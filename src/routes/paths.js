@@ -83,6 +83,9 @@ export const PATH_DASHBOARD = {
     newUser: path(ROOTS_DASHBOARD, '/user/new'),
     editById: path(ROOTS_DASHBOARD, `/user/reece-chung/edit`),
     account: path(ROOTS_DASHBOARD, '/user/account')
+  },
+  dormitory: {
+    root: path(ROOTS_DASHBOARD, '/dormitory')
   }
 };
 

@@ -1,42 +1,37 @@
 // material
 import { alpha, useTheme, styled } from '@material-ui/core/styles';
 import { Box, Grid, Card, Container, Typography, useMediaQuery } from '@material-ui/core';
+import useSettings from '../../../hooks/useSettings';
 //
 import { varFadeInUp, MotionInView, varFadeInDown } from '../../animate';
+import LandingGallery from './common/LandingGallery';
 
 // ----------------------------------------------------------------------
 
 const CARDS = [
   {
-    icon: '/static/icons/ic_design.svg',
-    title: 'Nhân viên trực 24/7',
-    description:
-      'The set is built on the principles of the atomic design system. It helps you to create projects fastest and easily customized packages for your projects.'
+    id: 1,
+    title: 'Quận 9',
+    imageUrl:
+      'https://www.nhatrosachse.com/images/desk/quan-9-min.png'
   },
   {
-    icon: '/static/icons/ic_code.svg',
-    title: 'Khóa cổng vân tay',
-    description: 'Easy to customize and extend each component, saving you time and money.'
+    id: 2,
+    title: 'Thủ Đức',
+    imageUrl:
+      'https://www.nhatrosachse.com/images/desk/thu-duc-min.png'
   },
   {
-    icon: '/static/brand/logo_single.svg',
-    title: 'Camera an ninh',
-    description: 'Consistent design in colors, fonts ... makes brand recognition easy.'
+    id: 3,
+    title: 'Bình Tân',
+    imageUrl:
+      'https://www.nhatrosachse.com/images/desk/tan-binh-min.png'
   },
   {
-    icon: '/static/brand/logo_single.svg',
-    title: 'Wifi tốc độ cao',
-    description: 'Consistent design in colors, fonts ... makes brand recognition easy.'
-  },
-  {
-    icon: '/static/brand/logo_single.svg',
-    title: 'Sửa chữa nhanh',
-    description: 'Consistent design in colors, fonts ... makes brand recognition easy.'
-  },
-  {
-    icon: '/static/brand/logo_single.svg',
-    title: 'Vệ sinh hàng ngày',
-    description: 'Consistent design in colors, fonts ... makes brand recognition easy.'
+    id: 4,
+    title: 'Khu vực khác',
+    imageUrl:
+      'https://www.nhatrosachse.com/images/desk/khu-vuc-khac-min.png'
   }
 ];
 
@@ -108,6 +103,7 @@ export default function LandingMinimalHelps() {
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
+  const { themeStretch } = useSettings();
 
   return (
     <RootStyle>
@@ -119,40 +115,9 @@ export default function LandingMinimalHelps() {
             </Typography>
           </MotionInView>
           <MotionInView variants={varFadeInDown}>
-            <Typography variant="h2" sx={{ textAlign: 'center' }}>
-              Tiện ích chung
-            </Typography>
+            <LandingGallery gallery={CARDS} />
           </MotionInView>
         </Box>
-
-        <Grid container spacing={isDesktop ? 10 : 5}>
-          {CARDS.map((card, index) => (
-            <Grid key={card.title} item xs={12} md={4}>
-              <MotionInView variants={varFadeInUp}>
-                <CardStyle className={(index === 0 && 'cardLeft') || (index === 1 && 'cardCenter')}>
-                  <CardIconStyle
-                    src={card.icon}
-                    alt={card.title}
-                    sx={{
-                      ...(index === 0 && {
-                        filter: (theme) => shadowIcon(theme.palette.info.main)
-                      }),
-                      ...(index === 1 && {
-                        filter: (theme) => shadowIcon(theme.palette.error.main)
-                      })
-                    }}
-                  />
-                  <Typography variant="h5" paragraph>
-                    {card.title}
-                  </Typography>
-                  <Typography sx={{ color: isLight ? 'text.secondary' : 'common.white' }}>
-                    {card.description}
-                  </Typography>
-                </CardStyle>
-              </MotionInView>
-            </Grid>
-          ))}
-        </Grid>
       </Container>
     </RootStyle>
   );

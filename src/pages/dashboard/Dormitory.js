@@ -5,21 +5,9 @@ import { LoadingButton } from '@material-ui/lab';
 import { PATH_DASHBOARD } from "src/routes/paths";
 import {
   Card,
-  Chip,
   Grid,
   Stack,
-  Radio,
-  Switch,
-  Select,
   TextField,
-  InputLabel,
-  Typography,
-  RadioGroup,
-  FormControl,
-  Autocomplete,
-  InputAdornment,
-  FormHelperText,
-  FormControlLabel,
   Container
 } from '@material-ui/core';
 

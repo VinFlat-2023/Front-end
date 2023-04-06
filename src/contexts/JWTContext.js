@@ -14,27 +14,27 @@ const initialState = {
   user: null
 };
 
-  // -------------------------------------
-  const profile = {
-    id: mockData.id(1),
-    cover: mockData.image.cover(1),
-    position: 'UI Designer',
-    follower: 1234,
-    following: 5678,
-    quote: 'Tart I love sugar plum I love oat cake. Sweet roll caramels I love jujubes. Topping cake wafer..',
-    country: mockData.address.country(1),
-    email: mockData.email(1),
-    company: mockData.company(1),
-    school: mockData.company(2),
-    role: 'Manager',
-    facebookLink: `https://www.facebook.com/caitlyn.kerluke`,
-    instagramLink: `https://www.instagram.com/caitlyn.kerluke`,
-    linkedinLink: `https://www.linkedin.com/in/caitlyn.kerluke`,
-    twitterLink: `https://www.twitter.com/caitlyn.kerluke`
-  };
-  // ----------------------
+// -------------------------------------
+const profile = {
+  id: mockData.id(1),
+  cover: mockData.image.cover(1),
+  position: 'UI Designer',
+  follower: 1234,
+  following: 5678,
+  quote: 'Tart I love sugar plum I love oat cake. Sweet roll caramels I love jujubes. Topping cake wafer..',
+  country: mockData.address.country(1),
+  email: mockData.email(1),
+  company: mockData.company(1),
+  school: mockData.company(2),
+  role: 'Manager',
+  facebookLink: `https://www.facebook.com/caitlyn.kerluke`,
+  instagramLink: `https://www.instagram.com/caitlyn.kerluke`,
+  linkedinLink: `https://www.linkedin.com/in/caitlyn.kerluke`,
+  twitterLink: `https://www.twitter.com/caitlyn.kerluke`
+};
+// ----------------------
 
-  
+
 const handlers = {
   INITIALIZE: (state, action) => {
     const { isAuthenticated, user } = action.payload;
@@ -56,9 +56,9 @@ const handlers = {
     user: null
   }),
   REGISTER: (state) => ({
-      ...state,
-      isAuthenticated: true,
-      user: profile,
+    ...state,
+    isAuthenticated: true,
+    user: profile,
   }),
 };
 
@@ -87,14 +87,18 @@ function AuthProvider({ children }) {
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
 
-          // const response = await axios.get('/api/account/my-account');
-          // const { user } = response.data;
-
+          const response = await axios.get('/accounts/profile', {
+            headers: {
+              'Authorization': 'Bearer ' + accessToken
+            }
+          });
+          const user = response?.data?.data
+          user && localStorage.setItem('user', JSON.stringify(user)); 
           dispatch({
             type: 'INITIALIZE',
             payload: {
               isAuthenticated: true,
-              user: null
+              user: user
             }
           });
         } else {
@@ -157,9 +161,9 @@ function AuthProvider({ children }) {
     dispatch({ type: 'LOGOUT' });
   };
 
-  const resetPassword = () => {};
+  const resetPassword = () => { };
 
-  const updateProfile = () => {};
+  const updateProfile = () => { };
 
   return (
     <AuthContext.Provider

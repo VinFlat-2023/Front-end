@@ -94,6 +94,9 @@ export default function Router() {
           ]
         },
         {
+          path: 'dormitory', element: <Dormitory />
+        },
+        {
           path: 'finances',
           children: [
             { path: '/invoices', element: <GeneralApp /> },
@@ -281,6 +284,7 @@ const ResetPassword = Loadable(lazy(() => import('../pages/authentication/ResetP
 const VerifyCode = Loadable(lazy(() => import('../pages/authentication/VerifyCode')));
 // Dashboard
 const HomePage = Loadable(lazy(() => import('../pages/feature/home/HomePage')));
+const Dormitory = Loadable(lazy(() => import('../pages/dashboard/Dormitory')));
 const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
 const GeneralEcommerce = Loadable(lazy(() => import('../pages/dashboard/GeneralEcommerce')));
 const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralAnalytics')));

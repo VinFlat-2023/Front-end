@@ -1,0 +1,11 @@
+.carousel-container {
+  position: relative;
+}
+
+.carousel-container .slick-next {
+  right: 0;
+}
+
+.carousel-container .slick-prev {
+  right: 40px;
+}

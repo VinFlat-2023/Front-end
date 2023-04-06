@@ -1,13 +1,10 @@
 import { findIndex } from 'lodash';
 import PropTypes from 'prop-types';
-import { Icon } from '@iconify/react';
 import { useState } from 'react';
-import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 // material
 import { alpha, styled } from '@material-ui/core/styles';
-import { Box, Grid, Card, CardActionArea, Typography, CardContent } from '@material-ui/core';
+import { Box, Grid, Card, Typography, CardContent } from '@material-ui/core';
 // utils
-import { fDate } from '../../../../utils/formatTime';
 import LightboxModal from '../../../LightboxModal';
 
 // ----------------------------------------------------------------------

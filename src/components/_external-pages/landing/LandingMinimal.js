@@ -5,6 +5,10 @@ import useSettings from '../../../hooks/useSettings';
 //
 import { varFadeInUp, MotionInView, varFadeInDown } from '../../animate';
 import LandingGallery from './common/LandingGallery';
+import LandingCarousel from './common/LandingCarousel';
+//
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
@@ -12,30 +16,63 @@ const CARDS = [
   {
     id: 1,
     title: 'Quận 9',
-    imageUrl:
-      'https://www.nhatrosachse.com/images/desk/quan-9-min.png'
+    imageUrl: 'https://www.nhatrosachse.com/images/desk/quan-9-min.png'
   },
   {
     id: 2,
     title: 'Thủ Đức',
-    imageUrl:
-      'https://www.nhatrosachse.com/images/desk/thu-duc-min.png'
+    imageUrl: 'https://www.nhatrosachse.com/images/desk/thu-duc-min.png'
   },
   {
     id: 3,
     title: 'Bình Tân',
-    imageUrl:
-      'https://www.nhatrosachse.com/images/desk/tan-binh-min.png'
+    imageUrl: 'https://www.nhatrosachse.com/images/desk/tan-binh-min.png'
   },
   {
     id: 4,
     title: 'Khu vực khác',
-    imageUrl:
-      'https://www.nhatrosachse.com/images/desk/khu-vuc-khac-min.png'
+    imageUrl: 'https://www.nhatrosachse.com/images/desk/khu-vuc-khac-min.png'
   }
 ];
 
-const shadowIcon = (color) => `drop-shadow(2px 2px 2px ${alpha(color, 0.48)})`;
+const products = [
+  {
+    id: 1,
+    name: 'Product 1',
+    description: 'This is product 1',
+    image: 'https://via.placeholder.com/300x200.png?text=Product+1'
+  },
+  {
+    id: 2,
+    name: 'Product 2',
+    description: 'This is product 2',
+    image: 'https://via.placeholder.com/300x200.png?text=Product+2'
+  },
+  {
+    id: 3,
+    name: 'Product 3',
+    description: 'This is product 3',
+    image: 'https://via.placeholder.com/300x200.png?text=Product+3'
+  },
+  {
+    id: 4,
+    name: 'Product 4',
+    description: 'This is product 3',
+    image: 'https://via.placeholder.com/300x200.png?text=Product+3'
+  },
+  {
+    id: 5,
+    name: 'Product 5',
+    description: 'This is product 3',
+    image: 'https://via.placeholder.com/300x200.png?text=Product+3'
+  },
+  {
+    id: 6,
+    name: 'Product 6',
+    description: 'This is product 3',
+    image: 'https://via.placeholder.com/300x200.png?text=Product+3'
+  }
+];
 
 const RootStyle = styled('div')(({ theme }) => ({
   paddingTop: theme.spacing(15),
@@ -44,67 +81,25 @@ const RootStyle = styled('div')(({ theme }) => ({
   }
 }));
 
-const CardStyle = styled(Card)(({ theme }) => {
-  const shadowCard = (opacity) =>
-    theme.palette.mode === 'light'
-      ? alpha(theme.palette.grey[500], opacity)
-      : alpha(theme.palette.common.black, opacity);
-
-  return {
-    maxWidth: 380,
-    minHeight: 440,
-    margin: 'auto',
-    textAlign: 'center',
-    padding: theme.spacing(10, 5, 0),
-    boxShadow: `-40px 40px 80px 0 ${shadowCard(0.48)}`,
-    [theme.breakpoints.up('md')]: {
-      boxShadow: 'none',
-      backgroundColor: theme.palette.grey[theme.palette.mode === 'light' ? 200 : 800]
-    },
-    '&.cardLeft': {
-      [theme.breakpoints.up('md')]: { marginTop: -40 }
-    },
-    '&.cardCenter': {
-      [theme.breakpoints.up('md')]: {
-        marginTop: -80,
-        backgroundColor: theme.palette.background.paper,
-        boxShadow: `-40px 40px 80px 0 ${shadowCard(0.4)}`,
-        '&:before': {
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: -1,
-          content: "''",
-          margin: 'auto',
-          position: 'absolute',
-          width: 'calc(100% - 40px)',
-          height: 'calc(100% - 40px)',
-          borderRadius: theme.shape.borderRadiusMd,
-          backgroundColor: theme.palette.background.paper,
-          boxShadow: `-20px 20px 40px 0 ${shadowCard(0.12)}`
-        }
-      }
-    }
-  };
-});
-
-const CardIconStyle = styled('img')(({ theme }) => ({
-  width: 40,
-  height: 40,
-  margin: 'auto',
-  marginBottom: theme.spacing(10),
-  filter: shadowIcon(theme.palette.primary.main)
+const ContainerStyle = styled('div')(({ theme }) => ({
+  paddingTop: theme.spacing(15)
 }));
 
 // ----------------------------------------------------------------------
 
 export default function LandingMinimalHelps() {
-  const theme = useTheme();
-  const isLight = theme.palette.mode === 'light';
-  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
-  const { themeStretch } = useSettings();
-
+  const [data, setData] = useState([]);
+  const fetchData = async () => {
+    try {
+      const data = await axios.get('https://vinflat-webapp.azurewebsites.net/api/buildings/order/all');
+      setData(data.data.data);
+    } catch (error) {
+      return console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <RootStyle>
       <Container maxWidth="lg">
@@ -117,6 +112,11 @@ export default function LandingMinimalHelps() {
           <MotionInView variants={varFadeInDown}>
             <LandingGallery gallery={CARDS} />
           </MotionInView>
+          <ContainerStyle>
+            <MotionInView variants={varFadeInDown}>
+              <LandingCarousel products={data} />
+            </MotionInView>
+          </ContainerStyle>
         </Box>
       </Container>
     </RootStyle>

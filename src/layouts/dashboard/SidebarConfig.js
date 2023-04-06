@@ -45,6 +45,11 @@ const sidebarConfig = [
         ],
       },
       {
+        title: 'Toà nhà KTX',
+        path: PATH_DASHBOARD.dormitory.root,
+        icon: ICONS.home,
+      },
+      {
         title: 'Tài chính',
         path: PATH_DASHBOARD.general.finances,
         icon: ICONS.ecommerce,

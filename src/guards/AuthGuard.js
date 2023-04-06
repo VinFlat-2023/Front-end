@@ -12,11 +12,14 @@ AuthGuard.propTypes = {
   children: PropTypes.node
 };
 
+const roleSupervisorPath = ['/dashboard/dormitory', '/dashboard/general/home']
+const roleAdminPath = ['/dashboard/general/home']
+
 export default function AuthGuard({ children }) {
   const { isAuthenticated } = useAuth();
   const { pathname } = useLocation();
   const [requestedLocation, setRequestedLocation] = useState(null);
-
+  console.log(pathname)
   if (!isAuthenticated) {
     if (pathname !== requestedLocation) {
       setRequestedLocation(pathname);
@@ -24,6 +27,13 @@ export default function AuthGuard({ children }) {
     return <Login />;
   }
 
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  if (user?.Role?.RoleName === "Supervisor" && !roleSupervisorPath.includes(pathname)) {
+    return <Navigate to='/dashboard/general/home' />
+  }
+  if (user?.Role?.RoleName === "Admin" && !roleAdminPath.includes(pathname)) {
+    return <Navigate to='/dashboard/general/home' />
+  }
   if (requestedLocation && pathname !== requestedLocation) {
     setRequestedLocation(null);
     return <Navigate to={requestedLocation} />;

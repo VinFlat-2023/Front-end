@@ -66,7 +66,6 @@ export default function LandingThemeColor() {
         <Typography variant="subtitle1" sx={{ mt: 1, p: 1, textAlign: 'center', color: 'black' }}>
           <Link
             sx={{
-              ml: 15,
               fontSize: 20,
               fontheight: 44,
               fontFamily: 'Public Sans',

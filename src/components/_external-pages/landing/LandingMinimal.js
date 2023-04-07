@@ -2,13 +2,13 @@
 import { alpha, useTheme, styled } from '@material-ui/core/styles';
 import { Box, Grid, Card, Container, Typography, useMediaQuery } from '@material-ui/core';
 import useSettings from '../../../hooks/useSettings';
+import axios from '../../../utils/axios';
 //
 import { varFadeInUp, MotionInView, varFadeInDown } from '../../animate';
 import LandingGallery from './common/LandingGallery';
 import LandingCarousel from './common/LandingCarousel';
 //
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
@@ -35,45 +35,6 @@ const CARDS = [
   }
 ];
 
-const products = [
-  {
-    id: 1,
-    name: 'Product 1',
-    description: 'This is product 1',
-    image: 'https://via.placeholder.com/300x200.png?text=Product+1'
-  },
-  {
-    id: 2,
-    name: 'Product 2',
-    description: 'This is product 2',
-    image: 'https://via.placeholder.com/300x200.png?text=Product+2'
-  },
-  {
-    id: 3,
-    name: 'Product 3',
-    description: 'This is product 3',
-    image: 'https://via.placeholder.com/300x200.png?text=Product+3'
-  },
-  {
-    id: 4,
-    name: 'Product 4',
-    description: 'This is product 3',
-    image: 'https://via.placeholder.com/300x200.png?text=Product+3'
-  },
-  {
-    id: 5,
-    name: 'Product 5',
-    description: 'This is product 3',
-    image: 'https://via.placeholder.com/300x200.png?text=Product+3'
-  },
-  {
-    id: 6,
-    name: 'Product 6',
-    description: 'This is product 3',
-    image: 'https://via.placeholder.com/300x200.png?text=Product+3'
-  }
-];
-
 const RootStyle = styled('div')(({ theme }) => ({
   paddingTop: theme.spacing(15),
   [theme.breakpoints.up('md')]: {
@@ -89,10 +50,12 @@ const ContainerStyle = styled('div')(({ theme }) => ({
 
 export default function LandingMinimalHelps() {
   const [data, setData] = useState([]);
+  const [totleSpareRoom, setTotalSpareRoom] = useState(0);
   const fetchData = async () => {
     try {
-      const data = await axios.get('https://vinflat-webapp.azurewebsites.net/api/buildings/order/all');
+      const data = await axios.get('buildings/spare-slot');
       setData(data.data.data);
+      setTotalSpareRoom(data.data.totalCount);
     } catch (error) {
       return console.error(error);
     }
@@ -114,7 +77,7 @@ export default function LandingMinimalHelps() {
           </MotionInView>
           <ContainerStyle>
             <MotionInView variants={varFadeInDown}>
-              <LandingCarousel products={data} />
+              <LandingCarousel products={data} totleSpareRoom={totleSpareRoom} />
             </MotionInView>
           </ContainerStyle>
         </Box>

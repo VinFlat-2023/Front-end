@@ -1,22 +1,18 @@
 import React from 'react';
 import Slider from 'react-slick';
-import { Box, Grid, Card, Typography, CardContent } from '@material-ui/core';
-import { FOUNDATION_LIST } from './PathConfig';
-import { ArrowBack, ArrowForward } from '@material-ui/icons';
+import { Card, Typography } from '@material-ui/core';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import ProductCard from './ProductCard';
 import './styles/LandingCarousel.css';
 
-const Carousel = ({ products }) => {
+const Carousel = ({ products, totleSpareRoom }) => {
   const settings = {
     dots: true,
     infinite: false,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: 3.5,
     slidesToScroll: 3,
-    nextArrow: <ArrowForward />,
-    prevArrow: <ArrowBack />,
     responsive: [
       {
         breakpoint: 1024,
@@ -39,13 +35,23 @@ const Carousel = ({ products }) => {
   };
 
   return (
-    <div className="carousel-container">
+    <Card
+      sx={{
+        p: 3,
+        borderRadius: 1,
+        color: 'primary.main',
+        bgcolor: `primary.grey[0]`
+      }}
+    >
+      <Typography variant="h4" sx={{ mt: 1, p: 1, textAlign: 'left', color: 'black' }}>
+        Có <strong style={{color: '#3366FF'}}>{totleSpareRoom} phòng </strong> đang trống
+      </Typography>
       <Slider {...settings}>
         {products.map((item) => (
           <ProductCard key={item.BuildingId} item={item} />
         ))}
       </Slider>
-    </div>
+    </Card>
   );
 };
 

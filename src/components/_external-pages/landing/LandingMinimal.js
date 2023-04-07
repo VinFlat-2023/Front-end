@@ -1,7 +1,6 @@
 // material
 import { alpha, useTheme, styled } from '@material-ui/core/styles';
-import { Box, Grid, Card, Container, Typography, useMediaQuery } from '@material-ui/core';
-import useSettings from '../../../hooks/useSettings';
+import { Box, Grid, Card, Container, Typography } from '@material-ui/core';
 import axios from '../../../utils/axios';
 //
 import { varFadeInUp, MotionInView, varFadeInDown } from '../../animate';
@@ -42,9 +41,7 @@ const RootStyle = styled('div')(({ theme }) => ({
   }
 }));
 
-const ContainerStyle = styled('div')(({ theme }) => ({
-  paddingTop: theme.spacing(15)
-}));
+const ContainerStyle = styled('div')(({ theme }) => ({}));
 
 // ----------------------------------------------------------------------
 
@@ -75,13 +72,13 @@ export default function LandingMinimalHelps() {
           <MotionInView variants={varFadeInDown}>
             <LandingGallery gallery={CARDS} />
           </MotionInView>
-          <ContainerStyle>
-            <MotionInView variants={varFadeInDown}>
-              <LandingCarousel products={data} totleSpareRoom={totleSpareRoom} />
-            </MotionInView>
-          </ContainerStyle>
         </Box>
       </Container>
+      <MotionInView variants={varFadeInDown}>
+        <ContainerStyle>
+          <LandingCarousel products={data} totleSpareRoom={totleSpareRoom} />
+        </ContainerStyle>
+      </MotionInView>
     </RootStyle>
   );
 }

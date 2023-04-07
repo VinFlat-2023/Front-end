@@ -5,8 +5,8 @@ import Page from '../components/Page';
 import {
   LandingHero,
   LandingMinimal,
-  LandingDarkMode,
-  // LandingThemeColor,
+  // LandingDarkMode,
+  LandingThemeColor,
   // LandingPricingPlans,
   // LandingAdvertisement,
   // LandingCleanInterfaces,
@@ -39,7 +39,7 @@ export default function LandingPage() {
         <LandingMinimal />
         {/* <LandingHugePackElements /> */}
         {/* <LandingDarkMode /> */}
-        {/* <LandingThemeColor /> */}
+        <LandingThemeColor />
         {/* <LandingCleanInterfaces /> */}
         {/* <LandingPricingPlans /> */}
         {/* <LandingAdvertisement /> */}

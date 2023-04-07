@@ -12,40 +12,40 @@ import { MHidden } from '../../@material-extend';
 
 const TESTIMONIALS = [
   {
-    name: 'Jenny Wilson',
-    rating: 5,
-    dateCreate: 'April 19, 2021',
-    content: `Excellent Work! Thanks a lot!`
+    name: 'Vệ sinh tuyệt đối sạch sẽ',
+    // rating: 5,
+    // dateCreate: 'April 19, 2021',
+    // content: `Excellent Work! Thanks a lot!`
   },
   {
-    name: 'Cody Fisher',
-    rating: 5,
-    dateCreate: 'April 19, 2021',
-    content: `It's a very good dashboard and we are really liking the product . We've done some things, like migrate to TS and implementing a react useContext api, to fit our job methodology but the product is one of the best in terms of design and application architecture. The team did a really good job.`
+    name: 'Duy trì tốt an ninh trật tự',
+    // rating: 5,
+    // dateCreate: 'April 19, 2021',
+    // content: `It's a very good dashboard and we are really liking the product . We've done some things, like migrate to TS and implementing a react useContext api, to fit our job methodology but the product is one of the best in terms of design and application architecture. The team did a really good job.`
   },
   {
-    name: 'Marvin McKinney',
-    rating: 5,
-    dateCreate: 'April 19, 2021',
-    content: `Customer support is realy fast and helpful the desgin of this theme is looks amazing also the code is very clean and readble realy good job !`
+    name: 'Đầy đủ chỗ đậu xe máy',
+    // rating: 5,
+    // dateCreate: 'April 19, 2021',
+    // content: `Customer support is realy fast and helpful the desgin of this theme is looks amazing also the code is very clean and readble realy good job !`
   },
   {
-    name: 'Darrell Steward',
-    rating: 5,
-    dateCreate: 'April 19, 2021',
-    content: `Amazing, really good code quality and gives you a lot of examples for implementations.`
+    name: 'Tiết kiệm chi phí',
+    // rating: 5,
+    // dateCreate: 'April 19, 2021',
+    // content: `Amazing, really good code quality and gives you a lot of examples for implementations.`
   },
   {
-    name: 'Jacob Jones',
-    rating: 5,
-    dateCreate: 'April 19, 2021',
-    content: `Got a few questions after purchasing the product. The owner responded very fast and very helpfull. Overall the code is excellent and works very good. 5/5 stars!`
+    name: 'Sữa chữa nhanh chóng',
+    // rating: 5,
+    // dateCreate: 'April 19, 2021',
+    // content: `Got a few questions after purchasing the product. The owner responded very fast and very helpfull. Overall the code is excellent and works very good. 5/5 stars!`
   },
   {
-    name: 'Bessie Cooper',
-    rating: 5,
-    dateCreate: 'April 19, 2021',
-    content: `CEO of Codealy.io here. We’ve built a developer assessment platform that makes sense - tasks are based on git repositories and run in virtual machines. We automate the pain points - storing candidates code, running it and sharing test results with the whole team, remotely. Bought this template as we need to provide an awesome dashboard for our early customers. I am super happy with purchase. The code is just as good as the design. Thanks!`
+    name: 'Và nhiều tiện ích khác...',
+    // rating: 5,
+    // dateCreate: 'April 19, 2021',
+    // content: `CEO of Codealy.io here. We’ve built a developer assessment platform that makes sense - tasks are based on git repositories and run in virtual machines. We automate the pain points - storing candidates code, running it and sharing test results with the whole team, remotely. Bought this template as we need to provide an awesome dashboard for our early customers. I am super happy with purchase. The code is just as good as the design. Thanks!`
   }
 ];
 
@@ -71,14 +71,14 @@ TestimonialCard.propTypes = {
   testimonial: PropTypes.object
 };
 
-function TestimonialLink() {
-  return (
-    <Link href="#" variant="subtitle2" sx={{ display: 'flex', alignItems: 'center' }}>
-      Read more testimonials
-      <Box component={Icon} icon={roundArrowRightAlt} sx={{ ml: 1, width: 20, height: 20 }} />
-    </Link>
-  );
-}
+// function TestimonialLink() {
+//   return (
+//     <Link href="#" variant="subtitle2" sx={{ display: 'flex', alignItems: 'center' }}>
+//       Read more testimonials
+//       <Box component={Icon} icon={roundArrowRightAlt} sx={{ ml: 1, width: 20, height: 20 }} />
+//     </Link>
+//   );
+// }
 
 function TestimonialCard({ testimonial }) {
   const { name, rating, dateCreate, content } = testimonial;
@@ -93,16 +93,16 @@ function TestimonialCard({ testimonial }) {
         bgcolor: (theme) => alpha(theme.palette.common.white, 0.04)
       }}
     >
-      <Typography variant="subtitle1" gutterBottom>
+      <Typography variant="body2" gutterBottom>
         {name}
       </Typography>
-      <Typography gutterBottom component="p" variant="caption" sx={{ color: 'grey.500' }}>
+      {/* <Typography gutterBottom component="p" variant="caption" sx={{ color: 'grey.500' }}>
         {dateCreate}
-      </Typography>
-      <Rating value={rating} readOnly size="small" />
-      <Typography variant="body2" sx={{ mt: 1.5 }}>
+      </Typography> */}
+      {/* <Rating value={rating} readOnly size="small" /> */}
+      {/* <Typography variant="body2" sx={{ mt: 1.5 }}>
         {content}
-      </Typography>
+      </Typography> */}
     </Paper>
   );
 }
@@ -125,32 +125,30 @@ export default function AboutTestimonials() {
             <Box sx={{ maxWidth: { md: 360 } }}>
               <MotionInView variants={varFadeInUp}>
                 <Typography component="p" variant="overline" sx={{ mb: 2, color: 'text.secondary' }}>
-                  Testimonials
+                  Vinflat2023
                 </Typography>
               </MotionInView>
 
               <MotionInView variants={varFadeInUp}>
                 <Typography variant="h2" sx={{ mb: 3, color: 'common.white' }}>
-                  Who love <br />
-                  my work
+                  Sự khác biệt <br />
                 </Typography>
               </MotionInView>
 
               <MotionInView variants={varFadeInUp}>
                 <Typography sx={{ color: 'common.white' }}>
-                  Our goal is to create a product and service that you’re satisfied with and use it every day. This is
-                  why we’re constantly working on our services to make it better every day and really listen to what our
-                  users has to say.
+                  Không dừng lại ở việc "cho thuê - thu tiền", chúng tôi thật sự mong muốn được tạo ra không gian sống
+                  tốt hơn và là hình mẫu cho việc đó.
                 </Typography>
               </MotionInView>
 
-              <MHidden width="mdUp">
+              {/* <MHidden width="mdUp">
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'center' }}>
                   <MotionInView variants={varFadeInUp}>
                     <TestimonialLink />
                   </MotionInView>
                 </Box>
-              </MHidden>
+              </MHidden> */}
             </Box>
           </Grid>
 
@@ -184,13 +182,13 @@ export default function AboutTestimonials() {
           </Grid>
         </Grid>
 
-        <MHidden width="mdDown">
+        {/* <MHidden width="mdDown">
           <Box sx={{ bottom: 60, position: 'absolute' }}>
             <MotionInView variants={varFadeInLeft}>
               <TestimonialLink />
             </MotionInView>
           </Box>
-        </MHidden>
+        </MHidden> */}
       </Container>
     </RootStyle>
   );

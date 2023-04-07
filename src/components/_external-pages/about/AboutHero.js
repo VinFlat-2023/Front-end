@@ -34,24 +34,25 @@ export default function AboutHero() {
     <RootStyle initial="initial" animate="animate" variants={varWrapEnter}>
       <Container maxWidth="lg" sx={{ position: 'relative', height: '100%' }}>
         <ContentStyle>
-          <TextAnimate text="Who" sx={{ color: 'primary.main' }} variants={varFadeInRight} />
+          <TextAnimate text="Chúng tôi" sx={{ color: 'primary.main' }} variants={varFadeInRight} />
           <br />
           <Box sx={{ display: 'inline-flex', color: 'common.white' }}>
-            <TextAnimate text="we" sx={{ mr: 2 }} />
-            <TextAnimate text="are?" />
+            <TextAnimate text="là" sx={{ mr: 2 }} />
+            <TextAnimate text="ai?" />
           </Box>
 
           <motion.div variants={varFadeInRight}>
             <Typography
-              variant="h4"
+              variant="h5"
               sx={{
                 mt: 5,
                 color: 'common.white',
                 fontWeight: 'fontWeightMedium'
               }}
             >
-              Let's work together and
-              <br /> make awesome site easily
+              Hãy tìm hiểu về chúng tôi,
+              <br /> để có lựa chọn phù hợp hơn
+              <br /> cho việc thuê phòng của bạn.
             </Typography>
           </motion.div>
         </ContentStyle>

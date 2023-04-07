@@ -96,7 +96,7 @@ export default function AboutWhat() {
           <Grid item xs={12} md={6} lg={5}>
             <MotionInView variants={varFadeInRight}>
               <Typography variant="h2" sx={{ mb: 3 }}>
-                What is minimal?
+                Công Ty Cổ Phần VinFlat
               </Typography>
             </MotionInView>
 
@@ -106,22 +106,23 @@ export default function AboutWhat() {
                   color: (theme) => (theme.palette.mode === 'light' ? 'text.secondary' : 'common.white')
                 }}
               >
-                Our theme is the most advanced and user-friendly theme you will find on the market, we have
-                documentation and video to help set your site really easily, pre-installed demos you can import in one
-                click and everything from the theme options to page content can be edited from the front-end. This is
-                the theme you are looking for.
+                Là công ty đầu tư, khai thác các khu ký túc xá dành cho sinh viên và người lao động, nhân viên công sở.
+                <br />
+                <br />
+                Công ty thành lập giữa năm 2022 và bắt đầu ở khu vực Q9 - Thủ Đức, đến cuối năm 2022 có 11 khu nhà, căn
+                hộ ký túc xá với hơn 300 phòng.
               </Typography>
             </MotionInView>
 
-            <Box sx={{ my: 5 }}>
+            {/* <Box sx={{ my: 5 }}>
               {MOCK_SKILLS.map((progress) => (
                 <MotionInView key={progress.label} variants={varFadeInRight}>
                   <ProgressItem progress={progress} />
                 </MotionInView>
-              ))}
-            </Box>
+              ))} 
+            </Box> */}
 
-            <MotionInView variants={varFadeInRight}>
+            {/* <MotionInView variants={varFadeInRight}>
               <Button
                 variant="outlined"
                 color="inherit"
@@ -130,7 +131,7 @@ export default function AboutWhat() {
               >
                 Check out our work
               </Button>
-            </MotionInView>
+            </MotionInView> */}
           </Grid>
         </Grid>
       </Container>

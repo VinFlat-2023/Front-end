@@ -20,7 +20,7 @@ export default function AboutVision() {
 
         <Box
           sx={{
-            bottom: { xs: 24, md: 80 },
+            bottom: { xs: 44, md: 180 },
             width: '100%',
             display: 'flex',
             flexWrap: 'wrap',
@@ -29,18 +29,22 @@ export default function AboutVision() {
             justifyContent: 'center'
           }}
         >
-          {['logo_amazon', 'logo_hbo', 'logo_ibm', 'logo_lya', 'logo_spotify', 'logo_netflix'].map((logo) => (
-            <MotionInView key={logo} variants={varFadeIn}>
-              <Box
-                component="img"
-                src={`/static/about/${logo}.svg`}
-                sx={{
-                  m: { xs: 1.5, md: 3 },
-                  height: { xs: 24, md: 32 }
-                }}
-              />
-            </MotionInView>
-          ))}
+          <MotionInView variants={varFadeInUp}>
+            <Typography variant="h4"
+              sx={{
+                color: (theme) => (theme.palette.mode === 'dark' ? 'text.primary' : 'common.white')
+              }}
+            >
+              Trở thành công ty chuyên nghiệp, tiên phong trong lĩnh vực<br /> khai thác
+              phòng ký túc xá cho thuê ở phân khúcgiá bình dân,<br /> vươn lên dẫn đầu thị trường trong lĩnh vực:
+              <br />
+              <br />
+              1. Mở rộng số lượng phòng cho thuê.<br />
+              2. Thương hiệu uy tín.<br />
+              3. Sự tin tưởng, lựa chọn hàng đầu của khách hàng<br /> & chủ
+              nhà, căn hộ cho thuê.
+            </Typography>
+          </MotionInView>
         </Box>
       </Box>
 
@@ -48,7 +52,7 @@ export default function AboutVision() {
         <Grid item xs={12} sm={8}>
           <MotionInView variants={varFadeInUp}>
             <Typography variant="h3" sx={{ textAlign: 'center' }}>
-              Our vision offering the best product nulla vehicula tortor scelerisque ultrices malesuada.
+              Mục tiêu phát triển
             </Typography>
           </MotionInView>
         </Grid>

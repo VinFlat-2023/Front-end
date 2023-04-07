@@ -18,12 +18,12 @@ const RootStyle = styled(Page)(({ theme }) => ({
 
 export default function About() {
   return (
-    <RootStyle title="About us | VinFlat">
+    <RootStyle title="Về chúng tôi | VinFlat">
       <AboutHero />
       <AboutWhat />
       <AboutVision />
-      <Divider orientation="vertical" sx={{ my: 10, mx: 'auto', width: 2, height: 40 }} />
-      <AboutTeam />
+      <Divider orientation="vertical" sx={{ my: 5, mx: 'auto', width: 1, height: 20 }} />
+      {/* <AboutTeam /> */}
       <AboutTestimonials />
     </RootStyle>
   );

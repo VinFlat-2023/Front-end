@@ -12,7 +12,7 @@ import axios from '../../../utils/axios';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 //
-import { MotionInView, varFadeInUp, varFadeInDown } from '../../animate';
+import { MotionInView, varFadeInUp } from '../../animate';
 
 // ----------------------------------------------------------------------
 
@@ -27,12 +27,10 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 export default function LandingThemeColor() {
   const [data, setData] = useState([]);
-  const [totleSpareRoom, setTotalSpareRoom] = useState(0);
   const fetchData = async () => {
     try {
       const data = await axios.get('buildings/spare-slot');
       setData(data.data.data);
-      setTotalSpareRoom(data.data.totalCount);
     } catch (error) {
       return console.error(error);
     }

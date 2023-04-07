@@ -8,7 +8,7 @@ import {
   // LandingDarkMode,
   LandingThemeColor,
   // LandingPricingPlans,
-  // LandingAdvertisement,
+  LandingAdvertisement,
   // LandingCleanInterfaces,
   // LandingHugePackElements
 } from '../components/_external-pages/landing';
@@ -42,7 +42,7 @@ export default function LandingPage() {
         <LandingThemeColor />
         {/* <LandingCleanInterfaces /> */}
         {/* <LandingPricingPlans /> */}
-        {/* <LandingAdvertisement /> */}
+        <LandingAdvertisement />
       </ContentStyle>
     </RootStyle>
   );

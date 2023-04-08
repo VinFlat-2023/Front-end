@@ -4,11 +4,11 @@ import { styled } from '@material-ui/core/styles';
 import Page from '../components/Page';
 import {
   LandingHero,
-  // LandingMinimal,
+  LandingMinimal,
   // LandingDarkMode,
-  // LandingThemeColor,
+  LandingThemeColor,
   // LandingPricingPlans,
-  // LandingAdvertisement,
+  LandingAdvertisement,
   // LandingCleanInterfaces,
   // LandingHugePackElements
 } from '../components/_external-pages/landing';
@@ -22,7 +22,6 @@ const RootStyle = styled(Page)(({ theme }) => ({
   }
 }));
 
-
 const ContentStyle = styled('div')(({ theme }) => ({
   overflow: 'hidden',
   position: 'relative',
@@ -35,15 +34,16 @@ export default function LandingPage() {
   return (
     <RootStyle title="Trang chủ | VinFlat" id="move_top">
       <LandingHero />
-      {/* <ContentStyle> */}
-        {/* <LandingMinimal /> */}
+      <ContentStyle>
+        
+        <LandingMinimal />
         {/* <LandingHugePackElements /> */}
-        {/* <LandingDarkMode />
+        {/* <LandingDarkMode /> */}
         <LandingThemeColor />
-        <LandingCleanInterfaces />
-        <LandingPricingPlans />
-        <LandingAdvertisement /> */}
-      {/* </ContentStyle> */}
+        {/* <LandingCleanInterfaces /> */}
+        {/* <LandingPricingPlans /> */}
+        <LandingAdvertisement />
+      </ContentStyle>
     </RootStyle>
   );
 }

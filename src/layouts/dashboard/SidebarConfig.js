@@ -20,6 +20,7 @@ const ICONS = {
   blog: getIcon('ic_blog'),
   calendar: getIcon('ic_calendar'),
   admin: getIcon('ic_admin'),
+  person: getIcon('ic_person'),
 
 };
 
@@ -47,7 +48,7 @@ const sidebarConfig = [
       {
         title: 'Quản lý hồ sơ cá nhân',
         path: PATH_DASHBOARD.admin_profile.home,
-        icon: ICONS.admin,
+        icon: ICONS.person,
         children: [
           { title: 'Hồ sơ cá nhân', path: PATH_DASHBOARD.admin_profile.home },
         ],

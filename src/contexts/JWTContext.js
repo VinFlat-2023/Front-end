@@ -127,7 +127,7 @@ function AuthProvider({ children }) {
 
   const login = async (userName, password) => {
     const response = await axios.post('/auth/management/v1/login', {
-      userName,
+      usernameOrPhoneNumber: userName,
       password
     });
     const { token } = response.data.data;

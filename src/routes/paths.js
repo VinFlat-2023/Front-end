@@ -39,6 +39,13 @@ export const PATH_DASHBOARD = {
     home: path(ROOTS_DASHBOARD, '/general/home'),
     analysis: path(ROOTS_DASHBOARD, '/general/analysis')
   },
+  account: {
+    accounts: path(ROOTS_DASHBOARD, '/account/accounts'),
+    create: path(ROOTS_DASHBOARD, '/account/create')
+  },
+  admin_profile: {
+    home: path(ROOTS_DASHBOARD, '/admin_profile/home'),
+  },
   manage: {
     users: path(ROOTS_DASHBOARD, '/manage/users'),
     profile: path(ROOTS_DASHBOARD, '/manage/profile'),

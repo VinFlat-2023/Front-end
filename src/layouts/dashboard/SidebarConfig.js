@@ -18,7 +18,9 @@ const ICONS = {
   user: getIcon('ic_user'),
   cart: getIcon('ic_cart'),
   blog: getIcon('ic_blog'),
-  calendar: getIcon('ic_calendar')
+  calendar: getIcon('ic_calendar'),
+  admin: getIcon('ic_admin'),
+
 };
 
 const sidebarConfig = [
@@ -31,6 +33,23 @@ const sidebarConfig = [
         children: [
           { title: 'App', path: PATH_DASHBOARD.general.home },
           { title: 'Analysis', path: PATH_DASHBOARD.general.analysis }
+        ],
+      },
+      {
+        title: 'Quản lý tài khoản',
+        path: PATH_DASHBOARD.account.accounts,
+        icon: ICONS.user,
+        children: [
+          { title: 'Danh sách tài khoản', path: PATH_DASHBOARD.account.accounts },
+          { title: 'Thêm tài khoản', path: PATH_DASHBOARD.account.create }
+        ],
+      },
+      {
+        title: 'Quản lý hồ sơ cá nhân',
+        path: PATH_DASHBOARD.admin_profile.home,
+        icon: ICONS.admin,
+        children: [
+          { title: 'Hồ sơ cá nhân', path: PATH_DASHBOARD.admin_profile.home },
         ],
       },
       {

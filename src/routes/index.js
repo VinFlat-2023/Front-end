@@ -85,6 +85,19 @@ export default function Router() {
           ]
         },
         {
+          path: 'account',
+          children: [
+            { path: '/accounts', element: <UserList /> },
+            { path: '/create', element: <UserCreate /> }
+          ]
+        },
+        {
+          path: 'admin_profile',
+          children: [
+            { path: '/home', element: <HomePage /> },
+          ]
+        },
+        {
           path: 'manage',
           children: [
             { path: '/users', element: <GeneralApp /> },

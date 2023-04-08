@@ -92,7 +92,7 @@ export default function MainNavbar() {
             variant="contained"
             component={RouterLink}
             to={PATH_DASHBOARD.root}
-            startIcon={<Icon icon={flashFill} width={20} height={20} />}
+            // startIcon={<Icon icon={flashFill} width={20} height={20} />}
           >
             Đăng Nhập
           </Button>

@@ -54,18 +54,26 @@ export default function FaqsHero() {
     <RootStyle initial="initial" animate="animate" variants={varWrapEnter}>
       <Container maxWidth="lg" sx={{ position: 'relative', height: '100%' }}>
         <ContentStyle>
-          <TextAnimate text="How" sx={{ color: 'primary.main' }} variants={varFadeInRight} />
+          <Box sx={{ display: 'inline-flex', color: 'common.white' }}>
+            <TextAnimate text="Làm" sx={{ mr: 2, color: 'primary.main' }} variants={varFadeInRight} />
+            <TextAnimate text="thế" sx={{ mr: 2, color: 'primary.main' }} variants={varFadeInRight} />
+            <TextAnimate text="nào" sx={{ mr: 2, color: 'primary.main' }} variants={varFadeInRight} />
+          </Box>
+          
           <br />
           <Box sx={{ display: 'inline-flex', color: 'common.white' }}>
-            <TextAnimate text="can" sx={{ mr: 2 }} />
-            <TextAnimate text="we" sx={{ mr: 2 }} />
-            <TextAnimate text="help" sx={{ mr: 2 }} />
-            <TextAnimate text="you?" />
+            <TextAnimate text="chúng" sx={{ mr: 2 }} />
+            <TextAnimate text="tôi" sx={{ mr: 2 }} />
+            <TextAnimate text="có" sx={{ mr: 2 }} />
+            <TextAnimate text="thể" sx={{ mr: 2 }} />
+            <TextAnimate text="giúp" sx={{ mr: 2 }} />
+            <TextAnimate text="đỡ" sx={{ mr: 2 }} />
+            <TextAnimate text="bạn?" />
           </Box>
 
           <MotionInView variants={varFadeInUp} sx={{ mt: 5 }}>
             <SearchStyle
-              placeholder="Search support"
+              placeholder="Tìm sự giúp đỡ"
               startAdornment={
                 <InputAdornment position="start">
                   <Box component={Icon} icon={searchFill} sx={{ color: 'text.disabled' }} />

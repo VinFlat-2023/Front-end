@@ -24,25 +24,25 @@ const SOCIALS = [
 
 const LINKS = [
   {
-    headline: 'Minimal',
+    headline: 'VinFlat',
     children: [
-      { name: 'About us', href: PATH_PAGE.about },
-      { name: 'Contact us', href: PATH_PAGE.contact },
-      { name: 'FAQs', href: PATH_PAGE.faqs }
+      { name: 'Về chúng tôi', href: PATH_PAGE.about },
+      { name: 'Các câu hỏi thường gặp', href: PATH_PAGE.faqs }
     ]
   },
   {
-    headline: 'Legal',
+    headline: 'Các khu vực KTX hiện có',
     children: [
-      { name: 'Terms and Condition', href: '#' },
-      { name: 'Privacy Policy', href: '#' }
+      { name: 'Quận 9', href: PATH_PAGE.maintenance },
+      { name: 'Thủ Đức', href: PATH_PAGE.maintenance },
+      { name: 'Quận Tân Bình', href: PATH_PAGE.maintenance }
     ]
   },
   {
-    headline: 'Contact',
+    headline: 'Thông tin liên hệ',
     children: [
-      { name: 'support@minimals.cc', href: '#' },
-      { name: 'Los Angeles, 359  Hidden Valley Road', href: '#' }
+      { name: 'vinflat.internal@gmail.com', href: '#' },
+      { name: 'Tổng đài tư vấn: 1900 5001', href: '#' }
     ]
   }
 ];

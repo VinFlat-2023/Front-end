@@ -30,7 +30,7 @@ export default function ResetPassword() {
   const [sent, setSent] = useState(false);
 
   return (
-    <RootStyle title="Reset Password | Minimal UI">
+    <RootStyle title="Đặt lại mật khẩu | VinFlat">
       <LogoOnlyLayout />
 
       <Container>
@@ -38,17 +38,17 @@ export default function ResetPassword() {
           {!sent ? (
             <>
               <Typography variant="h3" paragraph>
-                Forgot your password?
+                Bạn quên mật khẩu?
               </Typography>
               <Typography sx={{ color: 'text.secondary', mb: 5 }}>
-                Please enter the email address associated with your account and We will email you a link to reset your
-                password.
+                Vui lòng nhập địa chỉ email được liên kết với tài khoản của bạn và quản trị viên hệ thống sẽ liên hệ với
+                bạn để đặt lại mật khẩu.
               </Typography>
 
               <ResetPasswordForm onSent={() => setSent(true)} onGetEmail={(value) => setEmail(value)} />
 
               <Button fullWidth size="large" component={RouterLink} to={PATH_AUTH.login} sx={{ mt: 1 }}>
-                Back
+                Trở lại
               </Button>
             </>
           ) : (
@@ -56,17 +56,17 @@ export default function ResetPassword() {
               <SentIcon sx={{ mb: 5, mx: 'auto', height: 160 }} />
 
               <Typography variant="h3" gutterBottom>
-                Request sent successfully
+                Yêu cầu gửi thành công
               </Typography>
               <Typography>
-                We have sent a confirmation email to &nbsp;
+                Chúng tôi sẽ gửi lại thông tin mới đến &nbsp;
                 <strong>{email}</strong>
                 <br />
-                Please check your email.
+                sau khi thông tin xác thực. Vui lòng kiểm tra email của bạn.
               </Typography>
 
               <Button size="large" variant="contained" component={RouterLink} to={PATH_AUTH.login} sx={{ mt: 5 }}>
-                Back
+                Trở lại
               </Button>
             </Box>
           )}

@@ -8,32 +8,32 @@ import { varFadeIn, MotionInView } from '../../animate';
 
 const CATEGORIES = [
   {
-    label: 'Managing your account',
+    label: 'Quản lý linh hoạt',
     icon: '/static/faqs/ic_account.svg',
     href: '#'
   },
   {
-    label: 'Payment',
+    label: 'Lưu trữ thông tin',
     icon: '/static/faqs/ic_payment.svg',
     href: '#'
   },
   {
-    label: 'Delivery',
+    label: 'Tiện ích cho khách',
     icon: '/static/faqs/ic_delivery.svg',
     href: '#'
   },
   {
-    label: 'Problem with the Product',
+    label: 'Về cơ sở vật chất',
     icon: '/static/faqs/ic_package.svg',
     href: '#'
   },
   {
-    label: 'Return & Refund',
+    label: 'Tiết kiệm chi phí',
     icon: '/static/faqs/ic_refund.svg',
     href: '#'
   },
   {
-    label: 'Guarantees and assurances',
+    label: 'Bảo mật và đảm bảo',
     icon: '/static/faqs/ic_assurances.svg',
     href: '#'
   }

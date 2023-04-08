@@ -18,14 +18,14 @@ const RootStyle = styled(Page)(({ theme }) => ({
 
 export default function Faqs() {
   return (
-    <RootStyle title="Faqs | VinFlat">
+    <RootStyle title="Các câu hỏi thường gặp | VinFlat">
       <FaqsHero />
 
       <Container sx={{ mt: 15, mb: 10 }}>
         <FaqsCategory />
 
         <Typography variant="h3" sx={{ mb: 5 }}>
-          Frequently asked questions
+          Các câu hỏi thường gặp
         </Typography>
 
         <Grid container spacing={10}>

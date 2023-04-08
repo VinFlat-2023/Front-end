@@ -26,12 +26,12 @@ export default function Maintenance() {
         <Typography variant="h3" paragraph>
           Website currently under maintenance
         </Typography>
-        <Typography sx={{ color: 'text.secondary' }}>We are currently working hard on this page!</Typography>
+        <Typography sx={{ color: 'text.secondary' }}>Trang hiện đang bảo trì, xin vui lòng chờ đợi!</Typography>
 
         <MaintenanceIllustration sx={{ my: 10, height: 240 }} />
 
         <Button variant="contained" size="large" component={RouterLink} to="/">
-          Go to Home
+        Trở về trang chủ
         </Button>
       </Container>
     </RootStyle>

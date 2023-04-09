@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { alpha, styled } from '@material-ui/core/styles';
 import { Box, Grid, Card, Typography, CardContent } from '@material-ui/core';
 // utils
-import LightboxModal from '../../../LightboxModal';
+
 
 // ----------------------------------------------------------------------
 
@@ -64,14 +64,9 @@ ProfileGallery.propTypes = {
 };
 
 export default function ProfileGallery({ gallery }) {
-  const [openLightbox, setOpenLightbox] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const imagesLightbox = gallery.map((img) => img.imageUrl);
 
   const handleOpenLightbox = (url) => {
-    const selectedImage = findIndex(imagesLightbox, (index) => index === url);
-    setOpenLightbox(true);
-    setSelectedImage(selectedImage);
+    
   };
 
   return (
@@ -90,14 +85,6 @@ export default function ProfileGallery({ gallery }) {
             </Grid>
           ))}
         </Grid>
-
-        <LightboxModal
-          images={imagesLightbox}
-          photoIndex={selectedImage}
-          setPhotoIndex={setSelectedImage}
-          isOpen={openLightbox}
-          onClose={() => setOpenLightbox(false)}
-        />
       </Card>
     </Box>
   );

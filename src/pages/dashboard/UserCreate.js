@@ -24,7 +24,7 @@ export default function UserCreate() {
   const { name } = useParams();
   const { userList } = useSelector((state) => state.user);
   const isEdit = pathname.includes('edit');
-  const currentUser = userList.find((user) => paramCase(user.Username) === name);
+  const currentUser = userList?.find((user) => paramCase(user.Username) === name);
   
   useEffect(() => {
     dispatch(getUserList());

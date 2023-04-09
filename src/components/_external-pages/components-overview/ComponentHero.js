@@ -29,7 +29,7 @@ const labelChip = [
 ]
 
 export default function ComponentHero(props) {
-  const { setSortValue } = props;
+  const { sortValue, setSortValue } = props;
   const handleClick = (value) => {
     console.info(`You clicked the Chip ${value.text}`);
     setSortValue(value.value);
@@ -57,22 +57,9 @@ export default function ComponentHero(props) {
                 <Grid container rowSpacing={2} columnSpacing={1}>
                   {labelChip.map((item )=> 
                     <Grid item xs={6}>
-                    <StyleChip color="primary" label={item.text} variant="outlined" onClick={() => handleClick(item)} />
+                    <StyleChip color="primary" label={item.text} variant={sortValue === item.value ? 'fill' : 'outlined'} onClick={() => handleClick(item)} />
                   </Grid>
                   )}
-                  
-                  {/* <Grid item xs={6}>
-                    <StyleChip color="primary" label={labelChip[1]} variant="outlined" onClick={() => this.chipFilter(labelChip)} />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <StyleChip color="primary" label={labelChip[2]} variant="outlined" onClick={() => this.chipFilter(labelChip)} />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <StyleChip color="primary" label={labelChip[3]} variant="outlined" onClick={() => this.chipFilter(labelChip)} />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <StyleChip color="primary" label={labelChip[4]} variant="outlined" onClick={() => this.chipFilter(labelChip)} />
-                  </Grid> */}
                 </Grid>
               </Box>
             </motion.div>

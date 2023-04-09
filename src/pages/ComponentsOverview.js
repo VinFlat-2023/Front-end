@@ -43,7 +43,7 @@ export default function ComponentsOverview() {
 
   return (
     <RootStyle title="Components Overview | VinFlat">
-      <ComponentHero setSortValue={setSortValue} />
+      <ComponentHero sortValue={sortValue} setSortValue={setSortValue} />
       <Container maxWidth="lg">
         <LisBuilding data={listBuilding} total={total} sortValue={sortValue} />
         {/* <ComponentFoundation /> */}

@@ -24,7 +24,7 @@ const ICONS = {
 
 };
 
-const sidebarConfig = [
+export const adminSlidebar = [
   {
     items: [
       {
@@ -46,11 +46,27 @@ const sidebarConfig = [
         ],
       },
       {
-        title: 'Quản lý hồ sơ cá nhân',
+        title: 'Hồ sơ cá nhân',
         path: PATH_DASHBOARD.admin_profile.home,
         icon: ICONS.person,
         children: [
           { title: 'Hồ sơ cá nhân', path: PATH_DASHBOARD.admin_profile.home },
+        ],
+      },
+    ]
+  }
+];
+
+export const supervisorSlidebar = [
+  {
+    items: [
+      {
+        title: 'Trang chủ',
+        path: PATH_DASHBOARD.general.home,
+        icon: ICONS.home,
+        children: [
+          { title: 'App', path: PATH_DASHBOARD.general.home },
+          { title: 'Analysis', path: PATH_DASHBOARD.general.analysis }
         ],
       },
       {
@@ -117,4 +133,3 @@ const sidebarConfig = [
   }
 ];
 
-export default sidebarConfig;

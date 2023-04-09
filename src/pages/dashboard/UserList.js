@@ -39,11 +39,11 @@ import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_d
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'fullName', label: 'Họ và tên', alignRight: false },
+  { id: 'userName', label: 'Tài khoản', alignRight: false },
+  { id: 'role', label: 'Chức vụ', alignRight: false },
+  { id: 'phoneNumber', label: 'Số điện thoại', alignRight: false },
+  { id: 'status', label: 'Trạng thái', alignRight: false },
   { id: '' }
 ];
 
@@ -102,7 +102,7 @@ export default function UserList() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = userList.map((n) => n.name);
+      const newSelecteds = userList.map((n) => n.Username);
       setSelected(newSelecteds);
       return;
     }
@@ -122,6 +122,7 @@ export default function UserList() {
       newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
     }
     setSelected(newSelected);
+    console.log('selected ',selected)
   };
 
   const handleChangePage = (event, newPage) => {
@@ -148,14 +149,14 @@ export default function UserList() {
   const isUserNotFound = filteredUsers.length === 0;
 
   return (
-    <Page title="User: List | Minimal-UI">
+    <Page title="Danh sách tài khoản">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="User List"
+          heading="Danh sách tài khoản nhân viên VinFlat"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: 'List' }
+            { name: 'Trang chủ', href: PATH_DASHBOARD.root },
+            { name: 'Quản lý tài khoản', href: PATH_DASHBOARD.account.root },
+            { name: 'Danh sách tài khoản' }
           ]}
           action={
             <Button
@@ -164,13 +165,13 @@ export default function UserList() {
               to={PATH_DASHBOARD.user.newUser}
               startIcon={<Icon icon={plusFill} />}
             >
-              New User
+              Thêm tài khoản
             </Button>
           }
         />
 
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+          <UserListToolbar selected={selected} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -186,43 +187,42 @@ export default function UserList() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                    const isItemSelected = selected.indexOf(name) !== -1;
+                    const { EmployeeId, FullName, Username, Status, Role, Phone } = row;
+                    const isItemSelected = selected.indexOf(Username) !== -1;
 
                     return (
                       <TableRow
                         hover
-                        key={id}
+                        key={EmployeeId}
                         tabIndex={-1}
                         role="checkbox"
                         selected={isItemSelected}
                         aria-checked={isItemSelected}
                       >
                         <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, name)} />
+                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, Username)} />
                         </TableCell>
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={avatarUrl} />
                             <Typography variant="subtitle2" noWrap>
-                              {name}
+                              {FullName}
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{company}</TableCell>
-                        <TableCell align="left">{role}</TableCell>
-                        <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
+                        <TableCell align="left">{Username}</TableCell>
+                        <TableCell align="left">{Role.RoleName}</TableCell>
+                        <TableCell align="left">{Phone}</TableCell>
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(status === 'banned' && 'error') || 'success'}
+                            color={(Status === 'false' && 'error') || 'success'}
                           >
-                            {sentenceCase(status)}
+                            {sentenceCase(Status ? "Active" : "Banned")}
                           </Label>
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={name} />
+                          <UserMoreMenu onDelete={() => handleDeleteUser(EmployeeId)} userName={Username} />
                         </TableCell>
                       </TableRow>
                     );
@@ -260,3 +260,7 @@ export default function UserList() {
     </Page>
   );
 }
+//paging
+//export to excel
+//user list
+//api call

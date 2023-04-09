@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
 import searchFill from '@iconify/icons-eva/search-fill';
-import trash2Fill from '@iconify/icons-eva/trash-2-fill';
 import roundFilterList from '@iconify/icons-ic/round-filter-list';
+import download from '@iconify/icons-eva/download-fill';
 // material
 import { useTheme, styled } from '@material-ui/core/styles';
 import { Box, Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment } from '@material-ui/core';
@@ -32,14 +32,15 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 UserListToolbar.propTypes = {
-  numSelected: PropTypes.number,
+  selected: PropTypes.array,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func
 };
 
-export default function UserListToolbar({ numSelected, filterName, onFilterName }) {
+export default function UserListToolbar({ selected, filterName, onFilterName }) {
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
+  const numSelected = selected.length;
 
   return (
     <RootStyle
@@ -68,9 +69,9 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
+        <Tooltip title="Export to Excel">
           <IconButton>
-            <Icon icon={trash2Fill} />
+            <Icon icon={download} />
           </IconButton>
         </Tooltip>
       ) : (

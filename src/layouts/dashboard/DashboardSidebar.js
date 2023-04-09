@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { alpha, styled } from '@material-ui/core/styles';
@@ -16,8 +16,10 @@ import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
 import { MHidden } from '../../components/@material-extend';
 //
-import sidebarConfig from './SidebarConfig';
+
 import { DocIllustration } from '../../assets';
+import { adminSlidebar, supervisorSlidebar } from './SidebarConfig';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
@@ -94,7 +96,8 @@ DashboardSidebar.propTypes = {
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
   const { user } = useAuth();
-
+  const [role, setRole] = useState();
+  const [slidebar, setSlidebar] = useState(adminSlidebar);
   const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
     useCollapseDrawer();
 
@@ -104,6 +107,16 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+
+  useEffect(() => {
+    axios.get('/employees/profile').then((res) => {
+      setRole(res.data.data.Role.RoleName);
+    });
+  }, []);
+
+  useEffect(() => {
+    setSlidebar(adminSlidebar);
+  }, [role]);
 
   const renderContent = (
     <Scrollbar
@@ -156,7 +169,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         )}
       </Stack>
 
-      <NavSection navConfig={sidebarConfig} isShow={!isCollapse} />
+      <NavSection navConfig={slidebar} isShow={!isCollapse} />
 
       <Box sx={{ flexGrow: 1 }} />
     </Scrollbar>

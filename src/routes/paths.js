@@ -40,6 +40,7 @@ export const PATH_DASHBOARD = {
     analysis: path(ROOTS_DASHBOARD, '/general/analysis')
   },
   account: {
+    root: path(ROOTS_DASHBOARD, '/account'),
     accounts: path(ROOTS_DASHBOARD, '/account/accounts'),
     create: path(ROOTS_DASHBOARD, '/account/create')
   },

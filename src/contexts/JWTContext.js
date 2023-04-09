@@ -5,6 +5,8 @@ import axios from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
 // -------------------------------
 import mockData from '../utils/mock-data';
+import { getProfile, getRole } from 'src/redux/slices/user';
+import { getRoles } from '@testing-library/react';
 
 // ----------------------------------------------------------------------
 
@@ -34,7 +36,6 @@ const profile = {
 };
 // ----------------------
 
-
 const handlers = {
   INITIALIZE: (state, action) => {
     const { isAuthenticated, user } = action.payload;
@@ -48,7 +49,7 @@ const handlers = {
   LOGIN: (state) => ({
     ...state,
     isAuthenticated: true,
-    user: profile,
+    user: profile
   }),
   LOGOUT: (state) => ({
     ...state,
@@ -58,8 +59,8 @@ const handlers = {
   REGISTER: (state) => ({
     ...state,
     isAuthenticated: true,
-    user: profile,
-  }),
+    user: profile
+  })
 };
 
 const reducer = (state, action) => (handlers[action.type] ? handlers[action.type](state, action) : state);
@@ -89,11 +90,11 @@ function AuthProvider({ children }) {
 
           const response = await axios.get('/accounts/profile', {
             headers: {
-              'Authorization': 'Bearer ' + accessToken
+              Authorization: 'Bearer ' + accessToken
             }
           });
-          const user = response?.data?.data
-          user && localStorage.setItem('user', JSON.stringify(user)); 
+          const user = response?.data?.data;
+          user && localStorage.setItem('user', JSON.stringify(user));
           dispatch({
             type: 'INITIALIZE',
             payload: {
@@ -130,9 +131,10 @@ function AuthProvider({ children }) {
       usernameOrPhoneNumber: userName,
       password
     });
-    const { token } = response.data.data;
+    const { id, token } = response.data.data;
 
     setSession(token);
+    window.localStorage.setItem('userId', id);
     dispatch({
       type: 'LOGIN'
     });
@@ -158,12 +160,14 @@ function AuthProvider({ children }) {
 
   const logout = async () => {
     setSession(null);
+    window.localStorage.clear();
+    window.sessionStorage.clear();
     dispatch({ type: 'LOGOUT' });
   };
 
-  const resetPassword = () => { };
+  const resetPassword = () => {};
 
-  const updateProfile = () => { };
+  const updateProfile = () => {};
 
   return (
     <AuthContext.Provider

@@ -24,21 +24,21 @@ export default function UserCreate() {
   const { name } = useParams();
   const { userList } = useSelector((state) => state.user);
   const isEdit = pathname.includes('edit');
-  const currentUser = userList.find((user) => paramCase(user.name) === name);
-
+  const currentUser = userList.find((user) => paramCase(user.Username) === name);
+  
   useEffect(() => {
     dispatch(getUserList());
   }, [dispatch]);
 
   return (
-    <Page title="User: Create a new user | Minimal-UI">
+    <Page title={'Thêm thành viên mới'}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={!isEdit ? 'Create a new user' : 'Edit user'}
+          heading={'Thêm thành viên mới'}
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: !isEdit ? 'New user' : name }
+            { name: 'Trang chủ', href: PATH_DASHBOARD.root },
+            { name: 'Quản lý tài khoản', href: PATH_DASHBOARD.account.root },
+            { name: 'Thêm tài khoản' }
           ]}
         />
 

@@ -135,6 +135,8 @@ function AuthProvider({ children }) {
 
     setSession(token);
     window.localStorage.setItem('userId', id);
+    const role = await axios.get('/employees/profile');
+    window.sessionStorage.setItem('role',role.data.data.Role.RoleName);
     dispatch({
       type: 'LOGIN'
     });

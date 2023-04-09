@@ -90,14 +90,14 @@ function IconCollapse({ onToggleCollapse, collapseClick }) {
 
 DashboardSidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
+  role: PropTypes.string,
   onCloseSidebar: PropTypes.func
 };
 
-export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
+export default function DashboardSidebar({ isOpenSidebar,role, onCloseSidebar }) {
   const { pathname } = useLocation();
   const { user } = useAuth();
-  const [role, setRole] = useState();
-  const [slidebar, setSlidebar] = useState(adminSlidebar);
+  const [slidebar, setSlidebar] = useState([]);
   const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
     useCollapseDrawer();
 
@@ -109,13 +109,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   }, [pathname]);
 
   useEffect(() => {
-    axios.get('/employees/profile').then((res) => {
-      setRole(res.data.data.Role.RoleName);
-    });
-  }, []);
-
-  useEffect(() => {
-    setSlidebar(adminSlidebar);
+    setSlidebar(role ==='Admin' ? adminSlidebar : supervisorSlidebar);
   }, [role]);
 
   const renderContent = (

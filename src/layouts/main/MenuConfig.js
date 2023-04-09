@@ -20,54 +20,45 @@ const menuConfig = [
     path: '/'
   },
   {
-    title: 'Components',
-    icon: <Icon icon={roundGrain} {...ICON_SIZE} />,
-    path: PATH_PAGE.components
-  },
-  {
-    title: 'Pages',
-    path: '/pages',
+    title: 'Tìm ký túc xá',
     icon: <Icon icon={fileFill} {...ICON_SIZE} />,
+    path: PATH_PAGE.components,
     children: [
       {
-        subheader: 'Other',
+        subheader: 'Tìm kiếm',
         items: [
-          { title: 'Về chúng tôi', path: PATH_PAGE.about },
-          { title: 'Contact us', path: PATH_PAGE.contact },
-          { title: 'FAQs', path: PATH_PAGE.faqs },
-          { title: 'Pricing', path: PATH_PAGE.pricing },
-          { title: 'Payment', path: PATH_PAGE.payment },
-          { title: 'Maintenance', path: PATH_PAGE.maintenance },
-          { title: 'Coming Soon', path: PATH_PAGE.comingSoon }
+          { title: 'Tất cả', path: PATH_PAGE.components },         
+          { title: 'Giá dưới 3 triệu', path: PATH_PAGE.maintenance },
+          { title: 'Có phòng trống', path: PATH_PAGE.comingSoon }
         ]
       },
       {
-        subheader: 'Authentication',
+        subheader: 'Theo quận',
         items: [
-          { title: 'Login', path: PATH_AUTH.loginUnprotected },
-          { title: 'Register', path: PATH_AUTH.registerUnprotected },
-          { title: 'Reset password', path: PATH_AUTH.resetPassword },
-          { title: 'Verify code', path: PATH_AUTH.verify }
+           { title: 'Quận 9', path: PATH_PAGE.maintenance },
+          { title: 'Thủ Đức', path: PATH_PAGE.maintenance },
+          { title: 'Tân Bình', path: PATH_PAGE.maintenance },
+          { title: 'Khu vực khác', path: PATH_PAGE.maintenance }
         ]
       },
-      {
-        subheader: 'Error',
-        items: [
-          { title: 'Page 404', path: PATH_PAGE.page404 },
-          { title: 'Page 500', path: PATH_PAGE.page500 }
-        ]
-      },
-      {
-        subheader: 'Dashboard',
-        items: [{ title: 'Dashboard', path: PATH_DASHBOARD.root }]
-      }
+      // {
+      //   subheader: 'Error',
+      //   items: [
+      //     { title: 'Page 404', path: PATH_PAGE.page404 },
+      //     { title: 'Page 500', path: PATH_PAGE.page500 }
+      //   ]
+      // },
+      // {
+      //   subheader: 'Dashboard',
+      //   items: [{ title: 'Dashboard', path: PATH_DASHBOARD.root }]
+      // }
     ]
   },
   {
-    title: 'Documentation',
-    icon: <Icon icon={bookOpenFill} {...ICON_SIZE} />,
-    path: PATH_DOCS
-  }
+    title: 'Về chúng tôi',
+    icon: <Icon icon={roundGrain} {...ICON_SIZE} />,
+    path: PATH_PAGE.about
+  },
 ];
 
 export default menuConfig;

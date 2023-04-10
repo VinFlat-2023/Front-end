@@ -1,161 +1,87 @@
-import { capitalCase } from 'change-case';
-import { motion } from 'framer-motion';
+
 // material
 import { styled, alpha } from '@material-ui/core/styles';
 import {
-  Box,
-  Stack,
-  Radio,
-  Tooltip,
-  Container,
-  Typography,
-  RadioGroup,
-  CardActionArea,
-  FormControlLabel
+  Link,
+  Card,
+  Grid,
+  Typography
 } from '@material-ui/core';
-// hooks
-import useSettings from '../../../hooks/useSettings';
+import ProductCard from './common/ProductCard.jsx';
+import axios from '../../../utils/axios';
+import { useEffect, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 //
-import { MotionInView, varFadeInUp, varFadeInDown } from '../../animate';
+import { MotionInView, varFadeInUp } from '../../animate';
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
-  padding: theme.spacing(15, 0),
   backgroundImage:
     theme.palette.mode === 'light'
-      ? `linear-gradient(180deg, ${theme.palette.grey[300]} 0%, ${alpha(theme.palette.grey[300], 0)} 100%)`
+      ? `linear-gradient(180deg, ${theme.palette.grey[0]} 0%, ${alpha(theme.palette.grey[0], 0)} 100%)`
       : 'none'
 }));
 
 // ----------------------------------------------------------------------
 
 export default function LandingThemeColor() {
-  const { themeColor, onChangeColor, colorOption } = useSettings();
-
+  const [data, setData] = useState([]);
+  const fetchData = async () => {
+    try {
+      const data = await axios.get('buildings/spare-slot');
+      setData(data.data.data);
+    } catch (error) {
+      return console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <RootStyle>
-      <Container maxWidth="lg" sx={{ position: 'relative', textAlign: 'center' }}>
+      <Card
+        sx={{
+          p: 3,
+          borderRadius: 1,
+          color: 'primary.main',
+          bgcolor: `primary.grey[0]`
+        }}
+      >
         <MotionInView variants={varFadeInUp}>
-          <Typography component="p" variant="overline" sx={{ mb: 2, color: 'text.disabled', display: 'block' }}>
-            choose your style
+          <Typography variant="h4" sx={{ mt: 1, p: 1, textAlign: 'left', color: 'black' }}>
+            Ký túc xá <strong style={{ color: '#3366FF' }}>đang hoạt động</strong>
+          </Typography>
+          <Typography variant="subtitle1" sx={{ mt: 1, p: 1, textAlign: 'left', color: 'black' }}>
+            Đáp ứng mọi nhu cầu của bạn
           </Typography>
         </MotionInView>
-
-        <MotionInView variants={varFadeInUp}>
-          <Typography variant="h2" sx={{ mb: 3 }}>
-            Theme color
-          </Typography>
-        </MotionInView>
-
-        <MotionInView variants={varFadeInUp}>
-          <Typography
+        <Grid container spacing={3}>
+          {data.map((item) => (
+            <Grid key={item.BuildingId} item xs={12} sm={6} md={3}>
+              <ProductCard key={item.BuildingId} item={item} />
+            </Grid>
+          ))}
+        </Grid>
+        <Typography variant="subtitle1" sx={{ mt: 1, p: 1, textAlign: 'center', color: 'black' }}>
+          <Link
             sx={{
-              color: (theme) => (theme.palette.mode === 'light' ? 'text.secondary' : 'text.primary')
+              fontSize: 20,
+              fontheight: 44,
+              fontFamily: 'Public Sans',
+              color: 'black',
+              '&:hover': {
+                color: '#3366FF'
+              }
             }}
+            component={RouterLink}
+            to="#"
+            underline="none"
           >
-            Express your own style with just one click.
-          </Typography>
-        </MotionInView>
-
-        <RadioGroup name="themeColor" value={themeColor} onChange={onChangeColor} sx={{ my: 5 }}>
-          <Stack
-            direction={{ xs: 'row', lg: 'column' }}
-            justifyContent="center"
-            spacing={1}
-            sx={{
-              position: { lg: 'absolute' },
-              right: { lg: 0 }
-            }}
-          >
-            {colorOption.map((color) => {
-              const colorName = color.name;
-              const colorValue = color.value;
-              const isSelected = themeColor === colorName;
-
-              return (
-                <Tooltip key={colorName} title={capitalCase(colorName)} placement="right">
-                  <CardActionArea sx={{ color: colorValue, borderRadius: '50%', width: 32, height: 32 }}>
-                    <Box
-                      sx={{
-                        width: 1,
-                        height: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderRadius: '50%',
-                        ...(isSelected && {
-                          borderStyle: 'solid',
-                          borderWidth: 4,
-                          borderColor: alpha(colorValue, 0.24)
-                        })
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          width: 10,
-                          height: 10,
-                          borderRadius: '50%',
-                          bgcolor: colorValue,
-                          ...(isSelected && {
-                            width: 14,
-                            height: 14,
-                            transition: (theme) =>
-                              theme.transitions.create('all', {
-                                easing: theme.transitions.easing.easeInOut,
-                                duration: theme.transitions.duration.shorter
-                              })
-                          })
-                        }}
-                      />
-                      <FormControlLabel
-                        label=""
-                        value={colorName}
-                        control={<Radio sx={{ display: 'none' }} />}
-                        sx={{ top: 0, left: 0, margin: 0, width: 1, height: 1, position: 'absolute' }}
-                      />
-                    </Box>
-                  </CardActionArea>
-                </Tooltip>
-              );
-            })}
-          </Stack>
-        </RadioGroup>
-
-        <Box sx={{ position: 'relative' }}>
-          <Box component="img" src="/static/home/theme-color/grid.png" />
-
-          <Box sx={{ position: 'absolute', top: 0 }}>
-            <MotionInView variants={varFadeInUp}>
-              <img alt="screen" src={`/static/home/theme-color/screen-${themeColor}.png`} />
-            </MotionInView>
-          </Box>
-
-          <Box sx={{ position: 'absolute', top: 0 }}>
-            <MotionInView variants={varFadeInDown}>
-              <motion.div animate={{ y: [0, -20, 0] }} transition={{ duration: 8, repeat: Infinity }}>
-                <img alt="sidebar" src={`/static/home/theme-color/block1-${themeColor}.png`} />
-              </motion.div>
-            </MotionInView>
-          </Box>
-
-          <Box sx={{ position: 'absolute', top: 0 }}>
-            <MotionInView variants={varFadeInDown}>
-              <motion.div animate={{ y: [-10, 10, -10] }} transition={{ duration: 8, repeat: Infinity }}>
-                <img alt="sidebar" src={`/static/home/theme-color/block2-${themeColor}.png`} />
-              </motion.div>
-            </MotionInView>
-          </Box>
-
-          <Box sx={{ position: 'absolute', top: 0 }}>
-            <MotionInView variants={varFadeInDown}>
-              <motion.div animate={{ y: [-25, 5, -25] }} transition={{ duration: 10, repeat: Infinity }}>
-                <img alt="sidebar" src={`/static/home/theme-color/sidebar-${themeColor}.png`} />
-              </motion.div>
-            </MotionInView>
-          </Box>
-        </Box>
-      </Container>
+            Xem tất cả
+          </Link>
+        </Typography>
+      </Card>
     </RootStyle>
   );
 }

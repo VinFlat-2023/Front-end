@@ -22,13 +22,31 @@ const RootStyle = styled(Page)(({ theme }) => ({
 
 export default function ComponentsOverview() {
   const [listBuilding, setListBuilding] = useState([]);
-  const [sortValue, setSortValue] = useState('all');
+
+  const [sortValue, setSortValue] = useState('');
+  const [price, setPrice] = useState(0);
   const [total, setTotal] = useState(0);
+
+  const handleChangePrice = (value) => {
+    // console.log('change: ', value.target.value);
+    setPrice(value.target.value);
+  };
+
   const fetchData = async () => {
     try {
-      const data = await axios.get(`buildings/order/${sortValue}`);
-      setListBuilding(data.data.data);
-      setTotal(data.data.totalCount)
+      if (price === 0) {
+        const data = await axios.get(`buildings`, {
+          params: {
+            AreaName: sortValue
+          }
+        });
+        setListBuilding(data.data.data);
+        setTotal(data.data.totalCount);
+      } else {
+        const data = await axios.get(`buildings/average-price/${price}`);
+        setListBuilding(data.data.data);
+        setTotal(data.data.totalCount);
+      }
     } catch (error) {
       if (error.status === 'Not Found') {
         setListBuilding([]);
@@ -39,13 +57,18 @@ export default function ComponentsOverview() {
   };
   useEffect(() => {
     fetchData();
-  }, [sortValue]);
+  }, [sortValue, price]);
 
   return (
     <RootStyle title="Components Overview | VinFlat">
-      <ComponentHero sortValue={sortValue} setSortValue={setSortValue} />
+      <ComponentHero
+        price={price}
+        handleChangePrice={handleChangePrice}
+        sortValue={sortValue}
+        setSortValue={setSortValue}
+      />
       <Container maxWidth="lg">
-        <LisBuilding data={listBuilding} total={total} sortValue={sortValue} />
+        <LisBuilding data={listBuilding} total={total} sortValue={sortValue} price={price} />
         {/* <ComponentFoundation /> */}
         {/* <ComponentMaterialUI />
         <ComponentOther /> */}

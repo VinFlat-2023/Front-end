@@ -17,13 +17,21 @@ const RootStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function LisBuilding(props) {
-  const { data, total, sortValue } = props;
+  const { data, total, sortValue, price } = props;
+
+  let priceText = price/1000000;
+  let text='';
+  if(price === 0){
+    text ='';
+  }else{
+    text = `dưới ${priceText} triệu.`
+  }
   return (
     <RootStyle>
       <MotionInView variants={varFadeInUp}>
         <Typography variant="h4" sx={{ mt: 1, p: 1, textAlign: 'left', color: 'black' }}>
           Có <strong style={{ color: '#3366FF' }}>{total} Chi nhánh </strong> ở khu vực{' '}
-          {sortValue === 'all' ? '' : sortValue}
+          {sortValue === 'all' ? '' : sortValue} {text}
         </Typography>
       </MotionInView>
       <Grid container spacing={3}>

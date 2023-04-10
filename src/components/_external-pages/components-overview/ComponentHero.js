@@ -1,9 +1,7 @@
 import { motion } from 'framer-motion';
-import { Icon } from '@iconify/react';
-import roundArrowRightAlt from '@iconify/icons-ic/round-arrow-right-alt';
 // material
 import { useTheme, styled } from '@material-ui/core/styles';
-import { Box, Link, Container, Typography, Stack } from '@material-ui/core';
+import { Box, Link, Container, Typography, Stack, Chip, Grid } from '@material-ui/core';
 // components
 import { varFadeInUp, varWrapEnter, varFadeInDown } from '../../animate';
 //
@@ -16,9 +14,26 @@ const RootStyle = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.grey[theme.palette.mode === 'light' ? 200 : 800]
 }));
 
-export default function ComponentHero() {
-  const theme = useTheme();
-  const isLight = theme.palette.mode === 'light';
+const StyleChip = styled(Chip)(() => ({
+  width: 106,
+  height: 48,
+  borderRadius: 10
+}));
+
+const labelChip = [
+  {id: 1, text: 'Tất Cả', value: 'all'},
+  {id: 2, text: 'Quận 9', value: 'Quận 9'},
+  {id: 3, text: 'Thủ Đức', value: 'Thủ Đức'},
+  {id: 4, text: 'Tân Bình', value: 'Tân Bình'},
+  {id: 5, text: 'Khác', value: 'Khác'}
+]
+
+export default function ComponentHero(props) {
+  const { sortValue, setSortValue } = props;
+  const handleClick = (value) => {
+    console.info(`You clicked the Chip ${value.text}`);
+    setSortValue(value.value);
+  };
 
   return (
     <RootStyle>
@@ -32,31 +47,21 @@ export default function ComponentHero() {
         >
           <div>
             <motion.div variants={varFadeInUp}>
-              <Typography variant="h3" component="h1">
-                Components
+              <Typography sx={{ marginBottom: 3, color: '#012972', fontSize: 16 }} variant="subtitle2" component="h1">
+                Tìm theo quận
               </Typography>
             </motion.div>
 
             <motion.div variants={varFadeInUp}>
-              <Typography
-                sx={{
-                  mt: 3,
-                  mb: 5,
-                  color: isLight ? 'text.secondary' : 'common.white'
-                }}
-              >
-                With huge resource pack making deployment
-                <br /> easy and expanding more effectively
-              </Typography>
-            </motion.div>
-
-            <motion.div variants={varFadeInUp}>
-              <Link href="https://www.sketch.com/s/0fa4699d-a3ff-4cd5-a3a7-d851eb7e17f0" target="_blank">
-                <Stack direction="row" spacing={1} alignItems="center" sx={{ display: 'inline-flex' }}>
-                  <Typography variant="button"> Fast preview</Typography>
-                  <Icon icon={roundArrowRightAlt} width={20} height={20} />
-                </Stack>
-              </Link>
+              <Box sx={{ width: '45%' }}>
+                <Grid container rowSpacing={2} columnSpacing={1}>
+                  {labelChip.map((item )=> 
+                    <Grid item xs={6}>
+                    <StyleChip color="primary" label={item.text} variant={sortValue === item.value ? 'fill' : 'outlined'} onClick={() => handleClick(item)} />
+                  </Grid>
+                  )}
+                </Grid>
+              </Box>
             </motion.div>
           </div>
 

@@ -10,8 +10,7 @@ RoleBasedGuard.propTypes = {
 
 const useCurrentRole = () => {
   
-  // const role = localStorage.getItem('roleName');
-  const role = '';
+  const role = localStorage.getItem('roleName');
   return role;
 };
 

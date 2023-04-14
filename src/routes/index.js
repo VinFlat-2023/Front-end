@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { Navigate, useRoutes, useLocation } from 'react-router-dom';
 // layouts
 import MainLayout from '../layouts/main';
@@ -72,7 +72,7 @@ export default function Router() {
       path: 'dashboard',
       element: (
         <AuthGuard>
-          <RoleBasedGuard accessibleRoles="">
+          <RoleBasedGuard accessibleRoles="Admin">
             <DashboardLayout />
           </RoleBasedGuard>
         </AuthGuard>

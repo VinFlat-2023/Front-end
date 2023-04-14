@@ -6,6 +6,8 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
+const ROOTS_ADMIN = '/admin';
+const ROOTS_SUPERVISOR = '/supervisor';
 // export const HOME_PAGE = '/home';
 
 // ----------------------------------------------------------------------

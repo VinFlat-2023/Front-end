@@ -15,48 +15,20 @@ import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import UserNewForm from '../../components/_dashboard/user/UserNewForm';
 import { getProfile } from '../../redux/slices/user';
-import roundVpnKey from '@iconify/icons-ic/round-vpn-key';
-import account from '@iconify/icons-ic/account-box';
-import { Icon } from '@iconify/react';
-import { AccountChangePassword } from 'src/components/_dashboard/user/account';
-import { getAccountTabLabel } from 'src/utils/formatText';
 
 // ----------------------------------------------------------------------
 
 export default function UserEdit() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
-  const { name } = useParams();
-  const currentUserId = window.localStorage.getItem('userId');
-  const { userList } = useSelector((state) => state.user);
-  console.log(userList)
-                      
-  const [currentTab, setCurrentTab] = useState('general');
+  const { id } = useParams();
+  const { myProfile, userList } = useSelector((state) => state.user);
   const [currentUser, setCurrentUser] = useState();
+  useEffect(() => {
+    setCurrentUser(id ? userList.find((user) => user.EmployeeId == id) : myProfile);
+  }, [myProfile]);
 
-  useEffect(()=>{
-    setCurrentUser(userList.find((user) => user.EmployeeId == currentUserId));
-  },[userList])
 
-  console.log(currentUser, currentUserId)
-  const USER_TABS = [
-    {
-      value: 'general',
-      icon: <Icon icon={account} width={20} height={20} />,
-      component: <UserNewForm isEdit={true} currentUser={currentUser} />
-    },
-    {
-      value: 'changePassword',
-      icon: <Icon icon={roundVpnKey} width={20} height={20} />,
-      component: <AccountChangePassword />
-    },
-  ];
-
-  const handleChangeTab = (event, newValue) => {
-    setCurrentTab(newValue);
-  };
-
-  
   useEffect(() => {
     dispatch(getProfile());
   }, [dispatch]);
@@ -74,22 +46,7 @@ export default function UserEdit() {
         />
 
         <Stack spacing={5}>
-          <Tabs
-            value={currentTab}
-            scrollButtons="auto"
-            variant="scrollable"
-            allowScrollButtonsMobile
-            onChange={handleChangeTab}
-          >
-            {USER_TABS.map((tab) => (
-              <Tab disableRipple key={tab.value} label={getAccountTabLabel(tab.value)} icon={tab.icon} value={tab.value} />
-            ))}
-          </Tabs>
-
-          {USER_TABS.map((tab) => {
-            const isMatched = tab.value === currentTab;
-            return isMatched && <Box key={tab.value}>{tab.component}</Box>;
-          })}
+          <UserNewForm isEdit={true} currentUser={currentUser} />
         </Stack>
       </Container>
     </Page>

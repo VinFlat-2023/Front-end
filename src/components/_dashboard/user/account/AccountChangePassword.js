@@ -6,11 +6,15 @@ import { Stack, Card, TextField } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 // utils
 import fakeRequest from '../../../../utils/fakeRequest';
+import { changePassword } from 'src/redux/slices/user';
+import { useDispatch } from 'react-redux';
+import axios from '../../../../utils/axios';
 
 // ----------------------------------------------------------------------
 
 export default function AccountChangePassword() {
   const { enqueueSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
 
   const ChangePassWordSchema = Yup.object().shape({
     oldPassword: Yup.string().required('Bắt buộc nhập mật khẩu cũ'),
@@ -24,12 +28,28 @@ export default function AccountChangePassword() {
       newPassword: '',
       confirmNewPassword: ''
     },
-    validationSchema: ChangePassWordSchema,
-    onSubmit: async (values, { setSubmitting }) => {
-      await fakeRequest(500);
-      setSubmitting(false);
-      alert(JSON.stringify(values, null, 2));
-      enqueueSnackbar('Save success', { variant: 'success' });
+    //validationSchema: ChangePassWordSchema,
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      const url = `/employees/change-password`;
+      try {
+        console.log(url);
+        const response = await axios.put(url, {
+          password: values.newPassword,
+          confirmPassword: values.confirmNewPassword
+        });
+        console.log("res", response)
+        setSubmitting(false);
+        if (response.status) {
+          resetForm();
+          enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
+          //TODO update JWT
+        } else {
+          enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
+        }
+      } catch (error) {
+        setSubmitting(false);
+        enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
+      }
     }
   });
 

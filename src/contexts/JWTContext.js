@@ -131,6 +131,7 @@ function AuthProvider({ children }) {
       password
     });
     const { token } = response.data.data;
+    localStorage.setItem('roleName', response.data.data.roleName);
 
     setSession(token);
     dispatch({

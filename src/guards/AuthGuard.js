@@ -27,13 +27,13 @@ export default function AuthGuard({ children }) {
     return <Login />;
   }
 
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  if (user?.Role?.RoleName === "Supervisor" && !roleSupervisorPath.includes(pathname)) {
-    return <Navigate to='/dashboard/general/home' />
-  }
-  if (user?.Role?.RoleName === "Admin" && !roleAdminPath.includes(pathname)) {
-    return <Navigate to='/dashboard/general/home' />
-  }
+  // const user = JSON.parse(localStorage.getItem('user') || '{}');
+  // if (user?.Role?.RoleName === "Supervisor" && !roleSupervisorPath.includes(pathname)) {
+  //   return <Navigate to='/dashboard/general/home' />
+  // }
+  // if (user?.Role?.RoleName === "Admin" && !roleAdminPath.includes(pathname)) {
+  //   return <Navigate to='/dashboard/general/home' />
+  // }
   if (requestedLocation && pathname !== requestedLocation) {
     setRequestedLocation(null);
     return <Navigate to={requestedLocation} />;

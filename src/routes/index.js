@@ -7,7 +7,7 @@ import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 // guards
 import GuestGuard from '../guards/GuestGuard';
 import AuthGuard from '../guards/AuthGuard';
-// import RoleBasedGuard from '../guards/RoleBasedGuard';
+import RoleBasedGuard from '../guards/RoleBasedGuard';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 
@@ -72,7 +72,9 @@ export default function Router() {
       path: 'dashboard',
       element: (
         <AuthGuard>
-          <DashboardLayout />
+          <RoleBasedGuard accessibleRoles="admin">
+            <DashboardLayout />
+          </RoleBasedGuard>
         </AuthGuard>
       ),
       children: [
@@ -94,7 +96,8 @@ export default function Router() {
           ]
         },
         {
-          path: 'dormitory', element: <Dormitory />
+          path: 'dormitory',
+          element: <Dormitory />
         },
         {
           path: 'finances',
@@ -217,7 +220,7 @@ export default function Router() {
         {
           path: 'components',
           children: [
-            { path: '/', element: <ComponentsOverview area={window.localStorage.getItem('AreaName')}/> },
+            { path: '/', element: <ComponentsOverview area={window.localStorage.getItem('AreaName')} /> },
             // FOUNDATIONS
             { path: 'color', element: <Color /> },
             { path: 'typography', element: <Typography /> },

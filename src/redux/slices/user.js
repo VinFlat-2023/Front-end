@@ -3,6 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../utils/axios';
 
+import { PATH_DASHBOARD } from 'src/routes/paths';
+
 // ----------------------------------------------------------------------
 
 const initialState = {
@@ -139,13 +141,14 @@ export function getProfile() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/user/profile');
-      dispatch(slice.actions.getProfileSuccess(response.data.profile));
+      const response = await axios.get('/employees/profile');
+      dispatch(slice.actions.getProfileSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
   };
 }
+
 
 // ----------------------------------------------------------------------
 
@@ -209,8 +212,8 @@ export function getUserList() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/user/manage-users');
-      dispatch(slice.actions.getUserListSuccess(response.data.users));
+      const response = await axios.get('/employees');
+      dispatch(slice.actions.getUserListSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -280,9 +283,60 @@ export function getUsers() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/user/all');
-      dispatch(slice.actions.getUsersSuccess(response.data.users));
+      dispatch(slice.actions.getUsersSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+//------------------------update-----------------------------------------
+
+export function updateUserProfile(id, data, setErrors, resetForm, enqueueSnackbar, navigate) {
+  const url = `/employees/${id}`;
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      
+      const response = await axios.put(url, {
+        ...data, 
+        username: data.userName,
+        fullname: data.fullName,
+      });
+      console.log('ok', response);
+      dispatch(slice.actions.getUserListSuccess(response.data.data));
+      resetForm();
+      enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
+      navigate(PATH_DASHBOARD.user.list);
+    } catch (error) {
+      console.log('error', error);
+      setErrors(error);
+      dispatch(slice.actions.hasError(error));
+      enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
+    }
+  };
+}
+
+//------------------------create-----------------------------------------
+
+
+
+export function createNewEmployee(data, setErrors, resetForm, enqueueSnackbar, navigate) {
+  const url = `/employees/register`;
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post(url, data);
+      console.log('ok', response);
+      dispatch(slice.actions.getUserListSuccess(response.data.data));
+      resetForm();
+      enqueueSnackbar('Thêm thành viên thành công', { variant: 'success' });
+      navigate(PATH_DASHBOARD.account.accounts);
+    } catch (error) {
+      console.log('error', error);
+      setErrors(error);
+      dispatch(slice.actions.hasError(error));
+      enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
     }
   };
 }

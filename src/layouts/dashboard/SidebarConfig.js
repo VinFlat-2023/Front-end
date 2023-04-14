@@ -18,10 +18,46 @@ const ICONS = {
   user: getIcon('ic_user'),
   cart: getIcon('ic_cart'),
   blog: getIcon('ic_blog'),
-  calendar: getIcon('ic_calendar')
+  calendar: getIcon('ic_calendar'),
+  admin: getIcon('ic_admin'),
+  person: getIcon('ic_person'),
+
 };
 
-const sidebarConfig = [
+export const adminSlidebar = [
+  {
+    items: [
+      {
+        title: 'Trang chủ',
+        path: PATH_DASHBOARD.general.home,
+        icon: ICONS.home,
+        children: [
+          { title: 'App', path: PATH_DASHBOARD.general.home },
+          { title: 'Analysis', path: PATH_DASHBOARD.general.analysis }
+        ],
+      },
+      {
+        title: 'Quản lý tài khoản',
+        path: PATH_DASHBOARD.account.accounts,
+        icon: ICONS.user,
+        children: [
+          { title: 'Danh sách tài khoản', path: PATH_DASHBOARD.account.accounts },
+          { title: 'Thêm tài khoản', path: PATH_DASHBOARD.account.create }
+        ],
+      },
+      {
+        title: 'Hồ sơ cá nhân',
+        path: PATH_DASHBOARD.admin_profile.home,
+        icon: ICONS.person,
+        children: [
+          { title: 'Hồ sơ cá nhân', path: PATH_DASHBOARD.admin_profile.home },
+        ],
+      },
+    ]
+  }
+];
+
+export const supervisorSlidebar = [
   {
     items: [
       {
@@ -97,4 +133,3 @@ const sidebarConfig = [
   }
 ];
 
-export default sidebarConfig;

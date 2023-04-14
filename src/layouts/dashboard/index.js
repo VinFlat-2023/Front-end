@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 // material
 import { styled, useTheme } from '@material-ui/core/styles';
@@ -38,11 +38,15 @@ export default function DashboardLayout() {
   const theme = useTheme();
   const { collapseClick } = useCollapseDrawer();
   const [open, setOpen] = useState(false);
+  const [role, setRole] = useState();
 
+  useEffect(()=>{
+    setRole(window.sessionStorage.getItem('role'));
+  },[])
   return (
     <RootStyle>
       <DashboardNavbar onOpenSidebar={() => setOpen(true)} />
-      <DashboardSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
+      <DashboardSidebar isOpenSidebar={open} role ={role} onCloseSidebar={() => setOpen(false)} />
       <MainStyle
         sx={{
           transition: theme.transitions.create('margin', {

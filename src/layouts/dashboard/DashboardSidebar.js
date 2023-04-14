@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { alpha, styled } from '@material-ui/core/styles';
@@ -16,8 +16,10 @@ import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
 import { MHidden } from '../../components/@material-extend';
 //
-import sidebarConfig from './SidebarConfig';
+
 import { DocIllustration } from '../../assets';
+import { adminSlidebar, supervisorSlidebar } from './SidebarConfig';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
@@ -88,13 +90,14 @@ function IconCollapse({ onToggleCollapse, collapseClick }) {
 
 DashboardSidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
+  role: PropTypes.string,
   onCloseSidebar: PropTypes.func
 };
 
-export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
+export default function DashboardSidebar({ isOpenSidebar,role, onCloseSidebar }) {
   const { pathname } = useLocation();
   const { user } = useAuth();
-
+  const [slidebar, setSlidebar] = useState([]);
   const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
     useCollapseDrawer();
 
@@ -104,6 +107,10 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+
+  useEffect(() => {
+    setSlidebar(role ==='Admin' ? adminSlidebar : supervisorSlidebar);
+  }, [role]);
 
   const renderContent = (
     <Scrollbar
@@ -156,7 +163,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         )}
       </Stack>
 
-      <NavSection navConfig={sidebarConfig} isShow={!isCollapse} />
+      <NavSection navConfig={slidebar} isShow={!isCollapse} />
 
       <Box sx={{ flexGrow: 1 }} />
     </Scrollbar>

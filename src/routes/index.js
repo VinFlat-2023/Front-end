@@ -170,7 +170,7 @@ export default function Router() {
             { path: 'cards', element: <UserCards /> },
             { path: 'list', element: <UserList /> },
             { path: 'new', element: <UserCreate /> },
-            { path: '/:name/edit', element: <UserEdit /> },
+            { path: '/:id/edit', element: <UserEdit /> },
             { path: 'account', element: <UserAccount /> }
           ]
         },

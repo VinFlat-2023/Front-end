@@ -62,6 +62,12 @@ const slice = createSlice({
       state.userList = deleteUser;
     },
 
+    //DEACTIVE USER
+
+    // deactiveUser(state, action){
+
+    // },
+
     // GET FOLLOWERS
     getFollowersSuccess(state, action) {
       state.isLoading = false;
@@ -100,7 +106,8 @@ const slice = createSlice({
     // GET MANAGE USERS
     getUserListSuccess(state, action) {
       state.isLoading = false;
-      state.userList = action.payload;
+      state.userList = action.payload.userList;
+      state.total = action.payload.total;
     },
 
     // GET CARDS
@@ -148,7 +155,6 @@ export function getProfile() {
     }
   };
 }
-
 
 // ----------------------------------------------------------------------
 
@@ -208,12 +214,17 @@ export function getGallery() {
 
 // ----------------------------------------------------------------------
 
-export function getUserList() {
+export function getUserList(pageNumber, pageSize) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/employees');
-      dispatch(slice.actions.getUserListSuccess(response.data.data));
+      const response = await axios.get(`/employees?PageNumber=${pageNumber ?? 1}&PageSize=${pageSize ?? 5}`);
+      dispatch(
+        slice.actions.getUserListSuccess({
+          userList: response.data.data,
+          total: response.data.totalCount
+        })
+      );
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -292,19 +303,55 @@ export function getUsers() {
 
 //------------------------update-----------------------------------------
 
+export function changePassword( data) {
+  console.log(data)
+  const url = `/employees/change-password`;
+  return () => {
+    try {
+      console.log(url)
+      const response = axios.put(url, {
+        password: data.newPassword,
+        confirmPassword: data.confirmNewPassword
+      });
+      console.log("resp", response)
+      return response.status();
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+}
+
+export function changeUserStatus( data) {
+  //update api ...
+  console.log(data)
+  const url = `/employees/change-password`;
+  return () => {
+    try {
+      console.log(url)
+      const response = axios.put(url, {
+        password: data.newPassword,
+        confirmPassword: data.confirmNewPassword
+      });
+      console.log("resp", response)
+      return response.status();
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+}
+
 export function updateUserProfile(id, data, setErrors, resetForm, enqueueSnackbar, navigate) {
   const url = `/employees/${id}`;
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      
       const response = await axios.put(url, {
-        ...data, 
-        username: data.userName,
-        fullname: data.fullName,
+        fullname: data.fullname,
+        address: data.address,
+        email: data.email,
+        phone: data.phone
       });
-      console.log('ok', response);
-      dispatch(slice.actions.getUserListSuccess(response.data.data));
+      
       resetForm();
       enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
       navigate(PATH_DASHBOARD.user.list);
@@ -312,14 +359,12 @@ export function updateUserProfile(id, data, setErrors, resetForm, enqueueSnackba
       console.log('error', error);
       setErrors(error);
       dispatch(slice.actions.hasError(error));
-      enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
+      enqueueSnackbar(error.message, { variant: 'error' });
     }
   };
 }
 
 //------------------------create-----------------------------------------
-
-
 
 export function createNewEmployee(data, setErrors, resetForm, enqueueSnackbar, navigate) {
   const url = `/employees/register`;
@@ -327,8 +372,6 @@ export function createNewEmployee(data, setErrors, resetForm, enqueueSnackbar, n
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.post(url, data);
-      console.log('ok', response);
-      dispatch(slice.actions.getUserListSuccess(response.data.data));
       resetForm();
       enqueueSnackbar('Thêm thành viên thành công', { variant: 'success' });
       navigate(PATH_DASHBOARD.account.accounts);

@@ -26,7 +26,7 @@ const style = {
 // ----------------------------------------------------------------------
 
 export default function LisBuilding(props) {
-  const { data, total, sortValue, price, totalPages } = props;
+  const { data, total, sortValue, price, totalPages, handleChangePage } = props;
 
   let priceText = price / 1000000;
   let text = '';
@@ -54,7 +54,7 @@ export default function LisBuilding(props) {
         <Container maxWidth="lg">
           <Grid item xs={12} md={6}>
             <Block sx={style}>
-              <Pagination onChange={ } count={totalPages} shape="rounded" color="primary" />
+              <Pagination onChange={handleChangePage} count={totalPages} shape="rounded" color="primary" />
             </Block>
           </Grid>
         </Container>

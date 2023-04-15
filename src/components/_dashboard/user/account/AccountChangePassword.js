@@ -6,16 +6,20 @@ import { Stack, Card, TextField } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 // utils
 import fakeRequest from '../../../../utils/fakeRequest';
+import { changePassword } from 'src/redux/slices/user';
+import { useDispatch } from 'react-redux';
+import axios from '../../../../utils/axios';
 
 // ----------------------------------------------------------------------
 
 export default function AccountChangePassword() {
   const { enqueueSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
 
   const ChangePassWordSchema = Yup.object().shape({
-    oldPassword: Yup.string().required('Old Password is required'),
-    newPassword: Yup.string().min(6, 'Password must be at least 6 characters').required('New Password is required'),
-    confirmNewPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
+    oldPassword: Yup.string().required('Bắt buộc nhập mật khẩu cũ'),
+    newPassword: Yup.string().min(8, 'Mật khẩu phải tối thiểu 8 ký tự').required('Bắt buộc nhập mật khẩu mới'),
+    confirmNewPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Mật khẩu phải trùng khớp')
   });
 
   const formik = useFormik({
@@ -24,12 +28,28 @@ export default function AccountChangePassword() {
       newPassword: '',
       confirmNewPassword: ''
     },
-    validationSchema: ChangePassWordSchema,
-    onSubmit: async (values, { setSubmitting }) => {
-      await fakeRequest(500);
-      setSubmitting(false);
-      alert(JSON.stringify(values, null, 2));
-      enqueueSnackbar('Save success', { variant: 'success' });
+    //validationSchema: ChangePassWordSchema,
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      const url = `/employees/change-password`;
+      try {
+        console.log(url);
+        const response = await axios.put(url, {
+          password: values.newPassword,
+          confirmPassword: values.confirmNewPassword
+        });
+        console.log("res", response)
+        setSubmitting(false);
+        if (response.status) {
+          resetForm();
+          enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
+          //TODO update JWT
+        } else {
+          enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
+        }
+      } catch (error) {
+        setSubmitting(false);
+        enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
+      }
     }
   });
 
@@ -45,7 +65,7 @@ export default function AccountChangePassword() {
               fullWidth
               autoComplete="on"
               type="password"
-              label="Old Password"
+              label="Mật khẩu cũ"
               error={Boolean(touched.oldPassword && errors.oldPassword)}
               helperText={touched.oldPassword && errors.oldPassword}
             />
@@ -55,9 +75,9 @@ export default function AccountChangePassword() {
               fullWidth
               autoComplete="on"
               type="password"
-              label="New Password"
+              label="Mật khẩu mới"
               error={Boolean(touched.newPassword && errors.newPassword)}
-              helperText={(touched.newPassword && errors.newPassword) || 'Password must be minimum 6+'}
+              helperText={(touched.newPassword && errors.newPassword) || 'Mật khẩu phải tối thiểu 8 ký tự'}
             />
 
             <TextField
@@ -65,13 +85,13 @@ export default function AccountChangePassword() {
               fullWidth
               autoComplete="on"
               type="password"
-              label="Confirm New Password"
+              label="Xác nhận mật khẩu mới"
               error={Boolean(touched.confirmNewPassword && errors.confirmNewPassword)}
               helperText={touched.confirmNewPassword && errors.confirmNewPassword}
             />
 
             <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-              Save Changes
+              Cập nhật
             </LoadingButton>
           </Stack>
         </Form>

@@ -3,6 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../utils/axios';
 
+import { PATH_DASHBOARD } from 'src/routes/paths';
+
 // ----------------------------------------------------------------------
 
 const initialState = {
@@ -60,6 +62,12 @@ const slice = createSlice({
       state.userList = deleteUser;
     },
 
+    //DEACTIVE USER
+
+    // deactiveUser(state, action){
+
+    // },
+
     // GET FOLLOWERS
     getFollowersSuccess(state, action) {
       state.isLoading = false;
@@ -98,7 +106,8 @@ const slice = createSlice({
     // GET MANAGE USERS
     getUserListSuccess(state, action) {
       state.isLoading = false;
-      state.userList = action.payload;
+      state.userList = action.payload.userList;
+      state.total = action.payload.total;
     },
 
     // GET CARDS
@@ -139,8 +148,8 @@ export function getProfile() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/user/profile');
-      dispatch(slice.actions.getProfileSuccess(response.data.profile));
+      const response = await axios.get('/employees/profile');
+      dispatch(slice.actions.getProfileSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -205,12 +214,17 @@ export function getGallery() {
 
 // ----------------------------------------------------------------------
 
-export function getUserList() {
+export function getUserList(pageNumber, pageSize) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/user/manage-users');
-      dispatch(slice.actions.getUserListSuccess(response.data.users));
+      const response = await axios.get(`/employees?PageNumber=${pageNumber ?? 1}&PageSize=${pageSize ?? 5}`);
+      dispatch(
+        slice.actions.getUserListSuccess({
+          userList: response.data.data,
+          total: response.data.totalCount
+        })
+      );
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -280,9 +294,92 @@ export function getUsers() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/api/user/all');
-      dispatch(slice.actions.getUsersSuccess(response.data.users));
+      dispatch(slice.actions.getUsersSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+//------------------------update-----------------------------------------
+
+export function changePassword( data) {
+  console.log(data)
+  const url = `/employees/change-password`;
+  return () => {
+    try {
+      console.log(url)
+      const response = axios.put(url, {
+        password: data.newPassword,
+        confirmPassword: data.confirmNewPassword
+      });
+      console.log("resp", response)
+      return response.status();
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+}
+
+export function changeUserStatus( data) {
+  //update api ...
+  console.log(data)
+  const url = `/employees/change-password`;
+  return () => {
+    try {
+      console.log(url)
+      const response = axios.put(url, {
+        password: data.newPassword,
+        confirmPassword: data.confirmNewPassword
+      });
+      console.log("resp", response)
+      return response.status();
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+}
+
+export function updateUserProfile(id, data, setErrors, resetForm, enqueueSnackbar, navigate) {
+  const url = `/employees/${id}`;
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.put(url, {
+        fullname: data.fullname,
+        address: data.address,
+        email: data.email,
+        phone: data.phone
+      });
+      
+      resetForm();
+      enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
+      navigate(PATH_DASHBOARD.user.list);
+    } catch (error) {
+      console.log('error', error);
+      setErrors(error);
+      dispatch(slice.actions.hasError(error));
+      enqueueSnackbar(error.message, { variant: 'error' });
+    }
+  };
+}
+
+//------------------------create-----------------------------------------
+
+export function createNewEmployee(data, setErrors, resetForm, enqueueSnackbar, navigate) {
+  const url = `/employees/register`;
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post(url, data);
+      resetForm();
+      enqueueSnackbar('Thêm thành viên thành công', { variant: 'success' });
+      navigate(PATH_DASHBOARD.account.accounts);
+    } catch (error) {
+      console.log('error', error);
+      setErrors(error);
+      dispatch(slice.actions.hasError(error));
+      enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
     }
   };
 }

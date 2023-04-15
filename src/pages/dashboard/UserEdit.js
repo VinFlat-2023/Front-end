@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
-import { paramCase } from 'change-case';
+import { useEffect, useState } from 'react';
+import { paramCase, capitalCase } from 'change-case';
 import { useParams, useLocation } from 'react-router-dom';
 // material
-import { Container } from '@material-ui/core';
+import { Container, Tab, Box, Tabs, Stack } from '@material-ui/core';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getUserList } from '../../redux/slices/user';
@@ -14,35 +14,40 @@ import useSettings from '../../hooks/useSettings';
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import UserNewForm from '../../components/_dashboard/user/UserNewForm';
+import { getProfile } from '../../redux/slices/user';
 
 // ----------------------------------------------------------------------
 
-export default function UserCreate() {
+export default function UserEdit() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
-  const { pathname } = useLocation();
-  const { name } = useParams();
-  const { userList } = useSelector((state) => state.user);
-  const isEdit = pathname.includes('edit');
-  const currentUser = userList?.find((user) => paramCase(user.Username) === name);
-  
+  const { id } = useParams();
+  const { myProfile, userList } = useSelector((state) => state.user);
+  const [currentUser, setCurrentUser] = useState();
   useEffect(() => {
-    dispatch(getUserList());
+    setCurrentUser(id ? userList.find((user) => user.EmployeeId == id) : myProfile);
+  }, [myProfile]);
+
+
+  useEffect(() => {
+    dispatch(getProfile());
   }, [dispatch]);
 
   return (
-    <Page title={'Thêm thành viên mới'}>
+    <Page title="Chỉnh sửa tài khoản">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={'Thêm thành viên mới'}
+          heading="Chỉnh sửa tài khoản"
           links={[
             { name: 'Trang chủ', href: PATH_DASHBOARD.root },
             { name: 'Quản lý tài khoản', href: PATH_DASHBOARD.account.root },
-            { name: 'Thêm tài khoản' }
+            { name: 'Chỉnh sửa tài khoản' }
           ]}
         />
 
-        <UserNewForm isEdit={isEdit} currentUser={currentUser} />
+        <Stack spacing={5}>
+          <UserNewForm isEdit={true} currentUser={currentUser} />
+        </Stack>
       </Container>
     </Page>
   );

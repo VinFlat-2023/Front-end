@@ -5,7 +5,7 @@ function path(root, sublink) {
 }
 
 const ROOTS_AUTH = '/auth';
-const ROOTS_DASHBOARD = '/dashboard';
+const ROOTS_DASHBOARD = '/admin';
 const ROOTS_ADMIN = '/admin';
 const ROOTS_SUPERVISOR = '/supervisor';
 // export const HOME_PAGE = '/home';
@@ -21,6 +21,21 @@ export const PATH_AUTH = {
   resetPassword: path(ROOTS_AUTH, '/reset-password'),
   verify: path(ROOTS_AUTH, '/verify')
 };
+
+export const PATH_ADMIN = {
+  root: ROOTS_ADMIN,
+  home: {
+    dasboard: path(ROOTS_ADMIN, '/home/dashboard'),
+    analysis: path(ROOTS_ADMIN, '/home/analysis')
+  },
+}
+export const PATH_SUPERVISOR = {
+  root: ROOTS_SUPERVISOR,
+  dasboard: {
+    home: path(ROOTS_SUPERVISOR, '/home/dashboard'),
+    analysis: path(ROOTS_SUPERVISOR, '/home/analysis')
+  },
+}
 
 export const PATH_PAGE = {
   comingSoon: '/coming-soon',

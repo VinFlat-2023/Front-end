@@ -1,5 +1,5 @@
 // routes
-import { PATH_DASHBOARD, PATH_PAGE } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_PAGE, PATH_ADMIN } from '../../routes/paths';
 // components
 import SvgIconStyle from '../../components/SvgIconStyle';
 
@@ -20,8 +20,7 @@ const ICONS = {
   blog: getIcon('ic_blog'),
   calendar: getIcon('ic_calendar'),
   admin: getIcon('ic_admin'),
-  person: getIcon('ic_person'),
-
+  person: getIcon('ic_person')
 };
 
 export const adminSlidebar = [
@@ -29,12 +28,12 @@ export const adminSlidebar = [
     items: [
       {
         title: 'Trang chủ',
-        path: PATH_DASHBOARD.general.home,
+        path: PATH_ADMIN.home.dasboard,
         icon: ICONS.home,
         children: [
-          { title: 'App', path: PATH_DASHBOARD.general.home },
-          { title: 'Analysis', path: PATH_DASHBOARD.general.analysis }
-        ],
+          { title: 'App', path: PATH_ADMIN.home.dasboard },
+          { title: 'Analysis', path: PATH_ADMIN.home.analysis }
+        ]
       },
       {
         title: 'Quản lý tài khoản',
@@ -43,16 +42,14 @@ export const adminSlidebar = [
         children: [
           { title: 'Danh sách tài khoản', path: PATH_DASHBOARD.account.accounts },
           { title: 'Thêm tài khoản', path: PATH_DASHBOARD.account.create }
-        ],
+        ]
       },
       {
         title: 'Hồ sơ cá nhân',
         path: PATH_DASHBOARD.admin_profile.home,
         icon: ICONS.person,
-        children: [
-          { title: 'Hồ sơ cá nhân', path: PATH_DASHBOARD.admin_profile.home },
-        ],
-      },
+        children: [{ title: 'Hồ sơ cá nhân', path: PATH_DASHBOARD.admin_profile.home }]
+      }
     ]
   }
 ];
@@ -67,7 +64,7 @@ export const supervisorSlidebar = [
         children: [
           { title: 'App', path: PATH_DASHBOARD.general.home },
           { title: 'Analysis', path: PATH_DASHBOARD.general.analysis }
-        ],
+        ]
       },
       {
         title: 'Manager',
@@ -78,12 +75,12 @@ export const supervisorSlidebar = [
           { title: 'Thông tin tài khoản', path: PATH_DASHBOARD.manage.profile },
           { title: 'Tạo tài khoản', path: PATH_DASHBOARD.manage.create },
           { title: 'Chỉnh sửa tài khoản', path: PATH_DASHBOARD.manage.edit }
-        ],
+        ]
       },
       {
         title: 'Toà nhà KTX',
         path: PATH_DASHBOARD.dormitory.root,
-        icon: ICONS.home,
+        icon: ICONS.home
       },
       {
         title: 'Tài chính',
@@ -94,7 +91,7 @@ export const supervisorSlidebar = [
           { title: 'Phiếu thu', path: PATH_DASHBOARD.finances.income },
           { title: 'Phiếu chi', path: PATH_DASHBOARD.finances.expense },
           { title: 'Thống kê kinh doanh', path: PATH_DASHBOARD.finances.statistic }
-        ],
+        ]
       },
       {
         title: 'Hợp đồng thuê',
@@ -103,7 +100,7 @@ export const supervisorSlidebar = [
         children: [
           { title: 'Danh sách hợp đồng thuê', path: PATH_DASHBOARD.contract.contracts },
           { title: 'Danh sách khách thuê', path: PATH_DASHBOARD.contract.renters }
-        ],
+        ]
       },
       {
         title: 'Căn hộ',
@@ -112,13 +109,13 @@ export const supervisorSlidebar = [
         children: [
           { title: 'Danh sách căn hộ', path: PATH_DASHBOARD.flat.flats },
           { title: 'Danh sách tòa nhà', path: PATH_DASHBOARD.flat.buildings }
-        ],
+        ]
       },
       {
         title: 'Điện nước',
         path: PATH_DASHBOARD.general.ecommerce,
         icon: ICONS.flash,
-        children: [{ title: 'Danh sách điện nước', path: PATH_DASHBOARD.service.services }],
+        children: [{ title: 'Danh sách điện nước', path: PATH_DASHBOARD.service.services }]
       },
       {
         title: 'Báo cáo',
@@ -127,9 +124,8 @@ export const supervisorSlidebar = [
         children: [
           { title: 'Báo cáo tổng hợp tình trạng thuê', path: PATH_DASHBOARD.report.status },
           { title: 'Báo cáo điện nước', path: PATH_DASHBOARD.report.services }
-        ],
+        ]
       }
     ]
   }
 ];
-

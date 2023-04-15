@@ -67,9 +67,9 @@ export default function Router() {
       ]
     },
 
-    // Dashboard Routes
+    // Admin Routes
     {
-      path: 'dashboard',
+      path: 'admin',
       element: (
         <AuthGuard>
           <RoleBasedGuard accessibleRoles="Admin">
@@ -78,134 +78,134 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        { path: '/', element: <Navigate to="/dashboard/general/home" replace /> },
+        // { path: '/', element: <Navigate to="/admin/home/dashboard" replace /> },
         {
-          path: 'general',
+          path: 'home',
           children: [
-            { path: '/home', element: <HomePage /> },
+            { path: '/dasboard', element: <HomePage /> },
             { path: '/analysis', element: <GeneralEcommerce /> }
           ]
         },
-        {
-          path: 'account',
-          children: [
-            { path: '/', element: <Navigate to="/dashboard/account/accounts" replace /> },
-            { path: '/accounts', element: <UserList /> },
-            { path: '/create', element: <UserCreate /> }
-          ]
-        },
-        {
-          path: 'admin_profile',
-          children: [
-            { path: '/home', element: <UserEdit /> },
-          ]
-        },
-        {
-          path: 'manage',
-          children: [
-            { path: '/users', element: <GeneralApp /> },
-            { path: '/profile', element: <GeneralEcommerce /> },
-            { path: '/create', element: <GeneralEcommerce /> },
-            { path: '/edit', element: <GeneralEcommerce /> }
-          ]
-        },
-        {
-          path: 'dormitory',
-          element: <Dormitory />
-        },
-        {
-          path: 'finances',
-          children: [
-            { path: '/invoices', element: <GeneralApp /> },
-            { path: '/income', element: <GeneralEcommerce /> },
-            { path: '/expense', element: <GeneralEcommerce /> },
-            { path: '/statistic', element: <GeneralEcommerce /> }
-          ]
-        },
-        {
-          path: 'contract',
-          children: [
-            { path: '/contracts', element: <GeneralApp /> },
-            { path: '/renters', element: <GeneralEcommerce /> }
-          ]
-        },
-        {
-          path: 'flat',
-          children: [
-            { path: '/flats', element: <GeneralApp /> },
-            { path: '/buildings', element: <GeneralEcommerce /> }
-          ]
-        },
-        {
-          path: 'service',
-          children: [{ path: '/services', element: <GeneralApp /> }]
-        },
-        {
-          path: 'report',
-          children: [
-            { path: '/status', element: <GeneralApp /> },
-            { path: '/services', element: <GeneralApp /> }
-          ]
-        },
+        // {
+        //   path: 'account',
+        //   children: [
+        //     { path: '/', element: <Navigate to="" replace /> },
+        //     { path: '/accounts', element: <UserList /> },
+        //     { path: '/create', element: <UserCreate /> }
+        //   ]
+        // },
+        // {
+        //   path: 'admin_profile',
+        //   children: [
+        //     { path: '/home', element: <UserEdit /> },
+        //   ]
+        // },
+        // {
+        //   path: 'manage',
+        //   children: [
+        //     { path: '/users', element: <GeneralApp /> },
+        //     { path: '/profile', element: <GeneralEcommerce /> },
+        //     { path: '/create', element: <GeneralEcommerce /> },
+        //     { path: '/edit', element: <GeneralEcommerce /> }
+        //   ]
+        // },
+        // {
+        //   path: 'dormitory',
+        //   element: <Dormitory />
+        // },
+        // {
+        //   path: 'finances',
+        //   children: [
+        //     { path: '/invoices', element: <GeneralApp /> },
+        //     { path: '/income', element: <GeneralEcommerce /> },
+        //     { path: '/expense', element: <GeneralEcommerce /> },
+        //     { path: '/statistic', element: <GeneralEcommerce /> }
+        //   ]
+        // },
+        // {
+        //   path: 'contract',
+        //   children: [
+        //     { path: '/contracts', element: <GeneralApp /> },
+        //     { path: '/renters', element: <GeneralEcommerce /> }
+        //   ]
+        // },
+        // {
+        //   path: 'flat',
+        //   children: [
+        //     { path: '/flats', element: <GeneralApp /> },
+        //     { path: '/buildings', element: <GeneralEcommerce /> }
+        //   ]
+        // },
+        // {
+        //   path: 'service',
+        //   children: [{ path: '/services', element: <GeneralApp /> }]
+        // },
+        // {
+        //   path: 'report',
+        //   children: [
+        //     { path: '/status', element: <GeneralApp /> },
+        //     { path: '/services', element: <GeneralApp /> }
+        //   ]
+        // },
 
-        {
-          path: 'analytics',
-          element: <GeneralAnalytics />
-        },
-        {
-          path: 'e-commerce',
-          children: [
-            { path: '/', element: <Navigate to="/dashboard/e-commerce/shop" replace /> },
-            { path: 'shop', element: <EcommerceShop /> },
-            { path: 'product/:name', element: <EcommerceProductDetails /> },
-            { path: 'list', element: <EcommerceProductList /> },
-            { path: 'product/new', element: <EcommerceProductCreate /> },
-            { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
-            { path: 'checkout', element: <EcommerceCheckout /> },
-            { path: 'invoice', element: <EcommerceInvoice /> }
-          ]
-        },
-        {
-          path: 'user',
-          children: [
-            { path: '/', element: <Navigate to="/dashboard/user/profile" replace /> },
-            { path: 'profile', element: <UserProfile /> },
-            { path: 'cards', element: <UserCards /> },
-            { path: 'list', element: <UserList /> },
-            { path: 'new', element: <UserCreate /> },
-            { path: '/:id/edit', element: <UserEdit /> },
-            { path: 'account', element: <UserAccount /> }
-          ]
-        },
-        {
-          path: 'blog',
-          children: [
-            { path: '/', element: <Navigate to="/dashboard/blog/posts" replace /> },
-            { path: 'posts', element: <BlogPosts /> },
-            { path: 'post/:title', element: <BlogPost /> },
-            { path: 'new-post', element: <BlogNewPost /> }
-          ]
-        },
-        {
-          path: 'mail',
-          children: [
-            { path: '/', element: <Navigate to="/dashboard/mail/all" replace /> },
-            { path: 'label/:customLabel', element: <Mail /> },
-            { path: 'label/:customLabel/:mailId', element: <Mail /> },
-            { path: ':systemLabel', element: <Mail /> },
-            { path: ':systemLabel/:mailId', element: <Mail /> }
-          ]
-        },
-        {
-          path: 'chat',
-          children: [
-            { path: '/', element: <Chat /> },
-            { path: 'new', element: <Chat /> },
-            { path: ':conversationKey', element: <Chat /> }
-          ]
-        },
-        { path: 'calendar', element: <Calendar /> },
-        { path: 'kanban', element: <Kanban /> }
+        // {
+        //   path: 'analytics',
+        //   element: <GeneralAnalytics />
+        // },
+        // {
+        //   path: 'e-commerce',
+        //   children: [
+        //     { path: '/', element: <Navigate to="/dashboard/e-commerce/shop" replace /> },
+        //     { path: 'shop', element: <EcommerceShop /> },
+        //     { path: 'product/:name', element: <EcommerceProductDetails /> },
+        //     { path: 'list', element: <EcommerceProductList /> },
+        //     { path: 'product/new', element: <EcommerceProductCreate /> },
+        //     { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
+        //     { path: 'checkout', element: <EcommerceCheckout /> },
+        //     { path: 'invoice', element: <EcommerceInvoice /> }
+        //   ]
+        // },
+        // {
+        //   path: 'user',
+        //   children: [
+        //     { path: '/', element: <Navigate to="/dashboard/user/profile" replace /> },
+        //     { path: 'profile', element: <UserProfile /> },
+        //     { path: 'cards', element: <UserCards /> },
+        //     { path: 'list', element: <UserList /> },
+        //     { path: 'new', element: <UserCreate /> },
+        //     { path: '/:id/edit', element: <UserEdit /> },
+        //     { path: 'account', element: <UserAccount /> }
+        //   ]
+        // },
+        // {
+        //   path: 'blog',
+        //   children: [
+        //     { path: '/', element: <Navigate to="/dashboard/blog/posts" replace /> },
+        //     { path: 'posts', element: <BlogPosts /> },
+        //     { path: 'post/:title', element: <BlogPost /> },
+        //     { path: 'new-post', element: <BlogNewPost /> }
+        //   ]
+        // },
+        // {
+        //   path: 'mail',
+        //   children: [
+        //     { path: '/', element: <Navigate to="/dashboard/mail/all" replace /> },
+        //     { path: 'label/:customLabel', element: <Mail /> },
+        //     { path: 'label/:customLabel/:mailId', element: <Mail /> },
+        //     { path: ':systemLabel', element: <Mail /> },
+        //     { path: ':systemLabel/:mailId', element: <Mail /> }
+        //   ]
+        // },
+        // {
+        //   path: 'chat',
+        //   children: [
+        //     { path: '/', element: <Chat /> },
+        //     { path: 'new', element: <Chat /> },
+        //     { path: ':conversationKey', element: <Chat /> }
+        //   ]
+        // },
+        // { path: 'calendar', element: <Calendar /> },
+        // { path: 'kanban', element: <Kanban /> }
       ]
     },
 
@@ -220,7 +220,7 @@ export default function Router() {
         { path: 'payment', element: <Payment /> },
         { path: '500', element: <Page500 /> },
         { path: '404', element: <NotFound /> },
-        { path: '*', element: <Navigate to="/404" replace /> }
+        // { path: '*', element: <Navigate to="/404" replace /> }
       ]
     },
     {

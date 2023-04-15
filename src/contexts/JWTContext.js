@@ -88,7 +88,7 @@ function AuthProvider({ children }) {
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
 
-          const response = await axios.get('/accounts/profile', {
+          const response = await axios.get('/employees/profile', {
             headers: {
               Authorization: 'Bearer ' + accessToken
             }
@@ -132,7 +132,7 @@ function AuthProvider({ children }) {
       password
     });
     const { id, token } = response.data.data;
-
+    window.localStorage.setItem('roleName', response.data.data.roleName);
     setSession(token);
     window.localStorage.setItem('userId', id);
     const role = await axios.get('/employees/profile');

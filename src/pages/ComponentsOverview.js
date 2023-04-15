@@ -28,6 +28,7 @@ export default function ComponentsOverview(props) {
   const [sortValue, setSortValue] = useState(area);
   const [price, setPrice] = useState(0);
   const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   const handleChangePrice = (value) => {
     // console.log('change: ', value.target.value);
@@ -41,11 +42,13 @@ export default function ComponentsOverview(props) {
       const data = await axios.get(`buildings`, {
         params: {
           AreaName: sortValue,
-          AveragePrice: price
+          AveragePrice: price,
+          PageSize: 12,
         }
       });
       setListBuilding(data.data.data);
       setTotal(data.data.totalCount);
+      setTotalPages(data.data.totalPage);
     } catch (error) {
       if (error.status === 'Not Found') {
         setListBuilding([]);
@@ -67,7 +70,7 @@ export default function ComponentsOverview(props) {
         setSortValue={setSortValue}
       />
       <Container maxWidth="lg">
-        <LisBuilding data={listBuilding} total={total} sortValue={sortValue} price={price} />
+        <LisBuilding data={listBuilding} total={total} sortValue={sortValue} price={price} totalPages={totalPages} />
       </Container>
     </RootStyle>
   );

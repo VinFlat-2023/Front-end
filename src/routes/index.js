@@ -3,6 +3,7 @@ import { Navigate, useRoutes, useLocation } from 'react-router-dom';
 // layouts
 import MainLayout from '../layouts/main';
 import DashboardLayout from '../layouts/dashboard';
+import AdminLayout from '../layouts/admin';
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 // guards
 import GuestGuard from '../guards/GuestGuard';
@@ -10,6 +11,7 @@ import AuthGuard from '../guards/AuthGuard';
 import RoleBasedGuard from '../guards/RoleBasedGuard';
 // components
 import LoadingScreen from '../components/LoadingScreen';
+import localStorage from 'redux-persist/es/storage';
 
 // ----------------------------------------------------------------------
 
@@ -73,33 +75,33 @@ export default function Router() {
       element: (
         <AuthGuard>
           <RoleBasedGuard accessibleRoles="Admin">
-            <DashboardLayout />
+            <AdminLayout />
           </RoleBasedGuard>
         </AuthGuard>
       ),
       children: [
-        // { path: '/', element: <Navigate to="/admin/home/dashboard" replace /> },
+        { path: '/', element: <Navigate to="/admin/home/dashboard" replace /> },
         {
           path: 'home',
           children: [
-            { path: '/dasboard', element: <HomePage /> },
+            { path: '/dashboard', element: <HomePage /> },
             { path: '/analysis', element: <GeneralEcommerce /> }
           ]
         },
-        // {
-        //   path: 'account',
-        //   children: [
-        //     { path: '/', element: <Navigate to="" replace /> },
-        //     { path: '/accounts', element: <UserList /> },
-        //     { path: '/create', element: <UserCreate /> }
-        //   ]
-        // },
-        // {
-        //   path: 'admin_profile',
-        //   children: [
-        //     { path: '/home', element: <UserEdit /> },
-        //   ]
-        // },
+        {
+          path: 'account',
+          children: [
+            { path: '/', element: <Navigate to="" replace /> },
+            { path: '/accounts', element: <UserList /> },
+            { path: '/create', element: <UserCreate /> }
+          ]
+        },
+        {
+          path: 'admin_profile',
+          children: [
+            { path: '/home', element: <UserEdit /> },
+          ]
+        },
         // {
         //   path: 'manage',
         //   children: [

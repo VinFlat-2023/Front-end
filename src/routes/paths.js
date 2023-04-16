@@ -5,10 +5,9 @@ function path(root, sublink) {
 }
 
 const ROOTS_AUTH = '/auth';
-const ROOTS_DASHBOARD = '/admin';
+const ROOTS_DASHBOARD = '/dashboard';
 const ROOTS_ADMIN = '/admin';
 const ROOTS_SUPERVISOR = '/supervisor';
-// export const HOME_PAGE = '/home';
 
 // ----------------------------------------------------------------------
 
@@ -22,19 +21,31 @@ export const PATH_AUTH = {
   verify: path(ROOTS_AUTH, '/verify')
 };
 
+// ADMIN PATH
 export const PATH_ADMIN = {
   root: ROOTS_ADMIN,
   home: {
-    dasboard: path(ROOTS_ADMIN, '/home/dashboard'),
+    dashboard: path(ROOTS_ADMIN, '/home/dashboard'),
     analysis: path(ROOTS_ADMIN, '/home/analysis')
   },
+  account: {
+    root: path(ROOTS_ADMIN, '/account'),
+    accounts: path(ROOTS_ADMIN, '/account/accounts'),
+    create: path(ROOTS_ADMIN, '/account/create')
+  },
+  admin_profile: {
+    home: path(ROOTS_ADMIN, '/admin_profile/home'),
+  },
 }
+
+// SUPERVISOR PATH
 export const PATH_SUPERVISOR = {
   root: ROOTS_SUPERVISOR,
   dasboard: {
     home: path(ROOTS_SUPERVISOR, '/home/dashboard'),
     analysis: path(ROOTS_SUPERVISOR, '/home/analysis')
   },
+  
 }
 
 export const PATH_PAGE = {

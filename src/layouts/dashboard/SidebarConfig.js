@@ -23,37 +23,39 @@ const ICONS = {
   person: getIcon('ic_person')
 };
 
+// ADMIN SIDEBAR
 export const adminSlidebar = [
   {
     items: [
       {
         title: 'Trang chủ',
-        path: PATH_ADMIN.home.dasboard,
+        path: PATH_ADMIN.home.dashboard,
         icon: ICONS.home,
         children: [
-          { title: 'App', path: PATH_ADMIN.home.dasboard },
+          { title: 'App', path: PATH_ADMIN.home.dashboard },
           { title: 'Analysis', path: PATH_ADMIN.home.analysis }
         ]
       },
       {
         title: 'Quản lý tài khoản',
-        path: PATH_DASHBOARD.account.accounts,
+        path: PATH_ADMIN.account.accounts,
         icon: ICONS.user,
         children: [
-          { title: 'Danh sách tài khoản', path: PATH_DASHBOARD.account.accounts },
-          { title: 'Thêm tài khoản', path: PATH_DASHBOARD.account.create }
+          { title: 'Danh sách tài khoản', path: PATH_ADMIN.account.accounts },
+          { title: 'Thêm tài khoản', path: PATH_ADMIN.account.create }
         ]
       },
       {
         title: 'Hồ sơ cá nhân',
-        path: PATH_DASHBOARD.admin_profile.home,
+        path: PATH_ADMIN.admin_profile.home,
         icon: ICONS.person,
-        children: [{ title: 'Hồ sơ cá nhân', path: PATH_DASHBOARD.admin_profile.home }]
+        children: [{ title: 'Hồ sơ cá nhân', path: PATH_ADMIN.admin_profile.home }]
       }
     ]
   }
 ];
 
+// SUPERVISOR SIDEBAR
 export const supervisorSlidebar = [
   {
     items: [

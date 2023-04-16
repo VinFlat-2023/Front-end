@@ -17,6 +17,7 @@ const useCurrentRole = () => {
 export default function RoleBasedGuard({ accessibleRoles, children }) {
   const currentRole = useCurrentRole();
   console.log('current role', currentRole);
+  console.log('accessibleRoles', accessibleRoles);
   if (accessibleRoles !== currentRole) {
     return (
       <Container>

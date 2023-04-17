@@ -46,11 +46,10 @@ const handlers = {
       user
     };
   },
-  LOGIN: (state) => ({
-    ...state,
-    isAuthenticated: true,
-    user: profile
-  }),
+  LOGIN: (state, action) => {
+    const { user } = action.payload;
+    return { ...state, isAuthenticated: true, user: user };
+  },
   LOGOUT: (state) => ({
     ...state,
     isAuthenticated: false,
@@ -135,9 +134,13 @@ function AuthProvider({ children }) {
     window.localStorage.setItem('roleName', response.data.data.roleName);
     setSession(token);
     window.localStorage.setItem('userId', id);
-    // const role = await axios.get('/employees/profile');
+    const loggedUser = await axios.get('/employees/profile');
+    console.log('logged user', loggedUser);
     dispatch({
-      type: 'LOGIN'
+      type: 'LOGIN',
+      payload: {
+        user: loggedUser.data.data
+      }
     });
   };
 

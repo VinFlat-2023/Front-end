@@ -1,5 +1,5 @@
 // routes
-import { PATH_DASHBOARD, PATH_PAGE, PATH_ADMIN } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_PAGE, PATH_ADMIN, PATH_SUPERVISOR } from '../../routes/paths';
 // components
 import SvgIconStyle from '../../components/SvgIconStyle';
 
@@ -61,11 +61,11 @@ export const supervisorSlidebar = [
     items: [
       {
         title: 'Trang chủ',
-        path: PATH_DASHBOARD.general.home,
+        path: PATH_SUPERVISOR.dasboard.home,
         icon: ICONS.home,
         children: [
-          { title: 'App', path: PATH_DASHBOARD.general.home },
-          { title: 'Analysis', path: PATH_DASHBOARD.general.analysis }
+          { title: 'App', path: PATH_SUPERVISOR.dasboard.home },
+          { title: 'Analysis', path: PATH_SUPERVISOR.dasboard.analysis }
         ]
       },
       {

@@ -8,7 +8,7 @@ import { Box, Link, Stack, Button, Drawer, Tooltip, Typography, CardActionArea }
 import useAuth from '../../hooks/useAuth';
 import useCollapseDrawer from '../../hooks/useCollapseDrawer';
 // routes
-import { PATH_ADMIN, PATH_DOCS } from '../../routes/paths';
+import { PATH_ADMIN, PATH_DOCS, PATH_SUPERVISOR } from '../../routes/paths';
 // components
 import Logo from '../../components/Logo';
 import MyAvatar from '../../components/MyAvatar';
@@ -18,7 +18,7 @@ import { MHidden } from '../../components/@material-extend';
 //
 
 import { DocIllustration } from '../../assets';
-import { adminSlidebar } from '../dashboard/SidebarConfig';
+import { supervisorSlidebar } from '../dashboard/SidebarConfig';
 import axios from 'axios';
 
 // ----------------------------------------------------------------------
@@ -88,16 +88,16 @@ function IconCollapse({ onToggleCollapse, collapseClick }) {
   );
 }
 
-AdminSidebar.propTypes = {
+SupervisorSidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
   role: PropTypes.string,
   onCloseSidebar: PropTypes.func
 };
 
-export default function AdminSidebar({ isOpenSidebar, onCloseSidebar }) {
+export default function SupervisorSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
   const user = useAuth();
-  console.log(' bar', user);
+  console.log(' user supervisor', user);
   const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
     useCollapseDrawer();
 
@@ -143,7 +143,7 @@ export default function AdminSidebar({ isOpenSidebar, onCloseSidebar }) {
         {isCollapse ? (
           <MyAvatar sx={{ mx: 'auto', mb: 2 }} />
         ) : (
-          <Link underline="none" component={RouterLink} to={PATH_ADMIN.admin_profile.home}>
+          <Link underline="none" component={RouterLink} to={PATH_SUPERVISOR.dasboard.home}>
             <AccountStyle>
               <MyAvatar />
               <Box sx={{ ml: 2 }}>
@@ -159,7 +159,7 @@ export default function AdminSidebar({ isOpenSidebar, onCloseSidebar }) {
         )}
       </Stack>
 
-      <NavSection navConfig={adminSlidebar} isShow={!isCollapse} />
+      <NavSection navConfig={supervisorSlidebar} isShow={!isCollapse} />
 
       <Box sx={{ flexGrow: 1 }} />
     </Scrollbar>

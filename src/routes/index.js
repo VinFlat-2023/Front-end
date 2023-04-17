@@ -4,6 +4,7 @@ import { Navigate, useRoutes, useLocation } from 'react-router-dom';
 import MainLayout from '../layouts/main';
 import DashboardLayout from '../layouts/dashboard';
 import AdminLayout from '../layouts/admin';
+import SupervisorLayout from '../layouts/supervisor';
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 // guards
 import GuestGuard from '../guards/GuestGuard';
@@ -84,7 +85,7 @@ export default function Router() {
         {
           path: 'home',
           children: [
-            { path: '/dashboard', element: <HomePage /> },
+            { path: '/dashboard', element: <AdminDashboard /> },
             { path: '/analysis', element: <GeneralEcommerce /> }
           ]
         },
@@ -98,10 +99,8 @@ export default function Router() {
         },
         {
           path: 'admin_profile',
-          children: [
-            { path: '/home', element: <UserEdit /> },
-          ]
-        },
+          children: [{ path: '/home', element: <UserEdit /> }]
+        }
         // {
         //   path: 'manage',
         //   children: [
@@ -211,6 +210,28 @@ export default function Router() {
       ]
     },
 
+    // Supervisor
+    {
+      path: 'supervisor',
+      element: (
+        <AuthGuard>
+          <RoleBasedGuard accessibleRoles="Supervisor">
+            <SupervisorLayout />
+          </RoleBasedGuard>
+        </AuthGuard>
+      ),
+      children: [
+        { path: '/', element: <Navigate to="/supervisor/home/dashboard" replace /> },
+        {
+          path: 'home',
+          children: [
+            { path: '/dashboard', element: <SupervisorDashboard /> },
+            { path: '/analysis', element: <GeneralEcommerce /> }
+          ]
+        }
+      ]
+    },
+
     // Main Routes
     {
       path: '*',
@@ -221,7 +242,7 @@ export default function Router() {
         { path: 'pricing', element: <Pricing /> },
         { path: 'payment', element: <Payment /> },
         { path: '500', element: <Page500 /> },
-        { path: '404', element: <NotFound /> },
+        { path: '404', element: <NotFound /> }
         // { path: '*', element: <Navigate to="/404" replace /> }
       ]
     },
@@ -301,6 +322,12 @@ const Login = Loadable(lazy(() => import('../pages/authentication/Login')));
 const Register = Loadable(lazy(() => import('../pages/authentication/Register')));
 const ResetPassword = Loadable(lazy(() => import('../pages/authentication/ResetPassword')));
 const VerifyCode = Loadable(lazy(() => import('../pages/authentication/VerifyCode')));
+
+// Admin
+const AdminDashboard = Loadable(lazy(() => import('../pages/feature/admin/AdminDashboardPage')));
+
+// Supervisor
+const SupervisorDashboard = Loadable(lazy(() => import('../pages/feature/supervisor/SupervisorDashboard')));
 // Dashboard
 const HomePage = Loadable(lazy(() => import('../pages/feature/home/HomePage')));
 const Dormitory = Loadable(lazy(() => import('../pages/dashboard/Dormitory')));

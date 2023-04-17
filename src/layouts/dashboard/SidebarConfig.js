@@ -70,13 +70,13 @@ export const supervisorSlidebar = [
       },
       {
         title: 'Manager',
-        path: PATH_DASHBOARD.general.finances,
+        path: PATH_SUPERVISOR.manager.userList,
         icon: ICONS.dashboard,
         children: [
-          { title: 'Danh sách người dùng', path: PATH_DASHBOARD.manage.users },
-          { title: 'Thông tin tài khoản', path: PATH_DASHBOARD.manage.profile },
-          { title: 'Tạo tài khoản', path: PATH_DASHBOARD.manage.create },
-          { title: 'Chỉnh sửa tài khoản', path: PATH_DASHBOARD.manage.edit }
+          { title: 'Danh sách người dùng', path: PATH_SUPERVISOR.manager.userList },
+          { title: 'Thông tin tài khoản', path: PATH_SUPERVISOR.manager.userProfile },
+          { title: 'Tạo tài khoản', path: PATH_SUPERVISOR.manager.createUser },
+          { title: 'Chỉnh sửa tài khoản', path: PATH_SUPERVISOR.manager.updateUser }
         ]
       },
       {

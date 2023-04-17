@@ -86,20 +86,20 @@ export default function Router() {
           path: 'home',
           children: [
             { path: '/dashboard', element: <AdminDashboard /> },
-            { path: '/analysis', element: <GeneralEcommerce /> }
+            { path: '/analysis', element: <AdminAnalysisPage /> }
           ]
         },
         {
           path: 'account',
           children: [
             { path: '/', element: <Navigate to="" replace /> },
-            { path: '/accounts', element: <UserList /> },
-            { path: '/create', element: <UserCreate /> }
+            { path: '/accounts', element: <AdminUserListPage /> },
+            { path: '/create', element: <AdminCreateUserPage /> }
           ]
         },
         {
           path: 'admin_profile',
-          children: [{ path: '/home', element: <UserEdit /> }]
+          children: [{ path: '/home', element: <AdminProfilePage /> }]
         }
         // {
         //   path: 'manage',
@@ -228,6 +228,13 @@ export default function Router() {
             { path: '/dashboard', element: <SupervisorDashboard /> },
             { path: '/analysis', element: <GeneralEcommerce /> }
           ]
+        },
+        {
+          path: 'manage',
+          children: [
+            { path: '/users-list', element:  <UserListPage /> },
+            { path: '/users-profile', element: <GeneralEcommerce /> }
+          ]
         }
       ]
     },
@@ -242,8 +249,8 @@ export default function Router() {
         { path: 'pricing', element: <Pricing /> },
         { path: 'payment', element: <Payment /> },
         { path: '500', element: <Page500 /> },
-        { path: '404', element: <NotFound /> }
-        // { path: '*', element: <Navigate to="/404" replace /> }
+        { path: '404', element: <NotFound /> },
+        { path: '*', element: <Navigate to="/404" replace /> }
       ]
     },
     {
@@ -325,11 +332,16 @@ const VerifyCode = Loadable(lazy(() => import('../pages/authentication/VerifyCod
 
 // Admin
 const AdminDashboard = Loadable(lazy(() => import('../pages/feature/admin/AdminDashboardPage')));
+const AdminAnalysisPage = Loadable(lazy(() => import('../pages/feature/admin/AdminAnalysisPage.jsx')));
+const AdminUserListPage = Loadable(lazy(() => import('../pages/feature/admin/AdminUserListPage')));
+const AdminCreateUserPage = Loadable(lazy(() => import('../pages/feature/admin/AdminCreateUserPage')));
+const AdminProfilePage = Loadable(lazy(() => import('../pages/feature/admin/AdminProfilePage')));
 
 // Supervisor
 const SupervisorDashboard = Loadable(lazy(() => import('../pages/feature/supervisor/SupervisorDashboard')));
+const UserListPage = Loadable(lazy(() => import('../pages/feature/supervisor/UserList')));
+
 // Dashboard
-const HomePage = Loadable(lazy(() => import('../pages/feature/home/HomePage')));
 const Dormitory = Loadable(lazy(() => import('../pages/dashboard/Dormitory')));
 const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
 const GeneralEcommerce = Loadable(lazy(() => import('../pages/dashboard/GeneralEcommerce')));

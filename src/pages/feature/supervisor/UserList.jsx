@@ -23,12 +23,12 @@ import {
 
 // ----------------------------------------------------------------------
 
-export default function SupervisorDashboardPage() {
+export default function UserListPage() {
   const { themeStretch } = useSettings();
   const { user } = useAuth();
 
   return (
-    <Page title="VinFlat | Supervisor - Trang chủ">
+    <Page title="VinFlat | Danh sách người dùng">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
 

@@ -34,9 +34,9 @@ export const PATH_ADMIN = {
     create: path(ROOTS_ADMIN, '/account/create')
   },
   admin_profile: {
-    home: path(ROOTS_ADMIN, '/admin_profile/home'),
-  },
-}
+    home: path(ROOTS_ADMIN, '/admin_profile/home')
+  }
+};
 
 // SUPERVISOR PATH
 export const PATH_SUPERVISOR = {
@@ -45,8 +45,13 @@ export const PATH_SUPERVISOR = {
     home: path(ROOTS_SUPERVISOR, '/home/dashboard'),
     analysis: path(ROOTS_SUPERVISOR, '/home/analysis')
   },
-  
-}
+  manager: {
+    userList: path(ROOTS_SUPERVISOR, '/manage/users-list'),
+    userProfile: path(ROOTS_SUPERVISOR, '/manage/users-profile'),
+    createUser: path(ROOTS_SUPERVISOR, '/manage/users-create'),
+    updateUser: path(ROOTS_SUPERVISOR, '/manage/users-update')
+  }
+};
 
 export const PATH_PAGE = {
   comingSoon: '/coming-soon',
@@ -73,7 +78,7 @@ export const PATH_DASHBOARD = {
     create: path(ROOTS_DASHBOARD, '/account/create')
   },
   admin_profile: {
-    home: path(ROOTS_DASHBOARD, '/admin_profile/home'),
+    home: path(ROOTS_DASHBOARD, '/admin_profile/home')
   },
   manage: {
     users: path(ROOTS_DASHBOARD, '/manage/users'),

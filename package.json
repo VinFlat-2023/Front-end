@@ -57,7 +57,7 @@
     "@material-ui/lab": "^5.0.0-alpha.42",
     "@material-ui/styles": "^5.0.0-beta.4",
     "@material-ui/utils": "^5.0.0-beta.4",
-    "@react-pdf/renderer": "3.0.0",
+    "@react-pdf/renderer": "3.0.0", 
     "@reduxjs/toolkit": "^1.6.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
@@ -145,5 +145,9 @@
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.3.2"
+  },
+  "overrides": {
+    "@react-pdf/font": "2.2.1",
+    "@react-pdf/pdfkit": "2.1.0"
   }
 }

@@ -1,15 +1,18 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { Navigate, useRoutes, useLocation } from 'react-router-dom';
 // layouts
 import MainLayout from '../layouts/main';
 import DashboardLayout from '../layouts/dashboard';
+import AdminLayout from '../layouts/admin';
+import SupervisorLayout from '../layouts/supervisor';
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 // guards
 import GuestGuard from '../guards/GuestGuard';
 import AuthGuard from '../guards/AuthGuard';
-// import RoleBasedGuard from '../guards/RoleBasedGuard';
+import RoleBasedGuard from '../guards/RoleBasedGuard';
 // components
 import LoadingScreen from '../components/LoadingScreen';
+import localStorage from 'redux-persist/es/storage';
 
 // ----------------------------------------------------------------------
 
@@ -67,142 +70,172 @@ export default function Router() {
       ]
     },
 
-    // Dashboard Routes
+    // Admin Routes
     {
-      path: 'dashboard',
+      path: 'admin',
       element: (
         <AuthGuard>
-          <DashboardLayout />
+          <RoleBasedGuard accessibleRoles="Admin">
+            <AdminLayout />
+          </RoleBasedGuard>
         </AuthGuard>
       ),
       children: [
-        { path: '/', element: <Navigate to="/dashboard/general/home" replace /> },
+        { path: '/', element: <Navigate to="/admin/home/dashboard" replace /> },
         {
-          path: 'general',
+          path: 'home',
           children: [
-            { path: '/home', element: <HomePage /> },
-            { path: '/analysis', element: <GeneralEcommerce /> }
+            { path: '/dashboard', element: <AdminDashboard /> },
+            { path: '/analysis', element: <AdminAnalysisPage /> }
           ]
         },
         {
           path: 'account',
           children: [
-            { path: '/', element: <Navigate to="/dashboard/account/accounts" replace /> },
-            { path: '/accounts', element: <UserList /> },
-            { path: '/create', element: <UserCreate /> }
+            { path: '/', element: <Navigate to="" replace /> },
+            { path: '/accounts', element: <AdminUserListPage /> },
+            { path: '/create', element: <AdminCreateUserPage /> }
           ]
         },
         {
           path: 'admin_profile',
+          children: [{ path: '/home', element: <AdminProfilePage /> }]
+        }
+        // {
+        //   path: 'manage',
+        //   children: [
+        //     { path: '/users', element: <GeneralApp /> },
+        //     { path: '/profile', element: <GeneralEcommerce /> },
+        //     { path: '/create', element: <GeneralEcommerce /> },
+        //     { path: '/edit', element: <GeneralEcommerce /> }
+        //   ]
+        // },
+        // {
+        //   path: 'dormitory',
+        //   element: <Dormitory />
+        // },
+        // {
+        //   path: 'finances',
+        //   children: [
+        //     { path: '/invoices', element: <GeneralApp /> },
+        //     { path: '/income', element: <GeneralEcommerce /> },
+        //     { path: '/expense', element: <GeneralEcommerce /> },
+        //     { path: '/statistic', element: <GeneralEcommerce /> }
+        //   ]
+        // },
+        // {
+        //   path: 'contract',
+        //   children: [
+        //     { path: '/contracts', element: <GeneralApp /> },
+        //     { path: '/renters', element: <GeneralEcommerce /> }
+        //   ]
+        // },
+        // {
+        //   path: 'flat',
+        //   children: [
+        //     { path: '/flats', element: <GeneralApp /> },
+        //     { path: '/buildings', element: <GeneralEcommerce /> }
+        //   ]
+        // },
+        // {
+        //   path: 'service',
+        //   children: [{ path: '/services', element: <GeneralApp /> }]
+        // },
+        // {
+        //   path: 'report',
+        //   children: [
+        //     { path: '/status', element: <GeneralApp /> },
+        //     { path: '/services', element: <GeneralApp /> }
+        //   ]
+        // },
+
+        // {
+        //   path: 'analytics',
+        //   element: <GeneralAnalytics />
+        // },
+        // {
+        //   path: 'e-commerce',
+        //   children: [
+        //     { path: '/', element: <Navigate to="/dashboard/e-commerce/shop" replace /> },
+        //     { path: 'shop', element: <EcommerceShop /> },
+        //     { path: 'product/:name', element: <EcommerceProductDetails /> },
+        //     { path: 'list', element: <EcommerceProductList /> },
+        //     { path: 'product/new', element: <EcommerceProductCreate /> },
+        //     { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
+        //     { path: 'checkout', element: <EcommerceCheckout /> },
+        //     { path: 'invoice', element: <EcommerceInvoice /> }
+        //   ]
+        // },
+        // {
+        //   path: 'user',
+        //   children: [
+        //     { path: '/', element: <Navigate to="/dashboard/user/profile" replace /> },
+        //     { path: 'profile', element: <UserProfile /> },
+        //     { path: 'cards', element: <UserCards /> },
+        //     { path: 'list', element: <UserList /> },
+        //     { path: 'new', element: <UserCreate /> },
+        //     { path: '/:id/edit', element: <UserEdit /> },
+        //     { path: 'account', element: <UserAccount /> }
+        //   ]
+        // },
+        // {
+        //   path: 'blog',
+        //   children: [
+        //     { path: '/', element: <Navigate to="/dashboard/blog/posts" replace /> },
+        //     { path: 'posts', element: <BlogPosts /> },
+        //     { path: 'post/:title', element: <BlogPost /> },
+        //     { path: 'new-post', element: <BlogNewPost /> }
+        //   ]
+        // },
+        // {
+        //   path: 'mail',
+        //   children: [
+        //     { path: '/', element: <Navigate to="/dashboard/mail/all" replace /> },
+        //     { path: 'label/:customLabel', element: <Mail /> },
+        //     { path: 'label/:customLabel/:mailId', element: <Mail /> },
+        //     { path: ':systemLabel', element: <Mail /> },
+        //     { path: ':systemLabel/:mailId', element: <Mail /> }
+        //   ]
+        // },
+        // {
+        //   path: 'chat',
+        //   children: [
+        //     { path: '/', element: <Chat /> },
+        //     { path: 'new', element: <Chat /> },
+        //     { path: ':conversationKey', element: <Chat /> }
+        //   ]
+        // },
+        // { path: 'calendar', element: <Calendar /> },
+        // { path: 'kanban', element: <Kanban /> }
+      ]
+    },
+
+    // Supervisor
+    {
+      path: 'supervisor',
+      element: (
+        <AuthGuard>
+          <RoleBasedGuard accessibleRoles="Supervisor">
+            <SupervisorLayout />
+          </RoleBasedGuard>
+        </AuthGuard>
+      ),
+      children: [
+        { path: '/', element: <Navigate to="/supervisor/home/dashboard" replace /> },
+        {
+          path: 'home',
           children: [
-            { path: '/home', element: <UserEdit /> },
+            { path: '/dashboard', element: <SupervisorDashboard /> },
+            { path: '/analysis', element: <GeneralEcommerce /> }
           ]
         },
         {
           path: 'manage',
           children: [
-            { path: '/users', element: <GeneralApp /> },
-            { path: '/profile', element: <GeneralEcommerce /> },
-            { path: '/create', element: <GeneralEcommerce /> },
-            { path: '/edit', element: <GeneralEcommerce /> }
+            { path: '/users-list', element:  <UserListPage /> },
+            { path: '/users-profile', element: <GeneralEcommerce /> }
           ]
-        },
-        {
-          path: 'dormitory', element: <Dormitory />
-        },
-        {
-          path: 'finances',
-          children: [
-            { path: '/invoices', element: <GeneralApp /> },
-            { path: '/income', element: <GeneralEcommerce /> },
-            { path: '/expense', element: <GeneralEcommerce /> },
-            { path: '/statistic', element: <GeneralEcommerce /> }
-          ]
-        },
-        {
-          path: 'contract',
-          children: [
-            { path: '/contracts', element: <GeneralApp /> },
-            { path: '/renters', element: <GeneralEcommerce /> }
-          ]
-        },
-        {
-          path: 'flat',
-          children: [
-            { path: '/flats', element: <GeneralApp /> },
-            { path: '/buildings', element: <GeneralEcommerce /> }
-          ]
-        },
-        {
-          path: 'service',
-          children: [{ path: '/services', element: <GeneralApp /> }]
-        },
-        {
-          path: 'report',
-          children: [
-            { path: '/status', element: <GeneralApp /> },
-            { path: '/services', element: <GeneralApp /> }
-          ]
-        },
-
-        {
-          path: 'analytics',
-          element: <GeneralAnalytics />
-        },
-        {
-          path: 'e-commerce',
-          children: [
-            { path: '/', element: <Navigate to="/dashboard/e-commerce/shop" replace /> },
-            { path: 'shop', element: <EcommerceShop /> },
-            { path: 'product/:name', element: <EcommerceProductDetails /> },
-            { path: 'list', element: <EcommerceProductList /> },
-            { path: 'product/new', element: <EcommerceProductCreate /> },
-            { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
-            { path: 'checkout', element: <EcommerceCheckout /> },
-            { path: 'invoice', element: <EcommerceInvoice /> }
-          ]
-        },
-        {
-          path: 'user',
-          children: [
-            { path: '/', element: <Navigate to="/dashboard/user/profile" replace /> },
-            { path: 'profile', element: <UserProfile /> },
-            { path: 'cards', element: <UserCards /> },
-            { path: 'list', element: <UserList /> },
-            { path: 'new', element: <UserCreate /> },
-            { path: '/:id/edit', element: <UserEdit /> },
-            { path: 'account', element: <UserAccount /> }
-          ]
-        },
-        {
-          path: 'blog',
-          children: [
-            { path: '/', element: <Navigate to="/dashboard/blog/posts" replace /> },
-            { path: 'posts', element: <BlogPosts /> },
-            { path: 'post/:title', element: <BlogPost /> },
-            { path: 'new-post', element: <BlogNewPost /> }
-          ]
-        },
-        {
-          path: 'mail',
-          children: [
-            { path: '/', element: <Navigate to="/dashboard/mail/all" replace /> },
-            { path: 'label/:customLabel', element: <Mail /> },
-            { path: 'label/:customLabel/:mailId', element: <Mail /> },
-            { path: ':systemLabel', element: <Mail /> },
-            { path: ':systemLabel/:mailId', element: <Mail /> }
-          ]
-        },
-        {
-          path: 'chat',
-          children: [
-            { path: '/', element: <Chat /> },
-            { path: 'new', element: <Chat /> },
-            { path: ':conversationKey', element: <Chat /> }
-          ]
-        },
-        { path: 'calendar', element: <Calendar /> },
-        { path: 'kanban', element: <Kanban /> }
+        }
       ]
     },
 
@@ -231,7 +264,7 @@ export default function Router() {
         {
           path: 'components',
           children: [
-            { path: '/', element: <ComponentsOverview area={window.localStorage.getItem('AreaName')}/> },
+            { path: '/', element: <ComponentsOverview area={window.localStorage.getItem('AreaName')} /> },
             // FOUNDATIONS
             { path: 'color', element: <Color /> },
             { path: 'typography', element: <Typography /> },
@@ -296,8 +329,19 @@ const Login = Loadable(lazy(() => import('../pages/authentication/Login')));
 const Register = Loadable(lazy(() => import('../pages/authentication/Register')));
 const ResetPassword = Loadable(lazy(() => import('../pages/authentication/ResetPassword')));
 const VerifyCode = Loadable(lazy(() => import('../pages/authentication/VerifyCode')));
+
+// Admin
+const AdminDashboard = Loadable(lazy(() => import('../pages/feature/admin/AdminDashboardPage')));
+const AdminAnalysisPage = Loadable(lazy(() => import('../pages/feature/admin/AdminAnalysisPage.jsx')));
+const AdminUserListPage = Loadable(lazy(() => import('../pages/feature/admin/AdminUserListPage')));
+const AdminCreateUserPage = Loadable(lazy(() => import('../pages/feature/admin/AdminCreateUserPage')));
+const AdminProfilePage = Loadable(lazy(() => import('../pages/feature/admin/AdminProfilePage')));
+
+// Supervisor
+const SupervisorDashboard = Loadable(lazy(() => import('../pages/feature/supervisor/SupervisorDashboard')));
+const UserListPage = Loadable(lazy(() => import('../pages/feature/supervisor/UserList')));
+
 // Dashboard
-const HomePage = Loadable(lazy(() => import('../pages/feature/home/HomePage')));
 const Dormitory = Loadable(lazy(() => import('../pages/dashboard/Dormitory')));
 const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
 const GeneralEcommerce = Loadable(lazy(() => import('../pages/dashboard/GeneralEcommerce')));

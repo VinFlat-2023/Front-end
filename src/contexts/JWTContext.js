@@ -46,11 +46,10 @@ const handlers = {
       user
     };
   },
-  LOGIN: (state) => ({
-    ...state,
-    isAuthenticated: true,
-    user: profile
-  }),
+  LOGIN: (state, action) => {
+    const { user } = action.payload;
+    return { ...state, isAuthenticated: true, user: user };
+  },
   LOGOUT: (state) => ({
     ...state,
     isAuthenticated: false,
@@ -88,7 +87,7 @@ function AuthProvider({ children }) {
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
 
-          const response = await axios.get('/accounts/profile', {
+          const response = await axios.get('/employees/profile', {
             headers: {
               Authorization: 'Bearer ' + accessToken
             }
@@ -132,13 +131,16 @@ function AuthProvider({ children }) {
       password
     });
     const { id, token } = response.data.data;
-
+    window.localStorage.setItem('roleName', response.data.data.roleName);
     setSession(token);
     window.localStorage.setItem('userId', id);
-    const role = await axios.get('/employees/profile');
-    window.sessionStorage.setItem('role',role.data.data.Role.RoleName);
+    const loggedUser = await axios.get('/employees/profile');
+    console.log('logged user', loggedUser);
     dispatch({
-      type: 'LOGIN'
+      type: 'LOGIN',
+      payload: {
+        user: loggedUser.data.data
+      }
     });
   };
 

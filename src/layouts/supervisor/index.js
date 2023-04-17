@@ -5,8 +5,8 @@ import { styled, useTheme } from '@material-ui/core/styles';
 // hooks
 import useCollapseDrawer from '../../hooks/useCollapseDrawer';
 //
-import DashboardNavbar from './DashboardNavbar';
-import DashboardSidebar from './DashboardSidebar';
+import DashboardNavbar from '../dashboard/DashboardNavbar';
+import SupervisorSidebar from './supervisorSidebar';
 
 // ----------------------------------------------------------------------
 
@@ -38,15 +38,11 @@ export default function DashboardLayout() {
   const theme = useTheme();
   const { collapseClick } = useCollapseDrawer();
   const [open, setOpen] = useState(false);
-  const [role, setRole] = useState();
 
-  useEffect(()=>{
-    setRole(window.localStorage.getItem('roleName'));
-  },[role])
   return (
     <RootStyle>
       <DashboardNavbar onOpenSidebar={() => setOpen(true)} />
-      <DashboardSidebar isOpenSidebar={open} role ={role} onCloseSidebar={() => setOpen(false)} />
+      <SupervisorSidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
       <MainStyle
         sx={{
           transition: theme.transitions.create('margin', {

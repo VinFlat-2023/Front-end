@@ -5,7 +5,7 @@ import flashFill from '@iconify/icons-eva/flash-fill';
 import { styled } from '@material-ui/core/styles';
 import { Box, Button, AppBar, Toolbar, Container } from '@material-ui/core';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_AUTH } from '../../routes/paths';
 // hooks
 import useOffSetTop from '../../hooks/useOffSetTop';
 // components
@@ -91,7 +91,7 @@ export default function MainNavbar() {
           <Button
             variant="contained"
             component={RouterLink}
-            to={PATH_DASHBOARD.root}
+            to={PATH_AUTH.login}
             // startIcon={<Icon icon={flashFill} width={20} height={20} />}
           >
             Đăng Nhập

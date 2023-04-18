@@ -1,10 +1,10 @@
 // material
 import { Container, Grid, Stack } from '@material-ui/core';
 // hooks
-import useAuth from '../../../hooks/useAuth';
-import useSettings from '../../../hooks/useSettings';
+import useAuth from '../../../../hooks/useAuth';
+import useSettings from '../../../../hooks/useSettings';
 // components
-import Page from '../../../components/Page';
+import Page from '../../../../components/Page';
 import {
   AppWelcome,
   AppWidgets1,
@@ -19,7 +19,7 @@ import {
   AppCurrentDownload,
   AppTotalActiveUsers,
   AppTopInstalledCountries
-} from '../../../components/_dashboard/general-app';
+} from '../../../../components/_dashboard/general-app';
 
 // ----------------------------------------------------------------------
 

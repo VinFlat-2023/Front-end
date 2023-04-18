@@ -221,19 +221,39 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        { path: '/', element: <Navigate to="/supervisor/home/dashboard" replace /> },
+        { path: '/', element: <Navigate to="/supervisor/home" replace /> },
         {
-          path: 'home',
+          path: '/home',
+          element: <SupervisorDashboard />
+        },
+        {
+          path: 'room',
           children: [
-            { path: '/dashboard', element: <SupervisorDashboard /> },
-            { path: '/analysis', element: <GeneralEcommerce /> }
+            { path: '/list-building', element: <ListBuidingPage /> },
+            { path: '/list-room', element: <ListRoomPage /> }
           ]
         },
         {
-          path: 'manage',
+          path: 'guest',
           children: [
-            { path: '/users-list', element:  <UserListPage /> },
-            { path: '/users-profile', element: <GeneralEcommerce /> }
+            { path: '/contracts', element: <ListContractPage /> },
+            { path: '/list-guest', element: <ListGuestPage /> }
+          ]
+        },
+        { path: '/dormitory', element: <DomiritoryPage /> },
+        {
+          path: 'finances',
+          children: [
+            { path: '/bills', element: <BillsPage /> },
+            { path: '/statistic', element: <StatisticPage /> }
+          ]
+        },
+        { path: '/electric', element: <ElectricPage /> },
+        {
+          path: 'report',
+          children: [
+            { path: '/render-status', element: <RenderStatusPage /> },
+            { path: '/service', element: <ServicesPage /> },
           ]
         }
       ]
@@ -331,15 +351,24 @@ const ResetPassword = Loadable(lazy(() => import('../pages/authentication/ResetP
 const VerifyCode = Loadable(lazy(() => import('../pages/authentication/VerifyCode')));
 
 // Admin
-const AdminDashboard = Loadable(lazy(() => import('../pages/feature/admin/AdminDashboardPage')));
-const AdminAnalysisPage = Loadable(lazy(() => import('../pages/feature/admin/AdminAnalysisPage.jsx')));
-const AdminUserListPage = Loadable(lazy(() => import('../pages/feature/admin/AdminUserListPage')));
-const AdminCreateUserPage = Loadable(lazy(() => import('../pages/feature/admin/AdminCreateUserPage')));
-const AdminProfilePage = Loadable(lazy(() => import('../pages/feature/admin/AdminProfilePage')));
+const AdminDashboard = Loadable(lazy(() => import('../pages/feature/admin/dashboard/AdminDashboardPage')));
+const AdminAnalysisPage = Loadable(lazy(() => import('../pages/feature/admin/dashboard/AdminAnalysisPage.jsx')));
+const AdminUserListPage = Loadable(lazy(() => import('../pages/feature/admin/manageUser/AdminUserListPage')));
+const AdminCreateUserPage = Loadable(lazy(() => import('../pages/feature/admin/manageUser/AdminCreateUserPage')));
+const AdminProfilePage = Loadable(lazy(() => import('../pages/feature/admin/profile/AdminProfilePage')));
 
 // Supervisor
-const SupervisorDashboard = Loadable(lazy(() => import('../pages/feature/supervisor/SupervisorDashboard')));
-const UserListPage = Loadable(lazy(() => import('../pages/feature/supervisor/UserList')));
+const SupervisorDashboard = Loadable(lazy(() => import('../pages/feature/supervisor/dashboard/SupervisorDashboard')));
+const DomiritoryPage = Loadable(lazy(() => import('../pages/feature/supervisor/buildingKTX/BuildingKTXPage')));
+const ListBuidingPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/ListBuidingPage')));
+const ListRoomPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/ListRoomPage')));
+const ListContractPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/ListContractPage')));
+const ListGuestPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/ListGuestPage')));
+const BillsPage = Loadable(lazy(() => import('../pages/feature/supervisor/finances/BillsPage')));
+const StatisticPage = Loadable(lazy(() => import('../pages/feature/supervisor/finances/StatisticPage')));
+const ElectricPage = Loadable(lazy(() => import('../pages/feature/supervisor/electric/ElectricPage')));
+const RenderStatusPage = Loadable(lazy(() => import('../pages/feature/supervisor/report/StatusPage')));
+const ServicesPage = Loadable(lazy(() => import('../pages/feature/supervisor/report/ServicesPage')));
 
 // Dashboard
 const Dormitory = Loadable(lazy(() => import('../pages/dashboard/Dormitory')));

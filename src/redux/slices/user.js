@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../utils/axios';
 
-import { PATH_DASHBOARD } from 'src/routes/paths';
+import { PATH_DASHBOARD, PATH_ADMIN } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -354,7 +354,7 @@ export function updateUserProfile(id, data, setErrors, resetForm, enqueueSnackba
       
       resetForm();
       enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
-      navigate(PATH_DASHBOARD.user.list);
+      navigate(PATH_ADMIN.admin_profile.home);
     } catch (error) {
       console.log('error', error);
       setErrors(error);
@@ -374,7 +374,7 @@ export function createNewEmployee(data, setErrors, resetForm, enqueueSnackbar, n
       const response = await axios.post(url, data);
       resetForm();
       enqueueSnackbar('Thêm thành viên thành công', { variant: 'success' });
-      navigate(PATH_DASHBOARD.account.accounts);
+      navigate(PATH_ADMIN.account.accounts);
     } catch (error) {
       console.log('error', error);
       setErrors(error);

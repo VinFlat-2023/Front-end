@@ -22,19 +22,19 @@ import {
   TablePagination
 } from '@material-ui/core';
 // redux
-import { useDispatch, useSelector } from '../../../redux/store';
-import { getUserList, deleteUser } from '../../../redux/slices/user';
+import { useDispatch, useSelector } from '../../../../redux/store';
+import { getUserList, deleteUser } from '../../../../redux/slices/user';
 // routes
-import { PATH_ADMIN } from '../../../routes/paths';
+import { PATH_ADMIN } from '../../../../routes/paths';
 // hooks
-import useSettings from '../../../hooks/useSettings';
+import useSettings from '../../../../hooks/useSettings';
 // components
-import Page from '../../../components/Page';
-import Label from '../../../components/Label';
-import Scrollbar from '../../../components/Scrollbar';
-import SearchNotFound from '../../../components/SearchNotFound';
-import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../components/_dashboard/user/list';
+import Page from '../../../../components/Page';
+import Label from '../../../../components/Label';
+import Scrollbar from '../../../../components/Scrollbar';
+import SearchNotFound from '../../../../components/SearchNotFound';
+import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
+import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../../components/_dashboard/user/list';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [

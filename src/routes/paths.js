@@ -24,10 +24,7 @@ export const PATH_AUTH = {
 // ADMIN PATH
 export const PATH_ADMIN = {
   root: ROOTS_ADMIN,
-  home: {
-    dashboard: path(ROOTS_ADMIN, '/home/dashboard'),
-    analysis: path(ROOTS_ADMIN, '/home/analysis')
-  },
+  home: path(ROOTS_ADMIN, '/home'),
   account: {
     root: path(ROOTS_ADMIN, '/account'),
     accounts: path(ROOTS_ADMIN, '/account/accounts'),
@@ -35,6 +32,11 @@ export const PATH_ADMIN = {
   },
   admin_profile: {
     home: path(ROOTS_ADMIN, '/admin_profile/home')
+  },
+  area: {
+    root: path(ROOTS_ADMIN, '/area'),
+    listAreas: path(ROOTS_ADMIN, '/area/list'),
+    addArea: path(ROOTS_ADMIN, '/area/add')
   }
 };
 

@@ -13,6 +13,7 @@ import RoleBasedGuard from '../guards/RoleBasedGuard';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 import localStorage from 'redux-persist/es/storage';
+import AdminDashboardPage from 'src/pages/feature/admin/dashboard/AdminAnalysisPage';
 
 // ----------------------------------------------------------------------
 
@@ -81,13 +82,10 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        { path: '/', element: <Navigate to="/admin/home/dashboard" replace /> },
+        { path: '/', element: <Navigate to="/admin/home" replace /> },
         {
-          path: 'home',
-          children: [
-            { path: '/dashboard', element: <AdminDashboard /> },
-            { path: '/analysis', element: <AdminAnalysisPage /> }
-          ]
+          path: '/home',
+          element: <AdminDashboard />
         },
         {
           path: 'account',
@@ -100,7 +98,15 @@ export default function Router() {
         {
           path: 'admin_profile',
           children: [{ path: '/home', element: <AdminProfilePage /> }]
-        }
+        },
+        {
+          path: 'area',
+          children: [
+            { path: '/', element: <Navigate to="" replace /> },
+            { path: '/list', element: <ListAreaPage /> },
+            { path: '/add', element: <AddAreaPage /> }
+          ]
+        },
         // {
         //   path: 'manage',
         //   children: [
@@ -253,7 +259,7 @@ export default function Router() {
           path: 'report',
           children: [
             { path: '/render-status', element: <RenderStatusPage /> },
-            { path: '/service', element: <ServicesPage /> },
+            { path: '/service', element: <ServicesPage /> }
           ]
         }
       ]
@@ -356,6 +362,8 @@ const AdminAnalysisPage = Loadable(lazy(() => import('../pages/feature/admin/das
 const AdminUserListPage = Loadable(lazy(() => import('../pages/feature/admin/manageUser/AdminUserListPage')));
 const AdminCreateUserPage = Loadable(lazy(() => import('../pages/feature/admin/manageUser/AdminCreateUserPage')));
 const AdminProfilePage = Loadable(lazy(() => import('../pages/feature/admin/profile/AdminProfilePage')));
+const ListAreaPage = Loadable(lazy(() => import('../pages/feature/admin/area/ListAreaPage')));
+const AddAreaPage = Loadable(lazy(() => import('../pages/feature/admin/area/AddAreaPage')));
 
 // Supervisor
 const SupervisorDashboard = Loadable(lazy(() => import('../pages/feature/supervisor/dashboard/SupervisorDashboard')));

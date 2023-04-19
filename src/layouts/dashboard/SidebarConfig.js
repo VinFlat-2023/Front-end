@@ -29,12 +29,8 @@ export const adminSlidebar = [
     items: [
       {
         title: 'Trang chủ',
-        path: PATH_ADMIN.home.dashboard,
-        icon: ICONS.home,
-        children: [
-          { title: 'App', path: PATH_ADMIN.home.dashboard },
-          { title: 'Analysis', path: PATH_ADMIN.home.analysis }
-        ]
+        path: PATH_ADMIN.home,
+        icon: ICONS.home
       },
       {
         title: 'Quản lý tài khoản',
@@ -46,10 +42,19 @@ export const adminSlidebar = [
         ]
       },
       {
-        title: 'Hồ sơ cá nhân',
+        title: 'Quản lý hồ sơ cá nhân',
         path: PATH_ADMIN.admin_profile.home,
         icon: ICONS.person,
         children: [{ title: 'Hồ sơ cá nhân', path: PATH_ADMIN.admin_profile.home }]
+      },
+      {
+        title: 'Quản lý khu vực',
+        path: PATH_ADMIN.area.root,
+        icon: ICONS.book,
+        children: [
+          { title: 'Danh sách khu vực', path: PATH_ADMIN.area.listAreas },
+          { title: 'Thêm khu vực', path: PATH_ADMIN.area.addArea }
+        ]
       }
     ]
   }

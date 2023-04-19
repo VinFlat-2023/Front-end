@@ -16,7 +16,7 @@ export default function GuestGuard({ children }) {
 
   if (isAuthenticated) {
     if (localStorage.getItem('roleName') === 'Admin') {
-      return <Navigate to={PATH_ADMIN.home.dashboard} />;
+      return <Navigate to={PATH_ADMIN.root} />;
     }
     if (localStorage.getItem('roleName') === 'Supervisor') {
       return <Navigate to={PATH_SUPERVISOR.root} />;

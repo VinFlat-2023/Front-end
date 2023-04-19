@@ -1,10 +1,10 @@
 // material
 import { Container, Grid, Stack } from '@material-ui/core';
 // hooks
-import useAuth from '../../../hooks/useAuth';
-import useSettings from '../../../hooks/useSettings';
+import useAuth from '../../../../hooks/useAuth';
+import useSettings from '../../../../hooks/useSettings';
 // components
-import Page from '../../Page';
+import Page from '../../../../components/Page';
 import {
   AppWelcome,
   AppWidgets1,
@@ -19,16 +19,16 @@ import {
   AppCurrentDownload,
   AppTotalActiveUsers,
   AppTopInstalledCountries
-} from '../../_dashboard/general-app';
+} from '../../../../components/_dashboard/general-app';
 
 // ----------------------------------------------------------------------
 
-export default function HomeComponent() {
+export default function ListAreaPage() {
   const { themeStretch } = useSettings();
   const { user } = useAuth();
 
   return (
-    <Page title="VinFlat | Trang chủ">
+    <Page title="VinFlat | Danh sách khu vực">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
 

@@ -24,10 +24,7 @@ export const PATH_AUTH = {
 // ADMIN PATH
 export const PATH_ADMIN = {
   root: ROOTS_ADMIN,
-  home: {
-    dashboard: path(ROOTS_ADMIN, '/home/dashboard'),
-    analysis: path(ROOTS_ADMIN, '/home/analysis')
-  },
+  home: path(ROOTS_ADMIN, '/home'),
   account: {
     root: path(ROOTS_ADMIN, '/account'),
     accounts: path(ROOTS_ADMIN, '/account/accounts'),
@@ -35,21 +32,39 @@ export const PATH_ADMIN = {
   },
   admin_profile: {
     home: path(ROOTS_ADMIN, '/admin_profile/home')
+  },
+  area: {
+    root: path(ROOTS_ADMIN, '/area'),
+    listAreas: path(ROOTS_ADMIN, '/area/list'),
+    addArea: path(ROOTS_ADMIN, '/area/add')
   }
 };
 
 // SUPERVISOR PATH
 export const PATH_SUPERVISOR = {
   root: ROOTS_SUPERVISOR,
-  dasboard: {
-    home: path(ROOTS_SUPERVISOR, '/home/dashboard'),
-    analysis: path(ROOTS_SUPERVISOR, '/home/analysis')
+  home: path(ROOTS_SUPERVISOR, '/home'),
+  domitory: path(ROOTS_SUPERVISOR, '/dormitory'),
+  electric: path(ROOTS_SUPERVISOR, '/electric'),
+  room: {
+    root: path(ROOTS_SUPERVISOR, '/room'),
+    listBuilding: path(ROOTS_SUPERVISOR, '/room/list-building'),
+    listRoom: path(ROOTS_SUPERVISOR, '/room/list-room')
   },
-  manager: {
-    userList: path(ROOTS_SUPERVISOR, '/manage/users-list'),
-    userProfile: path(ROOTS_SUPERVISOR, '/manage/users-profile'),
-    createUser: path(ROOTS_SUPERVISOR, '/manage/users-create'),
-    updateUser: path(ROOTS_SUPERVISOR, '/manage/users-update')
+  guest: {
+    root: path(ROOTS_SUPERVISOR, '/guest'),
+    listContract: path(ROOTS_SUPERVISOR, '/guest/contracts'),
+    listGuest: path(ROOTS_SUPERVISOR, '/guest/list-guest')
+  },
+  finances: {
+    root: path(ROOTS_SUPERVISOR, '/finances'),
+    bill: path(ROOTS_SUPERVISOR, '/finances/bills'),
+    statistic: path(ROOTS_SUPERVISOR, '/finances/statistic')
+  },
+  report: {
+    root: path(ROOTS_SUPERVISOR, '/report'),
+    renderStatus: path(ROOTS_SUPERVISOR, '/report/render-status'),
+    service: path(ROOTS_SUPERVISOR, '/report/service'),
   }
 };
 

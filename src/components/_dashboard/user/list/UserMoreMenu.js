@@ -9,7 +9,7 @@ import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 // material
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@material-ui/core';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_ADMIN } from '../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -47,7 +47,7 @@ export default function UserMoreMenu({ onDelete, id }) {
 
         <MenuItem
           component={RouterLink}
-          to={`${PATH_DASHBOARD.user.root}/${id}/edit`}
+          to={`${PATH_ADMIN.root}/${id}/edit`}
           sx={{ color: 'text.secondary' }}
         >
           <ListItemIcon>

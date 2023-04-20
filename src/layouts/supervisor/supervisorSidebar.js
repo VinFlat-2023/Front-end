@@ -143,7 +143,7 @@ export default function SupervisorSidebar({ isOpenSidebar, onCloseSidebar }) {
         {isCollapse ? (
           <MyAvatar sx={{ mx: 'auto', mb: 2 }} />
         ) : (
-          <Link underline="none" component={RouterLink} to={PATH_SUPERVISOR.dasboard.home}>
+          <Link underline="none" component={RouterLink} to={PATH_SUPERVISOR.home}>
             <AccountStyle>
               <MyAvatar />
               <Box sx={{ ml: 2 }}>

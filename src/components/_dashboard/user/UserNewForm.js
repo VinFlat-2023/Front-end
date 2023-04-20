@@ -11,17 +11,8 @@ import {
   Card,
   Grid,
   Stack,
-  Switch,
   TextField,
-  Typography,
-  FormHelperText,
-  FormControlLabel
 } from '@material-ui/core';
-// utils
-import { fData } from '../../../utils/formatNumber';
-import fakeRequest from '../../../utils/fakeRequest';
-// routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
 //
 import Label from '../../Label';
 import { UploadAvatar } from '../../upload';

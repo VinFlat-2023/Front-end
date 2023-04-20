@@ -4,17 +4,17 @@ import { useParams, useLocation } from 'react-router-dom';
 // material
 import { Container, Tab, Box, Tabs, Stack } from '@material-ui/core';
 // redux
-import { useDispatch, useSelector } from '../../../redux/store';
+import { useDispatch, useSelector } from '../../../../redux/store';
 // import { getUserList } from '..././../redux/slices/user';
 // routes
-import { PATH_ADMIN } from '../../../routes/paths';
+import { PATH_ADMIN } from '../../../../routes/paths';
 // hooks
-import useSettings from '../../../hooks/useSettings';
+import useSettings from '../../../../hooks/useSettings';
 // components
-import Page from '../../../components/Page';
-import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
-import UserNewForm from '../../../components/_dashboard/user/UserNewForm';
-import { getProfile } from '../../../redux/slices/user';
+import Page from '../../../../components/Page';
+import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
+import UserNewForm from '../../../../components/_dashboard/user/UserNewForm';
+import { getProfile } from '../../../../redux/slices/user';
 
 // ----------------------------------------------------------------------
 

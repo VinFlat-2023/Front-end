@@ -73,7 +73,7 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_area) => _area.Name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis?.map((el) => el[0]);
 }
@@ -82,7 +82,6 @@ export default function ListAreaPage() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
   const dispatch = useDispatch();
-  // const { userList, total } = useSelector((state) => state.user);
 
   const [listArea, setListArea] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
@@ -96,16 +95,16 @@ export default function ListAreaPage() {
   const [filteredUsers, setFilteredUsers] = useState([]);
 
   useEffect(() => {
-    // dispatch(getUserList(page + 1, rowsPerPage));
     getData(rowsPerPage, page+1);
-  }, [page, rowsPerPage ]);
+  }, [page, rowsPerPage, filterName ]);
 
   const getData = async (pageSize, currentPage) => {
     try {
       const data = await axios.get(`areas`, {
         params: {
           PageSize: pageSize,
-          PageNumber: currentPage
+          PageNumber: currentPage,
+          Name: filterName
         }
       });
       setListArea(data.data.data);
@@ -250,7 +249,7 @@ export default function ListAreaPage() {
                         </TableCell>
 
                         <TableCell align="right">
-                          {/* <UserMoreMenu onDelete={() => handleDeleteUser(AreaId)} id={AreaId} /> */}
+                          {/* <UserMoreMenu /> */}
                         </TableCell>
                       </TableRow>
                     );

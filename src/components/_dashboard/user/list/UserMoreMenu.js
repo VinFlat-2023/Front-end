@@ -9,7 +9,7 @@ import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 // material
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@material-ui/core';
 // routes
-import { PATH_DASHBOARD, PATH_ADMIN } from '../../../../routes/paths';
+import { PATH_ADMIN } from '../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 

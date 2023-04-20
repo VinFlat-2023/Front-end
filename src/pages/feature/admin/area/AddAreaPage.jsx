@@ -1,61 +1,39 @@
+import { useEffect } from 'react';
+import { paramCase } from 'change-case';
+import { useParams, useLocation } from 'react-router-dom';
 // material
-import { Container, Grid, Stack } from '@material-ui/core';
+import { Container } from '@material-ui/core';
+// redux
+import { useDispatch, useSelector } from '../../../../redux/store';
+import { getUserList } from '../../../../redux/slices/user';
+// routes
+import { PATH_ADMIN } from '../../../../routes/paths';
 // hooks
-import useAuth from '../../../../hooks/useAuth';
 import useSettings from '../../../../hooks/useSettings';
 // components
 import Page from '../../../../components/Page';
-import {
-  AppWelcome,
-  AppWidgets1,
-  AppWidgets2,
-  AppFeatured,
-  AppNewInvoice,
-  AppTopAuthors,
-  AppTopRelated,
-  AppAreaInstalled,
-  AppTotalDownloads,
-  AppTotalInstalled,
-  AppCurrentDownload,
-  AppTotalActiveUsers,
-  AppTopInstalledCountries
-} from '../../../../components/_dashboard/general-app';
+import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
+import CreateAreaForm from './components/CreateAreaForm';
 
 // ----------------------------------------------------------------------
 
-export default function AddAreaPage() {
+export default function AreaCreatePage() {
   const { themeStretch } = useSettings();
-  const { user } = useAuth();
+
 
   return (
-    <Page title="VinFlat | Thêm khu vực">
-      <Container maxWidth={themeStretch ? false : 'xl'}>
-        <Grid container spacing={3}>
+    <Page title={'Thêm thành viên mới'}>
+      <Container maxWidth={themeStretch ? false : 'lg'}>
+        <HeaderBreadcrumbs
+          heading={'Thêm thành viên mới'}
+          links={[
+            { name: 'Trang chủ', href: PATH_ADMIN.root },
+            { name: 'Quản lý khu vực', href: PATH_ADMIN.area.listAreas },
+            { name: 'Thêm khu vực' }
+          ]}
+        />
 
-          <Grid item xs={12} md={3}>
-            <AppTotalActiveUsers />
-          </Grid>
-
-          <Grid item xs={12} md={3}>
-            <AppTotalInstalled />
-          </Grid>
-
-          <Grid item xs={12} md={3}>
-            <AppTotalInstalled />
-          </Grid>
-
-          <Grid item xs={12} md={3}>
-            <AppTotalDownloads />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentDownload />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
-            <AppAreaInstalled />
-          </Grid>
-        </Grid>
+        <CreateAreaForm />
       </Container>
     </Page>
   );

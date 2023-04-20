@@ -1,8 +1,7 @@
-import { Suspense, lazy, useEffect, useState } from 'react';
+import { Suspense, lazy } from 'react';
 import { Navigate, useRoutes, useLocation } from 'react-router-dom';
 // layouts
 import MainLayout from '../layouts/main';
-import DashboardLayout from '../layouts/dashboard';
 import AdminLayout from '../layouts/admin';
 import SupervisorLayout from '../layouts/supervisor';
 import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
@@ -12,8 +11,6 @@ import AuthGuard from '../guards/AuthGuard';
 import RoleBasedGuard from '../guards/RoleBasedGuard';
 // components
 import LoadingScreen from '../components/LoadingScreen';
-import localStorage from 'redux-persist/es/storage';
-import AdminDashboardPage from 'src/pages/feature/admin/dashboard/AdminAnalysisPage';
 
 // ----------------------------------------------------------------------
 
@@ -359,7 +356,6 @@ const VerifyCode = Loadable(lazy(() => import('../pages/authentication/VerifyCod
 
 // Admin
 const AdminDashboard = Loadable(lazy(() => import('../pages/feature/admin/dashboard/AdminDashboardPage')));
-const AdminAnalysisPage = Loadable(lazy(() => import('../pages/feature/admin/dashboard/AdminAnalysisPage.jsx')));
 const AdminUserListPage = Loadable(lazy(() => import('../pages/feature/admin/manageUser/AdminUserListPage')));
 const AdminCreateUserPage = Loadable(lazy(() => import('../pages/feature/admin/manageUser/AdminCreateUserPage')));
 const AdminProfilePage = Loadable(lazy(() => import('../pages/feature/admin/profile/AdminProfilePage')));
@@ -379,6 +375,7 @@ const ElectricPage = Loadable(lazy(() => import('../pages/feature/supervisor/ele
 const RenderStatusPage = Loadable(lazy(() => import('../pages/feature/supervisor/report/StatusPage')));
 const ServicesPage = Loadable(lazy(() => import('../pages/feature/supervisor/report/ServicesPage')));
 
+// Others
 const UserEdit = Loadable(lazy(() => import('../pages/dashboard/UserEdit')));
 
 // Dashboard

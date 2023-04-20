@@ -29,7 +29,7 @@ export default function LandingThemeColor() {
   const [data, setData] = useState([]);
   const fetchData = async () => {
     try {
-      const data = await axios.get('buildings?SpareSlots=true');
+      const data = await axios.get('buildings?Status=true');
       setData(data.data.data);
     } catch (error) {
       return console.error(error);

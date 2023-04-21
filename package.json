@@ -147,9 +147,5 @@
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.3.2"
-  },
-  "overrides": {
-    "@react-pdf/font": "2.2.0",
-    "@react-pdf/pdfkit": "2.1.0"
   }
 }

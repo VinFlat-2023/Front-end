@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useSnackbar } from 'notistack5';
 import { useNavigate } from 'react-router-dom';
 import { Form, FormikProvider, useFormik } from 'formik';
@@ -33,20 +33,21 @@ const locationFake = [{ id: '1', label: 'HCM' }];
 
 // ----------------------------------------------------------------------
 
-// CreateAreaForm.propTypes = {
-//   isEdit: PropTypes.bool,
-//   currentUser: PropTypes.object
-// };
+EditAreaForm.propTypes = {
+  areaDetail: PropTypes.object
+};
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
   color: theme.palette.text.secondary,
   marginBottom: theme.spacing(1)
 }));
 
-export default function CreateAreaForm() {
+export default function EditAreaForm({ areaDetail }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
+
+  // const [imageURL, setImageURL] = useState(areaDetail.);
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Tên đang trống'),
@@ -64,29 +65,29 @@ export default function CreateAreaForm() {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: '',
-      location: '',
-      images: null
+      name: areaDetail?.Name || '',
+      location: areaDetail?.Location || '',
+      images: areaDetail?.ImageUrl || []
     },
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
         setSubmitting(false);
         const createValue = {
-          name: values.name,
-          location: values.location,
+          name: values?.name,
+          location: values?.location,
           status: true
         };
         try {
-          const response = await axios.post('areas', createValue);
+          const response = await axios.put(`areas/${areaDetail.AreaId}`, createValue);
           let imageArr = [];
           imageArr.push(values.images.path);
 
-          const rsImage = await axios.put(`upload/area/${response.data.data.AreaId}`, {
+          const rsImage = await axios.put(`upload/area/${areaDetail.AreaId}`, {
             ImageUploadRequest: imageArr
           });
           resetForm();
-          enqueueSnackbar('Thêm khu vực thành công', { variant: 'success' });
+          enqueueSnackbar('Chỉnh sửa khu vực thành công', { variant: 'success' });
           navigate(PATH_ADMIN.area.listAreas);
         } catch (error) {
           console.log('error', error);
@@ -94,9 +95,9 @@ export default function CreateAreaForm() {
           enqueueSnackbar(error.message, { variant: 'error' });
         }
       } catch (error) {
-        console.error(error);
         setSubmitting(false);
-        setErrors(error);
+        console.log('error', error);
+        setErrors(error.message);
       }
     }
   });
@@ -115,15 +116,6 @@ export default function CreateAreaForm() {
     },
     [setFieldValue]
   );
-
-  const handleRemove = (file) => {
-    const filteredItems = values.images.filter((_file) => _file !== file);
-    setFieldValue('images', filteredItems);
-  };
-
-  const handleRemoveAll = () => {
-    setFieldValue('images', []);
-  };
 
   return (
     <FormikProvider value={formik}>
@@ -178,7 +170,7 @@ export default function CreateAreaForm() {
 
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Thêm khu vực
+                    Chỉnh sửa khu vực
                   </LoadingButton>
                 </Box>
               </Stack>

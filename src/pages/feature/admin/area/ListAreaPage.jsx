@@ -35,6 +35,7 @@ import Scrollbar from '../../../../components/Scrollbar';
 import SearchNotFound from '../../../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../../components/_dashboard/user/list';
+import AreaMoreMenu from './components/AreaMoreMenu'
 import axios from '../../../../utils/axios';
 // ----------------------------------------------------------------------
 
@@ -249,7 +250,7 @@ export default function ListAreaPage() {
                         </TableCell>
 
                         <TableCell align="right">
-                          {/* <UserMoreMenu /> */}
+                          <AreaMoreMenu id={AreaId} />
                         </TableCell>
                       </TableRow>
                     );

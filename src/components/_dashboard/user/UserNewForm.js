@@ -99,14 +99,14 @@ export default function UserNewForm({ isEdit, currentUser }) {
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                   <TextField
                     fullWidth
-                    label="Full Name"
+                    label="Họ và tên"
                     {...getFieldProps('fullname')}
                     error={Boolean(touched.fullname && errors.fullname)}
                     helperText={touched.fullname && errors.fullname}
                   />
                   <TextField
                     fullWidth
-                    label="User name"
+                    label="Username"
                     {...getFieldProps('username')}
                     disabled={isEdit}
                     error={Boolean(touched.username && errors.username)}

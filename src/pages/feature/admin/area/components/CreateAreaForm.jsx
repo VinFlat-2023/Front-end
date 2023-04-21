@@ -29,6 +29,13 @@ import { createNewEmployee, updateUserProfile } from 'src/redux/slices/user';
 import { useDispatch } from 'react-redux';
 
 // ----------------------------------------------------------------------
+const locationFake = [
+  { id: '1', label: 'Hồ Chí Minh' },
+  { id: '2', label: 'Hà Nội' },
+  { id: '3', label: 'Vũng Tàu' },
+]
+
+// ----------------------------------------------------------------------
 
 // CreateAreaForm.propTypes = {
 //   isEdit: PropTypes.bool,
@@ -48,7 +55,7 @@ export default function CreateAreaForm() {
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Tên đang trống'),
     location: Yup.string().required('vị trí đang trống'),
-    images: Yup.array().min(1, 'Hình ảnh đang trống') && Yup.array().max(4, 'Quá nhiều ảnh')
+    images: Yup.array().min(1, 'Hình ảnh đang trống') && Yup.array().max(1, 'Quá nhiều ảnh')
   });
 
   // "username": "A_admin",
@@ -72,21 +79,26 @@ export default function CreateAreaForm() {
         console.log('value area', values);
         const createValue = {
           name: values.name,
-          location: values.location
+          location: values.location,
+          status: true
         };
         try {
           const response = await axios.post('areas', createValue);
-          //   const rsImage = await axios.put('', values.images)
+          let imageArr = [];
           for (let i = 0; i < values.images.length; i++) {
-            const rsImage = await axios.put('', values.images);
+            imageArr.push(values.images[i].path);
           }
+
+          const rsImage = await axios.put(`upload/area/${response.data.data.AreaId}`, {
+            ImageUploadRequest: imageArr
+          });
           resetForm();
           enqueueSnackbar('Thêm khu vực thành công', { variant: 'success' });
           navigate(PATH_ADMIN.area.listAreas);
         } catch (error) {
           console.log('error', error);
           setErrors(error);
-          enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
+          enqueueSnackbar(error.data.message, { variant: 'error' });
         }
       } catch (error) {
         console.error(error);
@@ -137,12 +149,22 @@ export default function CreateAreaForm() {
                     helperText={touched.name && errors.name}
                   />
                   <TextField
+                    
+                    select
                     fullWidth
                     label="Vị trí"
                     {...getFieldProps('location')}
+                    SelectProps={{ native: true }}
                     error={Boolean(touched.location && errors.location)}
                     helperText={touched.location && errors.location}
-                  />
+                  >
+                    <option value="" />
+                    {locationFake.map((option) => (
+                      <option key={option.id} value={option.label}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </TextField>
                 </Stack>
 
                 <Stack>

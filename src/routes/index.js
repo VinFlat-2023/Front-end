@@ -102,7 +102,8 @@ export default function Router() {
           children: [
             { path: '/', element: <Navigate to="" replace /> },
             { path: '/list', element: <ListAreaPage /> },
-            { path: '/add', element: <AddAreaPage /> }
+            { path: '/add', element: <AddAreaPage /> },
+            { path: '/:id', element: <EditAreaPage /> },
           ]
         },
         // {
@@ -361,6 +362,7 @@ const AdminCreateUserPage = Loadable(lazy(() => import('../pages/feature/admin/m
 const AdminProfilePage = Loadable(lazy(() => import('../pages/feature/admin/profile/AdminProfilePage')));
 const ListAreaPage = Loadable(lazy(() => import('../pages/feature/admin/area/ListAreaPage')));
 const AddAreaPage = Loadable(lazy(() => import('../pages/feature/admin/area/AddAreaPage')));
+const EditAreaPage = Loadable(lazy(() => import('../pages/feature/admin/area/EditAreaPage')));
 
 // Supervisor
 const SupervisorDashboard = Loadable(lazy(() => import('../pages/feature/supervisor/dashboard/SupervisorDashboard')));

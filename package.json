@@ -149,7 +149,7 @@
     "prettier": "^2.3.2"
   }, 
   "overrides": {
-    "@react-pdf/font": "2.2.0",
+    "@react-pdf/font": "2.2.1",
     "@react-pdf/pdfkit": "2.1.0"
   }
 }

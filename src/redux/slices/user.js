@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../utils/axios';
 
-import { PATH_DASHBOARD, PATH_ADMIN, ROOTS_ADMIN } from 'src/routes/paths';
+import { PATH_ADMIN} from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 

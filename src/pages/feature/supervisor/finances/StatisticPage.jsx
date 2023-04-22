@@ -1,31 +1,31 @@
 // material
 import { Container, Grid, Stack } from '@material-ui/core';
 // hooks
-import useAuth from '../../../../hooks/useAuth';
+// import useAuth from '../../../../hooks/useAuth';
 import useSettings from '../../../../hooks/useSettings';
 // components
 import Page from '../../../../components/Page';
 import {
-  AppWelcome,
-  AppWidgets1,
-  AppWidgets2,
-  AppFeatured,
-  AppNewInvoice,
-  AppTopAuthors,
-  AppTopRelated,
+  // AppWelcome,
+  // AppWidgets1,
+  // AppWidgets2,
+  // AppFeatured,
+  // AppNewInvoice,
+  // AppTopAuthors,
+  // AppTopRelated,
   AppAreaInstalled,
   AppTotalDownloads,
   AppTotalInstalled,
   AppCurrentDownload,
   AppTotalActiveUsers,
-  AppTopInstalledCountries
+  // AppTopInstalledCountries
 } from '../../../../components/_dashboard/general-app';
 
 // ----------------------------------------------------------------------
 
 export default function AdminDashboardPage() {
   const { themeStretch } = useSettings();
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
   return (
     <Page title="VinFlat | Thống kê kinh doanh">

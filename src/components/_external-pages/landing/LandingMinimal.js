@@ -1,6 +1,6 @@
 // material
 import { styled } from '@material-ui/core/styles';
-import { Box,  Container, Typography } from '@material-ui/core';
+import { Box, Grid, Card, Container, Typography } from '@material-ui/core';
 import axios from '../../../utils/axios';
 //
 import { varFadeInUp, MotionInView, varFadeInDown } from '../../animate';

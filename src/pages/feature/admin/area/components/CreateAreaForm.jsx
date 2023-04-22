@@ -1,42 +1,35 @@
-import * as Yup from 'yup';
-import PropTypes from 'prop-types';
-import { useCallback } from 'react';
-import { useSnackbar } from 'notistack5';
-import { useNavigate } from 'react-router-dom';
 import { Form, FormikProvider, useFormik } from 'formik';
+import { useSnackbar } from 'notistack5';
+import { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
 
 // material
-import { LoadingButton } from '@material-ui/lab';
-import { styled } from '@material-ui/core/styles';
 import {
   Box,
   Card,
+  FormHelperText,
   Grid,
   Stack,
-  Switch,
   TextField,
-  Typography,
-  FormHelperText,
-  FormControlLabel
+  Typography
 } from '@material-ui/core';
+import { styled } from '@material-ui/core/styles';
+import { LoadingButton } from '@material-ui/lab';
 // utils
 import axios from '../../../../../utils/axios';
 // routes
 import { PATH_ADMIN } from '../../../../../routes/paths';
 //
-import UploadSingleFile from '../../../../../components/upload/UploadSingleFile';
-import { createNewEmployee, updateUserProfile } from 'src/redux/slices/user';
 import { useDispatch } from 'react-redux';
+import { uploadImage } from 'src/utils/firebase';
+import UploadSingleFile from '../../../../../components/upload/UploadSingleFile';
 
 // ----------------------------------------------------------------------
 const locationFake = [{ id: '1', label: 'HCM' }];
 
 // ----------------------------------------------------------------------
 
-// CreateAreaForm.propTypes = {
-//   isEdit: PropTypes.bool,
-//   currentUser: PropTypes.object
-// };
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
   color: theme.palette.text.secondary,
@@ -48,19 +41,13 @@ export default function CreateAreaForm() {
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
 
+  const [imageUpload, setImageUpload] = useState(null);
+
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Tên đang trống'),
     location: Yup.string().required('vị trí đang trống'),
     images: Yup.mixed().required('Ảnh đang trống')
   });
-
-  // "username": "A_admin",
-  // "fullname": "Admin full role",
-  // "email": "admin@vinflat.com",
-  // "phone": "0123456789",
-  // "address": "TPHCM",
-  // "roleId": 1,
-
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -71,20 +58,17 @@ export default function CreateAreaForm() {
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
+        const url = await uploadImage(imageUpload);
         setSubmitting(false);
         const createValue = {
           name: values.name,
           location: values.location,
-          status: true
+          status: true,
+          imageUrl: url,
         };
         try {
           const response = await axios.post('areas', createValue);
-          let imageArr = [];
-          imageArr.push(values.images.path);
 
-          const rsImage = await axios.put(`upload/area/${response.data.data.AreaId}`, {
-            ImageUploadRequest: imageArr
-          });
           resetForm();
           enqueueSnackbar('Thêm khu vực thành công', { variant: 'success' });
           navigate(PATH_ADMIN.area.listAreas);
@@ -106,6 +90,7 @@ export default function CreateAreaForm() {
   const handleDrop = useCallback(
     (acceptedFiles) => {
       const file = acceptedFiles[0];
+      setImageUpload(file);
       if (file) {
         setFieldValue('images', {
           ...file,

@@ -103,7 +103,7 @@ export default function Router() {
         {
           path: 'area',
           children: [
-            { path: '/', element: <Navigate to="" replace /> },
+            { path: '/', element: <Navigate to="/admin/area/list" replace /> },
             { path: '/list', element: <ListAreaPage /> },
             { path: '/add', element: <AddAreaPage /> },
             { path: '/:id', element: <EditAreaPage /> }

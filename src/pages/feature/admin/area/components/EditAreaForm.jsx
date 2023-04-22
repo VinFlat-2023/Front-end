@@ -1,32 +1,28 @@
-import * as Yup from 'yup';
+import { Form, FormikProvider, useFormik } from 'formik';
+import { useSnackbar } from 'notistack5';
 import PropTypes from 'prop-types';
 import { useCallback, useState } from 'react';
-import { useSnackbar } from 'notistack5';
-import { useNavigate } from 'react-router-dom';
-import { Form, FormikProvider, useFormik } from 'formik';
+import * as Yup from 'yup';
 
 // material
-import { LoadingButton } from '@material-ui/lab';
-import { styled } from '@material-ui/core/styles';
 import {
   Box,
   Card,
+  FormHelperText,
   Grid,
   Stack,
-  Switch,
   TextField,
-  Typography,
-  FormHelperText,
-  FormControlLabel
+  Typography
 } from '@material-ui/core';
+import { styled } from '@material-ui/core/styles';
+import { LoadingButton } from '@material-ui/lab';
 // utils
 import axios from '../../../../../utils/axios';
 // routes
-import { PATH_ADMIN } from '../../../../../routes/paths';
 //
+
+import { uploadImage } from 'src/utils/firebase';
 import UploadSingleFile from '../../../../../components/upload/UploadSingleFile';
-import { createNewEmployee, updateUserProfile } from 'src/redux/slices/user';
-import { useDispatch } from 'react-redux';
 
 // ----------------------------------------------------------------------
 const locationFake = [{ id: '1', label: 'HCM' }];
@@ -43,11 +39,10 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
 }));
 
 export default function EditAreaForm({ areaDetail }) {
-  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const dispatch = useDispatch();
 
-  // const [imageURL, setImageURL] = useState(areaDetail.);
+  const [imageUpload, setImageUpload] = useState(null);
+
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Tên đang trống'),
@@ -55,12 +50,6 @@ export default function EditAreaForm({ areaDetail }) {
     images: Yup.mixed().required('Ảnh đang trống')
   });
 
-  // "username": "A_admin",
-  // "fullname": "Admin full role",
-  // "email": "admin@vinflat.com",
-  // "phone": "0123456789",
-  // "address": "TPHCM",
-  // "roleId": 1,
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -71,24 +60,19 @@ export default function EditAreaForm({ areaDetail }) {
     },
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
+      const url = await uploadImage(imageUpload)
+
       try {
         setSubmitting(false);
         const createValue = {
           name: values?.name,
           location: values?.location,
-          status: true
+          status: true,
+          imageUrl: url
         };
         try {
-          const response = await axios.put(`areas/${areaDetail.AreaId}`, createValue);
-          let imageArr = [];
-          imageArr.push(values.images.path);
-
-          const rsImage = await axios.put(`upload/area/${areaDetail.AreaId}`, {
-            ImageUploadRequest: imageArr
-          });
-          resetForm();
+          await axios.put(`areas/${areaDetail.AreaId}`, createValue);
           enqueueSnackbar('Chỉnh sửa khu vực thành công', { variant: 'success' });
-          navigate(PATH_ADMIN.area.listAreas);
         } catch (error) {
           console.log('error', error);
           setErrors(error.message);
@@ -105,12 +89,13 @@ export default function EditAreaForm({ areaDetail }) {
   const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
 
   const handleDrop = useCallback(
-    (acceptedFiles) => {
+    async (acceptedFiles) => {
       const file = acceptedFiles[0];
+      setImageUpload(file);
       if (file) {
         setFieldValue('images', {
           ...file,
-          preview: URL.createObjectURL(file)
+          preview: URL.createObjectURL(file),
         });
       }
     },

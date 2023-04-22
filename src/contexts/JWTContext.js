@@ -1,12 +1,10 @@
-import { createContext, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
+import { createContext, useEffect, useReducer } from 'react';
 // utils
 import axios from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
 // -------------------------------
 import mockData from '../utils/mock-data';
-import { getProfile, getRole } from 'src/redux/slices/user';
-import { getRoles } from '@testing-library/react';
 
 // ----------------------------------------------------------------------
 
@@ -191,3 +189,4 @@ function AuthProvider({ children }) {
 }
 
 export { AuthContext, AuthProvider };
+

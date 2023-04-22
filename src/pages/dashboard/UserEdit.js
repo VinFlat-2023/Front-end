@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react';
-import { paramCase, capitalCase } from 'change-case';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 // material
-import { Container, Tab, Box, Tabs, Stack } from '@material-ui/core';
+import { Container, Stack } from '@material-ui/core';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getUserList } from '../../redux/slices/user';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_ADMIN } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // components
-import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+import Page from '../../components/Page';
 import UserNewForm from '../../components/_dashboard/user/UserNewForm';
 import { getProfile } from '../../redux/slices/user';
 
@@ -39,8 +37,8 @@ export default function UserEdit() {
         <HeaderBreadcrumbs
           heading="Chỉnh sửa tài khoản"
           links={[
-            { name: 'Trang chủ', href: PATH_DASHBOARD.root },
-            { name: 'Quản lý tài khoản', href: PATH_DASHBOARD.account.root },
+            { name: 'Trang chủ', href: PATH_ADMIN.root },
+            { name: 'Quản lý tài khoản', href: PATH_ADMIN.account.root },
             { name: 'Chỉnh sửa tài khoản' }
           ]}
         />

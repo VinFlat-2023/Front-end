@@ -88,14 +88,17 @@ export default function Router() {
         {
           path: 'account',
           children: [
-            { path: '/', element: <Navigate to="" replace /> },
+            { path: '/', element: <Navigate to="/admin/account/accounts" replace /> },
             { path: '/accounts', element: <AdminUserListPage /> },
             { path: '/create', element: <AdminCreateUserPage /> }
           ]
         },
         {
           path: 'admin_profile',
-          children: [{ path: '/home', element: <AdminProfilePage /> }]
+          children: [
+            { path: '/home', element: <AdminProfilePage /> },
+            { path: '/edit', element: <AdminEditProfile /> },
+          ]
         },
         {
           path: 'area',
@@ -103,115 +106,10 @@ export default function Router() {
             { path: '/', element: <Navigate to="" replace /> },
             { path: '/list', element: <ListAreaPage /> },
             { path: '/add', element: <AddAreaPage /> },
-            { path: '/:id', element: <EditAreaPage /> },
+            { path: '/:id', element: <EditAreaPage /> }
           ]
-        },
-        // {
-        //   path: 'manage',
-        //   children: [
-        //     { path: '/users', element: <GeneralApp /> },
-        //     { path: '/profile', element: <GeneralEcommerce /> },
-        //     { path: '/create', element: <GeneralEcommerce /> },
-        //     { path: '/edit', element: <GeneralEcommerce /> }
-        //   ]
-        // },
-        // {
-        //   path: 'dormitory',
-        //   element: <Dormitory />
-        // },
-        // {
-        //   path: 'finances',
-        //   children: [
-        //     { path: '/invoices', element: <GeneralApp /> },
-        //     { path: '/income', element: <GeneralEcommerce /> },
-        //     { path: '/expense', element: <GeneralEcommerce /> },
-        //     { path: '/statistic', element: <GeneralEcommerce /> }
-        //   ]
-        // },
-        // {
-        //   path: 'contract',
-        //   children: [
-        //     { path: '/contracts', element: <GeneralApp /> },
-        //     { path: '/renters', element: <GeneralEcommerce /> }
-        //   ]
-        // },
-        // {
-        //   path: 'flat',
-        //   children: [
-        //     { path: '/flats', element: <GeneralApp /> },
-        //     { path: '/buildings', element: <GeneralEcommerce /> }
-        //   ]
-        // },
-        // {
-        //   path: 'service',
-        //   children: [{ path: '/services', element: <GeneralApp /> }]
-        // },
-        // {
-        //   path: 'report',
-        //   children: [
-        //     { path: '/status', element: <GeneralApp /> },
-        //     { path: '/services', element: <GeneralApp /> }
-        //   ]
-        // },
-
-        // {
-        //   path: 'analytics',
-        //   element: <GeneralAnalytics />
-        // },
-        // {
-        //   path: 'e-commerce',
-        //   children: [
-        //     { path: '/', element: <Navigate to="/dashboard/e-commerce/shop" replace /> },
-        //     { path: 'shop', element: <EcommerceShop /> },
-        //     { path: 'product/:name', element: <EcommerceProductDetails /> },
-        //     { path: 'list', element: <EcommerceProductList /> },
-        //     { path: 'product/new', element: <EcommerceProductCreate /> },
-        //     { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
-        //     { path: 'checkout', element: <EcommerceCheckout /> },
-        //     { path: 'invoice', element: <EcommerceInvoice /> }
-        //   ]
-        // },
-        // {
-        //   path: 'user',
-        //   children: [
-        //     { path: '/', element: <Navigate to="/dashboard/user/profile" replace /> },
-        //     { path: 'profile', element: <UserProfile /> },
-        //     { path: 'cards', element: <UserCards /> },
-        //     { path: 'list', element: <UserList /> },
-        //     { path: 'new', element: <UserCreate /> },
-        //     { path: '/:id/edit', element: <UserEdit /> },
-        //     { path: 'account', element: <UserAccount /> }
-        //   ]
-        // },
-        // {
-        //   path: 'blog',
-        //   children: [
-        //     { path: '/', element: <Navigate to="/dashboard/blog/posts" replace /> },
-        //     { path: 'posts', element: <BlogPosts /> },
-        //     { path: 'post/:title', element: <BlogPost /> },
-        //     { path: 'new-post', element: <BlogNewPost /> }
-        //   ]
-        // },
-        // {
-        //   path: 'mail',
-        //   children: [
-        //     { path: '/', element: <Navigate to="/dashboard/mail/all" replace /> },
-        //     { path: 'label/:customLabel', element: <Mail /> },
-        //     { path: 'label/:customLabel/:mailId', element: <Mail /> },
-        //     { path: ':systemLabel', element: <Mail /> },
-        //     { path: ':systemLabel/:mailId', element: <Mail /> }
-        //   ]
-        // },
-        // {
-        //   path: 'chat',
-        //   children: [
-        //     { path: '/', element: <Chat /> },
-        //     { path: 'new', element: <Chat /> },
-        //     { path: ':conversationKey', element: <Chat /> }
-        //   ]
-        // },
-        // { path: 'calendar', element: <Calendar /> },
-        // { path: 'kanban', element: <Kanban /> }
+        }
+        
       ]
     },
 
@@ -360,6 +258,7 @@ const AdminDashboard = Loadable(lazy(() => import('../pages/feature/admin/dashbo
 const AdminUserListPage = Loadable(lazy(() => import('../pages/feature/admin/manageUser/AdminUserListPage')));
 const AdminCreateUserPage = Loadable(lazy(() => import('../pages/feature/admin/manageUser/AdminCreateUserPage')));
 const AdminProfilePage = Loadable(lazy(() => import('../pages/feature/admin/profile/AdminProfilePage')));
+const AdminEditProfile = Loadable(lazy(() => import('../pages/feature/admin/profile/components/EditAdminProfile')));
 const ListAreaPage = Loadable(lazy(() => import('../pages/feature/admin/area/ListAreaPage')));
 const AddAreaPage = Loadable(lazy(() => import('../pages/feature/admin/area/AddAreaPage')));
 const EditAreaPage = Loadable(lazy(() => import('../pages/feature/admin/area/EditAreaPage')));

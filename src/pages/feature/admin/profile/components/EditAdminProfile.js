@@ -1,25 +1,28 @@
 import { useEffect, useState } from 'react';
 // material
-import { Container, Tab, Box, Tabs, Stack } from '@material-ui/core';
-import { Icon } from '@iconify/react';
 import roundAccountBox from '@iconify/icons-ic/round-account-box';
+import roundVpnKey from '@iconify/icons-ic/round-vpn-key';
+import { Icon } from '@iconify/react';
+import { Box, Container, Stack, Tab, Tabs } from '@material-ui/core';
 // redux
-import { useDispatch, useSelector } from '../../../../redux/store';
+import { useSelector } from '../../../../../redux/store';
 // routes
-import { PATH_ADMIN } from '../../../../routes/paths';
+import { PATH_ADMIN } from '../../../../../routes/paths';
 // hooks
-import useSettings from '../../../../hooks/useSettings';
+import useSettings from 'src/hooks/useSettings';
 // components
-import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
-import Page from '../../../../components/Page';
-import { getProfile } from '../../../../redux/slices/user';
-import ViewProfile from './components/ViewProfile';
+import UserNewForm from 'src/components/_dashboard/user/UserNewForm';
 import { getAccountTabLabel } from 'src/utils/formatText';
+import HeaderBreadcrumbs from '../../../../../components/HeaderBreadcrumbs';
+import Page from '../../../../../components/Page';
+import { getProfile } from 'src/redux/slices/user';
+import { useDispatch } from 'react-redux';
+import { AccountChangePassword } from 'src/components/_dashboard/user/account';
 
 // ----------------------------------------------------------------------
 
-export default function AdminProfilePage() {
-  const { themeStretch } = useSettings();
+export default function EditAdminProfile() {
+  const { themeStretch } = useSettings;
   const { myProfile } = useSelector((state) => state.user);
   const [currentTab, setCurrentTab] = useState('general');
   const dispatch = useDispatch();
@@ -28,8 +31,13 @@ export default function AdminProfilePage() {
     {
       value: 'general',
       icon: <Icon icon={roundAccountBox} width={20} height={20} />,
-      component: <ViewProfile currentUser={myProfile} />
+      component: <UserNewForm isEdit={true} currentUser={myProfile} />
     },
+    {
+      value: 'change_password',
+      icon: <Icon icon={roundVpnKey} width={20} height={20} />,
+      component: <AccountChangePassword />
+    }
   ];
 
   const handleChangeTab = (event, newValue) => {
@@ -48,7 +56,7 @@ export default function AdminProfilePage() {
           links={[
             { name: 'Trang chủ', href: PATH_ADMIN.root },
             { name: 'Quản lý hồ sơ', href: PATH_ADMIN.admin_profile.home },
-            { name: 'Hồ sơ cá nhân' }
+            { name: 'Chỉnh sửa hồ sơ' }
           ]}
         />
 
@@ -61,7 +69,13 @@ export default function AdminProfilePage() {
             onChange={handleChangeTab}
           >
             {ADMIN_TABS.map((tab) => (
-              <Tab disableRipple key={tab.value} label={getAccountTabLabel(tab.value)} icon={tab.icon} value={tab.value} />
+              <Tab
+                disableRipple
+                key={tab.value}
+                label={getAccountTabLabel(tab.value)}
+                icon={tab.icon}
+                value={tab.value}
+              />
             ))}
           </Tabs>
 
@@ -74,4 +88,3 @@ export default function AdminProfilePage() {
     </Page>
   );
 }
-

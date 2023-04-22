@@ -1,24 +1,22 @@
-import * as Yup from 'yup';
+import { Form, FormikProvider, useFormik } from 'formik';
 import { useSnackbar } from 'notistack5';
-import { useFormik, Form, FormikProvider } from 'formik';
+import * as Yup from 'yup';
 // material
-import { Stack, Card, TextField } from '@material-ui/core';
+import { Card, Stack, TextField } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 // utils
-import fakeRequest from '../../../../utils/fakeRequest';
-import { changePassword } from 'src/redux/slices/user';
 import { useDispatch } from 'react-redux';
 import axios from '../../../../utils/axios';
+import { setSession } from 'src/utils/jwt';
 
 // ----------------------------------------------------------------------
 
 export default function AccountChangePassword() {
   const { enqueueSnackbar } = useSnackbar();
-  const dispatch = useDispatch();
 
   const ChangePassWordSchema = Yup.object().shape({
     oldPassword: Yup.string().required('Bắt buộc nhập mật khẩu cũ'),
-    newPassword: Yup.string().min(8, 'Mật khẩu phải tối thiểu 8 ký tự').required('Bắt buộc nhập mật khẩu mới'),
+    newPassword: Yup.string().min(6, 'Mật khẩu phải tối thiểu 6 ký tự').required('Bắt buộc nhập mật khẩu mới'),
     confirmNewPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Mật khẩu phải trùng khớp')
   });
 
@@ -28,27 +26,28 @@ export default function AccountChangePassword() {
       newPassword: '',
       confirmNewPassword: ''
     },
-    //validationSchema: ChangePassWordSchema,
+    validationSchema: ChangePassWordSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       const url = `/employees/change-password`;
       try {
-        console.log(url);
         const response = await axios.put(url, {
+          oldPassword: values.oldPassword,
           password: values.newPassword,
           confirmPassword: values.confirmNewPassword
         });
-        console.log("res", response)
         setSubmitting(false);
         if (response.status) {
           resetForm();
-          enqueueSnackbar('Cập nhật thành công', { variant: 'success' });
-          //TODO update JWT
+          enqueueSnackbar(response.data.message, { variant: 'success' });
+          const newToken = response.data.data;
+          setSession(newToken);
         } else {
-          enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
+          enqueueSnackbar(response.data.message, { variant: 'error' });
         }
       } catch (error) {
+        console.error(error);
         setSubmitting(false);
-        enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
+        enqueueSnackbar(error.message, { variant: 'error' });
       }
     }
   });
@@ -77,7 +76,7 @@ export default function AccountChangePassword() {
               type="password"
               label="Mật khẩu mới"
               error={Boolean(touched.newPassword && errors.newPassword)}
-              helperText={(touched.newPassword && errors.newPassword) || 'Mật khẩu phải tối thiểu 8 ký tự'}
+              helperText={(touched.newPassword && errors.newPassword) || 'Mật khẩu phải tối thiểu 6 ký tự'}
             />
 
             <TextField

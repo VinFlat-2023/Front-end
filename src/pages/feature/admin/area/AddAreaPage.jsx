@@ -22,10 +22,10 @@ export default function AreaCreatePage() {
 
 
   return (
-    <Page title={'Thêm thành viên mới'}>
+    <Page title={'Thêm một khu vực mới cho  hệ thống KTX VinFlat'}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={'Thêm thành viên mới'}
+          heading={'Thêm một khu vực mới cho  hệ thống KTX VinFlat'}
           links={[
             { name: 'Trang chủ', href: PATH_ADMIN.root },
             { name: 'Quản lý khu vực', href: PATH_ADMIN.area.listAreas },

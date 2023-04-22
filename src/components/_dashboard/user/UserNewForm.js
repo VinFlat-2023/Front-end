@@ -14,8 +14,8 @@ import {
   TextField,
 } from '@material-ui/core';
 //
-// import Label from '../../Label';
-// import { UploadAvatar } from '../../upload';
+import Label from '../../Label';
+import { UploadAvatar } from '../../upload';
 import { createNewEmployee, updateUserProfile } from 'src/redux/slices/user';
 import { useDispatch } from 'react-redux';
 import { roles } from './roles';
@@ -67,7 +67,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
     }
   });
 
-  const { errors, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
+  const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
 
   const handleDrop = useCallback(
     (acceptedFiles) => {

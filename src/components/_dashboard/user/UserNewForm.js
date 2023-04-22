@@ -41,13 +41,6 @@ export default function UserNewForm({ isEdit, currentUser }) {
     roleId: Yup.string().required('Role is required')
   });
 
-  // "username": "A_admin",
-  // "fullname": "Admin full role",
-  // "email": "admin@vinflat.com",
-  // "phone": "0123456789",
-  // "address": "TPHCM",
-  // "roleId": 1,
-
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {

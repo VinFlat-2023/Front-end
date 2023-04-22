@@ -1,9 +1,9 @@
-import { Link as ScrollLink } from 'react-scroll';
+// import { Link as ScrollLink } from 'react-scroll';
 import { useLocation, Outlet } from 'react-router-dom';
 // material
-import { Box, Link, Container, Typography } from '@material-ui/core';
+import { Box} from '@material-ui/core';
 // components
-import Logo from '../../components/Logo';
+// import Logo from '../../components/Logo';
 //
 import MainNavbar from './MainNavbar';
 import MainFooter from './MainFooter';

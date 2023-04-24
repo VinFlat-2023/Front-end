@@ -1,28 +1,24 @@
 import { useEffect, useState } from 'react';
-import { paramCase } from 'change-case';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 // material
 import { Container } from '@material-ui/core';
 // redux
-import { useDispatch, useSelector } from '../../../../redux/store';
-import { getUserList } from '../../../../redux/slices/user';
 // routes
 import { PATH_ADMIN } from '../../../../routes/paths';
 // hooks
 import useSettings from '../../../../hooks/useSettings';
 // components
-import Page from '../../../../components/Page';
 import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
+import Page from '../../../../components/Page';
 import EditAreaForm from './components/EditAreaForm';
 // 
-import axios from '../../../../utils/axios'
+import axios from '../../../../utils/axios';
 
 // ----------------------------------------------------------------------
 
 export default function AreaEditPage() {
   const { themeStretch } = useSettings();
   const { id } = useParams(); // useParams use to get id of area on URL area/:id
-  console.log('id area: ', id);
   const [areaDetail, setAreaDetail] = useState('');
 
   useEffect(() => {
@@ -44,14 +40,14 @@ export default function AreaEditPage() {
 
 
   return (
-    <Page title={'Thêm thành viên mới'}>
+    <Page title={'Chỉnh sửa thông tin khu vực'}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={'Thêm thành viên mới'}
+          heading={'Chỉnh sửa thông tin khu vực'}
           links={[
             { name: 'Trang chủ', href: PATH_ADMIN.root },
             { name: 'Quản lý khu vực', href: PATH_ADMIN.area.listAreas },
-            { name: 'Chỉnh sửa khu vực' }
+            { name: 'Chỉnh sửa thông tin khu vục' }
           ]}
         />
 

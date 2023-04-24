@@ -92,7 +92,7 @@ export default function UserList() {
 
 
   useEffect(() => {
-    dispatch(getUserList(page +1 ,rowsPerPage));
+    dispatch(getUserList(page + 1, rowsPerPage));
   }, [dispatch, page, rowsPerPage]);
 
 
@@ -111,9 +111,9 @@ export default function UserList() {
     setSelected([]);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     setFilteredUsers(applySortFilter(userList, getComparator(order, orderBy), filterName));
-  },[userList])
+  }, [userList])
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -226,7 +226,7 @@ export default function UserList() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu  onDelete={() => handleDeleteUser(EmployeeId)} id={EmployeeId} />
+                          <UserMoreMenu onDelete={() => handleDeleteUser(EmployeeId)} id={EmployeeId} />
                         </TableCell>
                       </TableRow>
                     );
@@ -260,7 +260,3 @@ export default function UserList() {
     </Page>
   );
 }
-//paging
-//export to excel
-//user list
-//api call

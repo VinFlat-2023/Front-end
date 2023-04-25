@@ -108,7 +108,7 @@ export default function Router() {
             { path: '/add', element: <AddAreaPage /> },
             { path: '/:id', element: <EditAreaPage /> }
           ]
-        }
+        },
         
       ]
     },
@@ -157,6 +157,13 @@ export default function Router() {
           children: [
             { path: '/render-status', element: <RenderStatusPage /> },
             { path: '/service', element: <ServicesPage /> }
+          ]
+        },
+        {
+          path: 'setting',
+          children: [
+            { path: '/room-type', element: <RoomTypePage /> },
+            { path: '/flat-type', element: <FlatTypePage /> },
           ]
         }
       ]
@@ -275,6 +282,8 @@ const StatisticPage = Loadable(lazy(() => import('../pages/feature/supervisor/fi
 const ElectricPage = Loadable(lazy(() => import('../pages/feature/supervisor/electric/ElectricPage')));
 const RenderStatusPage = Loadable(lazy(() => import('../pages/feature/supervisor/report/StatusPage')));
 const ServicesPage = Loadable(lazy(() => import('../pages/feature/supervisor/report/ServicesPage')));
+const RoomTypePage = Loadable(lazy(() => import('../pages/feature/supervisor/setting/RoomType')));
+const FlatTypePage = Loadable(lazy(() => import('../pages/feature/supervisor/setting/FlatType')));
 
 // Others
 const UserEdit = Loadable(lazy(() => import('../pages/dashboard/UserEdit')));

@@ -1,11 +1,27 @@
 import { Form, FormikProvider, useFormik } from 'formik';
 import { useSnackbar } from 'notistack5';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
+import { isString } from 'lodash';
 
 // material
-import { Box, Card, FormHelperText, Grid, Stack, TextField, Typography } from '@material-ui/core';
+import {
+  Box,
+  Card,
+  FormHelperText,
+  Grid,
+  Stack,
+  TextField,
+  Typography,
+  List,
+  Paper,
+  Button,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  ListItemSecondaryAction
+} from '@material-ui/core';
 import { styled } from '@material-ui/core/styles';
 import { LoadingButton } from '@material-ui/lab';
 // utils
@@ -35,6 +51,23 @@ export default function CreateEditBuildingForm({ building, area, buildingExists 
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const user = useAuth();
+  const [initImgArr, setInitImgArr] = useState([
+    building?.BuildingImageUrl1,
+    building?.BuildingImageUrl2,
+    building?.BuildingImageUrl3,
+    building?.BuildingImageUrl4,
+    building?.BuildingImageUrl5,
+    building?.BuildingImageUrl6
+  ]);
+
+  var dmm = [
+    building?.BuildingImageUrl1,
+    building?.BuildingImageUrl2,
+    building?.BuildingImageUrl3,
+    building?.BuildingImageUrl4,
+    building?.BuildingImageUrl5,
+    building?.BuildingImageUrl6
+  ];
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Tên đang trống'),
@@ -45,6 +78,7 @@ export default function CreateEditBuildingForm({ building, area, buildingExists 
     description: Yup.string().required('Tên quản lý đang trống'),
     images: Yup.array().min(1, 'Ảnh đang trống') && Yup.array().max(7, 'Quá nhiều ảnh')
   });
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -54,7 +88,7 @@ export default function CreateEditBuildingForm({ building, area, buildingExists 
       address: building.BuildingAddress || '',
       supName: user.user.FullName || '',
       description: building.Description || '',
-      images: building.ImageUrl || []
+      images: []
     },
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
@@ -82,7 +116,7 @@ export default function CreateEditBuildingForm({ building, area, buildingExists 
           imageUrl6: arrImgURL[5] || ''
         };
         try {
-            console.log('value create building: ', createEditValue);
+          console.log('value create building: ', createEditValue);
           if (buildingExists === false) {
             const rs = await axios.post('buildings', createEditValue);
             enqueueSnackbar(rs.data.message, { variant: 'success' });
@@ -93,7 +127,6 @@ export default function CreateEditBuildingForm({ building, area, buildingExists 
             enqueueSnackbar(rs.data.message, { variant: 'success' });
             navigate(PATH_SUPERVISOR.home);
           }
-          
         } catch (error) {
           console.log('error', error);
           setErrors(error.message);
@@ -211,6 +244,21 @@ export default function CreateEditBuildingForm({ building, area, buildingExists 
                       </FormHelperText>
                     )}
                   </div>
+                </Stack>
+                <Stack direction="row" justifyContent="center" alignItems="center" spacing={3} sx={{ p: 2 }}>
+                  {dmm.map((item) => (
+                    <Box
+                      component="img"
+                      alt="file preview"
+                      src={item}
+                      sx={{
+                        top: 8,
+                        borderRadius: 1,
+                        width: '100px',
+                        height: '100px'
+                      }}
+                    />
+                  ))}
                 </Stack>
                 <Stack>
                   <div>

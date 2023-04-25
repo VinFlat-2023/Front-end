@@ -1,15 +1,19 @@
 import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
 import { paramCase } from 'change-case';
+import { useSnackbar } from 'notistack5';
 import { useRef, useState } from 'react';
 import editFill from '@iconify/icons-eva/edit-fill';
 import { Link as RouterLink } from 'react-router-dom';
 import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
+import { useNavigate } from 'react-router-dom';
 // material
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@material-ui/core';
 // routes
 import { PATH_ADMIN } from '../../../../../routes/paths';
+//
+import axios from '../../../../../utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -18,9 +22,21 @@ AreaMoreMenu.propTypes = {
   id: PropTypes.number
 };
 
-export default function AreaMoreMenu({ onDelete, id }) {
+export default function AreaMoreMenu({ id }) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+
+  const onDelete = async () => {
+    try {
+      const result = await axios.delete(`areas/${id}`);
+      enqueueSnackbar(result.data.message, { variant: 'success' });
+      window.location.reload();
+    } catch (error) {
+      enqueueSnackbar(error.message, { variant: 'error' });
+    }
+  };
 
   return (
     <>
@@ -45,11 +61,7 @@ export default function AreaMoreMenu({ onDelete, id }) {
           <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
-        <MenuItem
-          component={RouterLink}
-          to={`${PATH_ADMIN.area.root}/${id}`}
-          sx={{ color: 'text.secondary' }}
-        >
+        <MenuItem component={RouterLink} to={`${PATH_ADMIN.area.root}/${id}`} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />
           </ListItemIcon>

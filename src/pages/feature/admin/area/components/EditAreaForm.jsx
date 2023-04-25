@@ -56,7 +56,7 @@ export default function EditAreaForm({ areaDetail }) {
     initialValues: {
       name: areaDetail?.Name || '',
       location: areaDetail?.Location || '',
-      images: areaDetail?.ImageUrl || []
+      images: areaDetail?.AreaImageUrl1 || []
     },
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {

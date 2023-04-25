@@ -68,7 +68,7 @@ export default function CreateAreaForm() {
         };
         try {
           const response = await axios.post('areas', createValue);
-
+          
           resetForm();
           enqueueSnackbar('Thêm khu vực thành công', { variant: 'success' });
           navigate(PATH_ADMIN.area.listAreas);

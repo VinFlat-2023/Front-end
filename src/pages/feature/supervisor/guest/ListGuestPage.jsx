@@ -39,9 +39,10 @@ import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../../compone
 
 const TABLE_HEAD = [
   { id: 'fullName', label: 'Họ và tên', alignRight: false },
-  { id: 'userName', label: 'Tài khoản', alignRight: false },
-  { id: 'role', label: 'Chức vụ', alignRight: false },
   { id: 'phoneNumber', label: 'Số điện thoại', alignRight: false },
+  { id: 'userName', label: 'Địa chỉ email', alignRight: false },
+  { id: 'userName', label: 'Ngày sinh', alignRight: false },
+  { id: 'role', label: 'Giới tính', alignRight: false }, 
   { id: 'status', label: 'Trạng thái', alignRight: false },
   { id: '' }
 ];
@@ -156,22 +157,22 @@ export default function UserList() {
     <Page title="Danh sách khách thuê">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Danh sách khách thuê"
+          heading="Danh sách tài khoản khách thuê VinFlat"
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
             { name: 'Khách thuê', href: PATH_SUPERVISOR.room.listBuilding },
             { name: 'Danh sách khách thuê' }
           ]}
-          action={
-            <Button
-              variant="contained"
-              component={RouterLink}
-              to={PATH_SUPERVISOR.room.listBuilding}
-              startIcon={<Icon icon={plusFill} />}
-            >
-              Thêm khách thuê
-            </Button>
-          }
+          // action={
+          //   <Button
+          //     variant="contained"
+          //     component={RouterLink}
+          //     to={PATH_SUPERVISOR.room.listBuilding}
+          //     startIcon={<Icon icon={plusFill} />}
+          //   >
+          //     Thêm khách thuê
+          //   </Button>
+          // }
         />
 
         <Card>
@@ -213,9 +214,11 @@ export default function UserList() {
                             </Typography>
                           </Stack>
                         </TableCell>
+                        <TableCell align="left">{Phone}</TableCell>
+                        <TableCell align="left">{Username}</TableCell>
                         <TableCell align="left">{Username}</TableCell>
                         <TableCell align="left">{Role.RoleName}</TableCell>
-                        <TableCell align="left">{Phone}</TableCell>
+                       
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}

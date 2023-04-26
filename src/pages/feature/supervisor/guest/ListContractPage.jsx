@@ -161,14 +161,14 @@ export default function UserList() {
           heading="Danh sách hợp đồng"
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
-            { name: 'Khách thuê', href: PATH_SUPERVISOR.room.listBuilding },
+            { name: 'Khách thuê', href: PATH_SUPERVISOR.guest.listContract },
             { name: 'Danh sách hợp đồng' }
           ]}
           action={
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_SUPERVISOR.room.listBuilding}
+              to={PATH_SUPERVISOR.guest.listContract}
               startIcon={<Icon icon={plusFill} />}
             >
               Thêm hợp đồng

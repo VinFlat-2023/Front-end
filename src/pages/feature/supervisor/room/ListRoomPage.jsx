@@ -159,14 +159,14 @@ export default function UserList() {
           heading="Danh sách phòng"
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
-            { name: 'Phòng', href: PATH_SUPERVISOR.room.listBuilding },
+            { name: 'Phòng', href: PATH_SUPERVISOR.room.listRoom },
             { name: 'Danh sách phòng' }
           ]}
           action={
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_SUPERVISOR.room.listBuilding}
+              to={PATH_SUPERVISOR.room.listRoom}
               startIcon={<Icon icon={plusFill} />}
             >
               Thêm phòng

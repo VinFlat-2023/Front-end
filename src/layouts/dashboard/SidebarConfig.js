@@ -84,7 +84,7 @@ export const supervisorSlidebar = [
         path: PATH_SUPERVISOR.room.root,
         icon: ICONS.user,
         children: [
-          { title: 'Danh sách căn hộ', path: PATH_SUPERVISOR.room.listBuilding },
+          { title: 'Danh sách căn hộ', path: PATH_SUPERVISOR.room.listFlat },
           { title: 'Danh sách phòng', path: PATH_SUPERVISOR.room.listRoom }
         ]
       },

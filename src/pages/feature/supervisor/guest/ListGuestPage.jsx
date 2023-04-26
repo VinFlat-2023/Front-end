@@ -160,7 +160,7 @@ export default function UserList() {
           heading="Danh sách tài khoản khách thuê VinFlat"
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
-            { name: 'Khách thuê', href: PATH_SUPERVISOR.room.listBuilding },
+            { name: 'Khách thuê', href: PATH_SUPERVISOR.guest.listGuest },
             { name: 'Danh sách khách thuê' }
           ]}
           // action={

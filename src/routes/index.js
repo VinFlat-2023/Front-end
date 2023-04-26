@@ -132,7 +132,7 @@ export default function Router() {
         {
           path: 'room',
           children: [
-            { path: '/list-building', element: <ListBuidingPage /> },
+            { path: '/list-flat', element: <ListFlatPage /> },
             { path: '/list-room', element: <ListRoomPage /> }
           ]
         },
@@ -273,7 +273,7 @@ const EditAreaPage = Loadable(lazy(() => import('../pages/feature/admin/area/Edi
 // Supervisor
 const SupervisorDashboard = Loadable(lazy(() => import('../pages/feature/supervisor/dashboard/SupervisorDashboard')));
 const DomiritoryPage = Loadable(lazy(() => import('../pages/feature/supervisor/buildingKTX/BuildingKTXPage')));
-const ListBuidingPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/ListBuidingPage')));
+const ListFlatPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/ListFlatPage')));
 const ListRoomPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/ListRoomPage')));
 const ListContractPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/ListContractPage')));
 const ListGuestPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/ListGuestPage')));

@@ -6,37 +6,19 @@ import * as Yup from 'yup';
 import { isString } from 'lodash';
 
 // material
-import {
-  Box,
-  Card,
-  FormHelperText,
-  Grid,
-  Stack,
-  TextField,
-  Typography,
-  List,
-  Paper,
-  Button,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  ListItemSecondaryAction
-} from '@material-ui/core';
+import { Box, Card, FormHelperText, Grid, Stack, TextField, Typography } from '@material-ui/core';
 import { styled } from '@material-ui/core/styles';
 import { LoadingButton } from '@material-ui/lab';
 // utils
 import axios from '../../../../../utils/axios';
 // routes
-import { PATH_ADMIN, PATH_SUPERVISOR } from '../../../../../routes/paths';
+import { PATH_SUPERVISOR } from '../../../../../routes/paths';
 //
 import { useDispatch } from 'react-redux';
 import { uploadImage } from 'src/utils/firebase';
 import UploadMultiFile from '../../../../../components/upload/UploadMultiFile';
 import { QuillEditor } from '../../../../../components/editor';
 import useAuth from '../../../../../hooks/useAuth';
-
-// ----------------------------------------------------------------------
-const locationFake = [{ id: '1', label: 'HCM' }];
 
 // ----------------------------------------------------------------------
 
@@ -51,16 +33,8 @@ export default function CreateEditBuildingForm({ building, area, buildingExists 
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const user = useAuth();
-  const [initImgArr, setInitImgArr] = useState([
-    building?.BuildingImageUrl1,
-    building?.BuildingImageUrl2,
-    building?.BuildingImageUrl3,
-    building?.BuildingImageUrl4,
-    building?.BuildingImageUrl5,
-    building?.BuildingImageUrl6
-  ]);
 
-  var dmm = [
+  var imageListUpdate = [
     building?.BuildingImageUrl1,
     building?.BuildingImageUrl2,
     building?.BuildingImageUrl3,
@@ -108,12 +82,12 @@ export default function CreateEditBuildingForm({ building, area, buildingExists 
           status: true,
           averagePrice: 0,
           areaId: values.area,
-          imageUrl: arrImgURL[0] || '',
-          imageUrl2: arrImgURL[1] || '',
-          imageUrl3: arrImgURL[2] || '',
-          imageUrl4: arrImgURL[3] || '',
-          imageUrl5: arrImgURL[4] || '',
-          imageUrl6: arrImgURL[5] || ''
+          imageUrl: arrImgURL[0] || imageListUpdate[0] || '',
+          imageUrl2: arrImgURL[1] || imageListUpdate[1] || '',
+          imageUrl3: arrImgURL[2] || imageListUpdate[2] || '',
+          imageUrl4: arrImgURL[3] || imageListUpdate[3] || '',
+          imageUrl5: arrImgURL[4] || imageListUpdate[4] || '',
+          imageUrl6: arrImgURL[5] || imageListUpdate[5] || ''
         };
         try {
           console.log('value create building: ', createEditValue);
@@ -245,21 +219,35 @@ export default function CreateEditBuildingForm({ building, area, buildingExists 
                     )}
                   </div>
                 </Stack>
-                <Stack direction="row" justifyContent="center" alignItems="center" spacing={3} sx={{ p: 2 }}>
-                  {dmm.map((item) => (
-                    <Box
-                      component="img"
-                      alt="file preview"
-                      src={item}
-                      sx={{
-                        top: 8,
-                        borderRadius: 1,
-                        width: '100px',
-                        height: '100px'
-                      }}
-                    />
-                  ))}
-                </Stack>
+                {buildingExists === true ? (
+                  <Stack>
+                    <LabelStyle>Ảnh hiện tại</LabelStyle>
+                    <Stack direction="row" justifyContent="center" alignItems="center" spacing={3} sx={{ p: 2 }}>
+                      {imageListUpdate.map((item) => (
+                        <Box
+                          component="img"
+                          alt=""
+                          src={item}
+                          sx={item ? {
+                            top: 8,
+                            borderRadius: 1,
+                            width: '100px',
+                            height: '100px'
+                          } : {
+                            top: 8,
+                            borderRadius: 1,
+                            width: '100px',
+                            height: '100px',
+                            backgroundColor: '#ccd5dd'
+                          }}
+                        />
+                      ))}
+                    </Stack>
+                  </Stack>
+                ) : (
+                  ''
+                )}
+
                 <Stack>
                   <div>
                     <LabelStyle>Mô tả</LabelStyle>

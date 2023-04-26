@@ -38,10 +38,10 @@ import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../../compone
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'fullName', label: 'Họ và tên', alignRight: false },
-  { id: 'userName', label: 'Tài khoản', alignRight: false },
-  { id: 'role', label: 'Chức vụ', alignRight: false },
-  { id: 'phoneNumber', label: 'Số điện thoại', alignRight: false },
+  { id: 'fullName', label: 'Phòng', alignRight: false },
+  // { id: 'userName', label: 'Tài khoản', alignRight: false },
+  { id: 'role', label: 'Loại phòng', alignRight: false },
+  { id: 'phoneNumber', label: 'Số vị trí còn trống', alignRight: false },
   { id: 'status', label: 'Trạng thái', alignRight: false },
   { id: '' }
 ];
@@ -213,7 +213,7 @@ export default function UserList() {
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{Username}</TableCell>
+                        {/* <TableCell align="left">{Username}</TableCell> */}
                         <TableCell align="left">{Role.RoleName}</TableCell>
                         <TableCell align="left">{Phone}</TableCell>
                         <TableCell align="left">

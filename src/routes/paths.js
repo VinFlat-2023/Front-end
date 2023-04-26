@@ -48,7 +48,7 @@ export const PATH_SUPERVISOR = {
   electric: path(ROOTS_SUPERVISOR, '/electric'),
   room: {
     root: path(ROOTS_SUPERVISOR, '/room'),
-    listBuilding: path(ROOTS_SUPERVISOR, '/room/list-building'),
+    listFlat: path(ROOTS_SUPERVISOR, '/room/list-flat'),
     listRoom: path(ROOTS_SUPERVISOR, '/room/list-room')
   },
   guest: {

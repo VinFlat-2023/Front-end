@@ -159,14 +159,14 @@ export default function UserList() {
           heading="Danh sách căn hộ"
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
-            { name: 'Phòng', href: PATH_SUPERVISOR.room.listBuilding },
+            { name: 'Phòng', href: PATH_SUPERVISOR.room.listFlat },
             { name: 'Danh sách căn hộ' }
           ]}
           action={
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_SUPERVISOR.room.listBuilding}
+              to={PATH_SUPERVISOR.room.listFlat}
               startIcon={<Icon icon={plusFill} />}
             >
               Thêm căn hộ

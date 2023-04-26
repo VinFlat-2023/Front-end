@@ -37,7 +37,7 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(1)
 }));
 
-export default function CreateFlatForm() {
+export default function CreateRoomForm() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
@@ -71,8 +71,8 @@ export default function CreateFlatForm() {
           const response = await axios.post('areas', createValue);
           
           resetForm();
-          enqueueSnackbar('Thêm căn hộ thành công', { variant: 'success' });
-          navigate(PATH_SUPERVISOR.room.listFlat);
+          enqueueSnackbar('Thêm phòng thành công', { variant: 'success' });
+          navigate(PATH_SUPERVISOR.room.listRoom);
         } catch (error) {
           console.log('error', error);
           setErrors(error.message);
@@ -121,36 +121,18 @@ export default function CreateFlatForm() {
                 <Stack>
                   <TextField
                     fullWidth
-                    label="Tên căn hộ"
+                    label="Tên phòng"
                     {...getFieldProps('name')}
                     error={Boolean(touched.name && errors.name)}
                     helperText={touched.name && errors.name}
                   />
                 </Stack>
 
-                <Stack>
-                  <div>
-                    <LabelStyle>Hình ảnh căn hộ</LabelStyle>
-                    <UploadSingleFile
-                      maxSize={5145728}
-                      accept="image/*"
-                      file={values.images}
-                      onDrop={handleDrop}
-                      error={Boolean(touched.images && errors.images)}
-                    />
-                    {touched.images && errors.images && (
-                      <FormHelperText error sx={{ px: 2 }}>
-                        {touched.images && errors.images}
-                      </FormHelperText>
-                    )}
-                  </div>
-                </Stack>
-
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                 <TextField
                     select
                     fullWidth
-                    label="Loại căn hộ"
+                    label="Tên căn hộ"
                     {...getFieldProps('location')}
                     SelectProps={{ native: true }}
                     error={Boolean(touched.location && errors.location)}
@@ -183,6 +165,26 @@ export default function CreateFlatForm() {
 
                 <Stack>
                   <div>
+                    <LabelStyle>Hình ảnh phòng</LabelStyle>
+                    <UploadSingleFile
+                      maxSize={5145728}
+                      accept="image/*"
+                      file={values.images}
+                      onDrop={handleDrop}
+                      error={Boolean(touched.images && errors.images)}
+                    />
+                    {touched.images && errors.images && (
+                      <FormHelperText error sx={{ px: 2 }}>
+                        {touched.images && errors.images}
+                      </FormHelperText>
+                    )}
+                  </div>
+                </Stack>
+
+                
+
+                <Stack>
+                  <div>
                     <LabelStyle>Mô tả</LabelStyle>
                     <QuillEditor
                       id="post-content"
@@ -200,7 +202,7 @@ export default function CreateFlatForm() {
 
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Thêm căn hộ
+                    Thêm phòng mới
                   </LoadingButton>
                 </Box>
               </Stack>

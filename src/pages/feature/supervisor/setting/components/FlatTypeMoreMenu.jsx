@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 // material
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@material-ui/core';
 // routes
-import { PATH_ADMIN } from '../../../../../routes/paths';
+import { PATH_ADMIN, PATH_SUPERVISOR } from '../../../../../routes/paths';
 //
 import axios from '../../../../../utils/axios';
 
@@ -67,7 +67,7 @@ export default function FlatTypeMoreMenu({ id }) {
           <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
-        <MenuItem component={RouterLink} to={`${PATH_ADMIN.area.root}/${id}`} sx={{ color: 'text.secondary' }}>
+        <MenuItem component={RouterLink} to={`${PATH_SUPERVISOR.setting.flatType}/${id}`} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />
           </ListItemIcon>

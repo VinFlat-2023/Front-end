@@ -185,7 +185,7 @@ export default function UserList() {
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_SUPERVISOR.setting.flatType}
+              to={PATH_SUPERVISOR.setting.addFlatType}
               startIcon={<Icon icon={plusFill} />}
             >
               Thêm loại căn hộ

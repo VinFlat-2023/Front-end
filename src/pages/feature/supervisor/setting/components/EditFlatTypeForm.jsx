@@ -24,32 +24,38 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(1)
 }));
 
-export default function CreateFlatTypeForm() {
+export default function EditFlatTypeForm() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
 
+  const [imageUpload, setImageUpload] = useState(null);
+
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Tên đang trống'),
-    numberOfRoom: Yup.number().required('Số phòng đang trống')
+    location: Yup.string().required('vị trí đang trống'),
+    images: Yup.mixed().required('Ảnh đang trống')
   });
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       name: '',
-      numberOfRoom: 0
+      location: '',
+      images: null
     },
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
+        const url = await uploadImage(imageUpload);
         setSubmitting(false);
         const createValue = {
-          flatTypeName: values.name,
-          roomCapacity: values.numberOfRoom,
-          status: true
+          name: values.name,
+          location: values.location,
+          status: true,
+          imageUrl: url
         };
         try {
-          const response = await axios.post('flats/type', createValue);
+          const response = await axios.post('areas', createValue);
 
           resetForm();
           enqueueSnackbar('Thêm loại căn hộ thành công', { variant: 'success' });
@@ -68,6 +74,29 @@ export default function CreateFlatTypeForm() {
   });
 
   const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
+
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+      setImageUpload(file);
+      if (file) {
+        setFieldValue('images', {
+          ...file,
+          preview: URL.createObjectURL(file)
+        });
+      }
+    },
+    [setFieldValue]
+  );
+
+  const handleRemove = (file) => {
+    const filteredItems = values.images.filter((_file) => _file !== file);
+    setFieldValue('images', filteredItems);
+  };
+
+  const handleRemoveAll = () => {
+    setFieldValue('images', []);
+  };
 
   return (
     <FormikProvider value={formik}>
@@ -88,21 +117,18 @@ export default function CreateFlatTypeForm() {
                 <Stack>
                   <TextField
                     fullWidth
-                    type="number"
                     label="Tổng số phòng"
-                    {...getFieldProps('numberOfRoom')}
-                    error={Boolean(touched.numberOfRoom && errors.numberOfRoom)}
-                    helperText={touched.numberOfRoom && errors.numberOfRoom}
+                    {...getFieldProps('name')}
+                    error={Boolean(touched.name && errors.name)}
+                    helperText={touched.name && errors.name}
                   />
                 </Stack>
-                <Stack direction='row' sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Box>trạn thái: Active</Box>
-                  <Box >
-                    <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                      Thêm loại căn hộ
-                    </LoadingButton>
-                  </Box>
-                </Stack>
+
+                <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
+                  <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                    Thêm loại căn hộ
+                  </LoadingButton>
+                </Box>
               </Stack>
             </Card>
           </Grid>

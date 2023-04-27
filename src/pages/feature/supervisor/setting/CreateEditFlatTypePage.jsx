@@ -60,6 +60,7 @@ export default function CreateEditFlatTypePage() {
           heading={id ? 'Chỉnh sửa loại căn hộ' : 'Thêm loại căn hộ'}
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
+            { name: 'Cài đặt', href: PATH_SUPERVISOR.setting.flatType },
             { name: 'Danh sách loại căn hộ', href: PATH_SUPERVISOR.setting.flatType },
             { name: id ? 'Chỉnh sửa loại căn hộ' : 'Thêm loại căn hộ' }
           ]}

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { paramCase } from 'change-case';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack5';
 // material
 import { Container } from '@material-ui/core';
@@ -13,7 +12,7 @@ import Page from '../../../../components/Page';
 import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
 import CreateFlatTypeForm from './components/CreateFlatTypeForm';
 import EditFlatTypeForm from './components/EditFlatTypeForm';
-//
+// API
 import axios from '../../../../utils/axios';
 
 // ----------------------------------------------------------------------

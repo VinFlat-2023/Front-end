@@ -3,7 +3,6 @@ import { useSnackbar } from 'notistack5';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@material-ui/core/styles';
 import * as Yup from 'yup';
-
 // material
 import { Box, Card, Grid, Stack, TextField, Typography, Switch } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
@@ -63,7 +62,7 @@ export default function CreateFlatTypeForm({ flatTypeDetail, handleChange, flatT
     }
   });
 
-  const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
   return (
     <FormikProvider value={formik}>

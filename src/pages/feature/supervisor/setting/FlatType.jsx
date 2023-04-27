@@ -1,6 +1,5 @@
 import { filter } from 'lodash';
 import { Icon } from '@iconify/react';
-import { sentenceCase } from 'change-case';
 import { useState, useEffect } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
@@ -22,9 +21,6 @@ import {
   TablePagination,
   Switch
 } from '@material-ui/core';
-// redux
-import { useDispatch, useSelector } from '../../../../redux/store';
-import { getUserList, deleteUser } from '../../../../redux/slices/user';
 // routes
 import { PATH_SUPERVISOR } from '../../../../routes/paths';
 // hooks
@@ -35,7 +31,7 @@ import Label from '../../../../components/Label';
 import Scrollbar from '../../../../components/Scrollbar';
 import SearchNotFound from '../../../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../../components/_dashboard/user/list';
+import { UserListHead, UserListToolbar } from '../../../../components/_dashboard/user/list';
 import FlatTypeMoreMenu from './components/FlatTypeMoreMenu';
 // API
 import axios from '../../../../utils/axios';
@@ -85,7 +81,6 @@ function applySortFilter(array, comparator, query) {
 export default function UserList() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
-  const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   // const { userList, total } = useSelector((state) => state.user);
   const [flatTypeList, setFlatTypeList] = useState([]);
@@ -170,7 +165,7 @@ export default function UserList() {
     setFilterName(event.target.value);
   };
 
-  const handleChangeStatus = async (id, status) => {
+  const handleChangeStatus = async (id) => {
     try {
       const response = await axios.put(`flats/type/${id}/toggle-status`);
       enqueueSnackbar(response.data.message, { variant: 'success' });

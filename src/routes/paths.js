@@ -70,6 +70,7 @@ export const PATH_SUPERVISOR = {
     root: path(ROOTS_SUPERVISOR, '/setting'),
     roomType: path(ROOTS_SUPERVISOR, '/setting/room-type'),
     flatType: path (ROOTS_SUPERVISOR, '/setting/flat-type'),
+    addFlatType: path(ROOTS_SUPERVISOR, '/setting/flat-type/add'),
   }
 };
 

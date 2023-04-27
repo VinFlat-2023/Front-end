@@ -164,6 +164,8 @@ export default function Router() {
           children: [
             { path: '/room-type', element: <RoomTypePage /> },
             { path: '/flat-type', element: <FlatTypePage /> },
+            { path: '/flat-type/add', element: <CreateEditFlatTypePage /> },
+            { path: '/flat-type/:id', element: <CreateEditFlatTypePage /> }
           ]
         }
       ]
@@ -284,6 +286,7 @@ const RenderStatusPage = Loadable(lazy(() => import('../pages/feature/supervisor
 const ServicesPage = Loadable(lazy(() => import('../pages/feature/supervisor/report/ServicesPage')));
 const RoomTypePage = Loadable(lazy(() => import('../pages/feature/supervisor/setting/RoomType')));
 const FlatTypePage = Loadable(lazy(() => import('../pages/feature/supervisor/setting/FlatType')));
+const CreateEditFlatTypePage = Loadable(lazy(() => import('../pages/feature/supervisor/setting/CreateEditFlatTypePage')));
 
 // Others
 const UserEdit = Loadable(lazy(() => import('../pages/dashboard/UserEdit')));

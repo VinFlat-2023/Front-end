@@ -1,9 +1,8 @@
 import { Form, FormikProvider, useFormik } from 'formik';
 import { useSnackbar } from 'notistack5';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
-import { isString } from 'lodash';
 
 // material
 import { Box, Card, FormHelperText, Grid, Stack, TextField, Typography } from '@material-ui/core';
@@ -14,7 +13,6 @@ import axios from '../../../../../utils/axios';
 // routes
 import { PATH_SUPERVISOR } from '../../../../../routes/paths';
 //
-import { useDispatch } from 'react-redux';
 import { uploadImage } from 'src/utils/firebase';
 import UploadMultiFile from '../../../../../components/upload/UploadMultiFile';
 import { QuillEditor } from '../../../../../components/editor';
@@ -31,7 +29,6 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
 export default function CreateEditBuildingForm({ building, area, buildingExists }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const dispatch = useDispatch();
   const user = useAuth();
 
   var imageListUpdate = [

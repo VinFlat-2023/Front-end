@@ -1,12 +1,10 @@
 import { Form, FormikProvider, useFormik } from 'formik';
 import { useSnackbar } from 'notistack5';
-import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@material-ui/core/styles';
 import * as Yup from 'yup';
-
 // material
-import { Box, Card, Grid, Stack, TextField, Typography } from '@material-ui/core';
+import { Box, Card, Grid, Stack, TextField, Typography, Switch } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 // utils
 import axios from '../../../../../utils/axios';
@@ -15,13 +13,13 @@ import { PATH_SUPERVISOR } from '../../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
-const LabelStyle = styled(Typography)(({ theme }) => ({
+const LabelStyle = styled(Typography)(({ theme, customColor }) => ({
   ...theme.typography.subtitle2,
-  color: 'green',
+  color: customColor,
   marginBottom: theme.spacing(1)
 }));
 //----------------------------------------------------------------
-export default function CreateFlatTypeForm() {
+export default function CreateFlatTypeForm({ flatTypeDetail, handleChange, flatTypeStatus }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -32,8 +30,9 @@ export default function CreateFlatTypeForm() {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: '',
-      numberOfRoom: 0
+      name: flatTypeDetail?.FlatTypeName || '',
+      numberOfRoom: flatTypeDetail?.RoomCapacity || 0,
+      status: flatTypeStatus
     },
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
@@ -42,10 +41,10 @@ export default function CreateFlatTypeForm() {
         const createValue = {
           flatTypeName: values.name,
           roomCapacity: values.numberOfRoom,
-          status: true
+          status: values.status
         };
         try {
-          const response = await axios.post('flats/type', createValue);
+          const response = await axios.put(`flats/type/${flatTypeDetail?.FlatTypeId}`, createValue);
 
           resetForm();
           enqueueSnackbar(response.data.message, { variant: 'success' });
@@ -63,7 +62,7 @@ export default function CreateFlatTypeForm() {
     }
   });
 
-  const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
   return (
     <FormikProvider value={formik}>
@@ -94,12 +93,20 @@ export default function CreateFlatTypeForm() {
                 <Stack direction="row" sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Box>
                     <span>
-                      Trạng thái: <LabelStyle> Đang hoạt động</LabelStyle>
+                      <LabelStyle customColor={flatTypeDetail?.Status === true ? 'green' : 'red'}>
+                        {' '}
+                        {flatTypeDetail?.Status === true ? 'Đang hoạt động' : 'Dừng hoạt động'}{' '}
+                        <Switch
+                          checked={flatTypeStatus}
+                          onChange={handleChange}
+                          inputProps={{ 'aria-label': 'controlled' }}
+                        />
+                      </LabelStyle>{' '}
                     </span>
                   </Box>
                   <Box>
                     <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                      Thêm loại căn hộ
+                      Lưu thay đổi
                     </LoadingButton>
                   </Box>
                 </Stack>

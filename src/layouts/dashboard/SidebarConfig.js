@@ -122,7 +122,7 @@ export const supervisorSlidebar = [
       },
       {
         title: 'Cài đặt',
-        path: PATH_SUPERVISOR.report.root,
+        path: PATH_SUPERVISOR.setting.root,
         icon: ICONS.user,
         children: [
           { title: 'Loại căn hộ', path: PATH_SUPERVISOR.setting.flatType },

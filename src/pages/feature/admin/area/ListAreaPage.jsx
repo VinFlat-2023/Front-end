@@ -168,10 +168,6 @@ export default function ListAreaPage() {
     setFilterName(event.target.value);
   };
 
-  const handleDeleteUser = (userId) => {
-    dispatch(deleteUser(userId));
-  };
-
   // const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - listArea.length) : 0;
 
   const isUserNotFound = filteredUsers?.length === 0;

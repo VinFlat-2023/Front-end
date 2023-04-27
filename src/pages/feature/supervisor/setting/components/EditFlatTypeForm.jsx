@@ -1,6 +1,5 @@
 import { Form, FormikProvider, useFormik } from 'formik';
 import { useSnackbar } from 'notistack5';
-import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@material-ui/core/styles';
 import * as Yup from 'yup';
@@ -21,10 +20,9 @@ const LabelStyle = styled(Typography)(({ theme, customColor }) => ({
   marginBottom: theme.spacing(1)
 }));
 //----------------------------------------------------------------
-export default function CreateFlatTypeForm({ flatTypeDetail }) {
+export default function CreateFlatTypeForm({ flatTypeDetail, handleChange, flatTypeStatus }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const [initStatus, setInitSatus] = useState(flatTypeDetail?.Status);
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Tên đang trống'),
@@ -35,7 +33,7 @@ export default function CreateFlatTypeForm({ flatTypeDetail }) {
     initialValues: {
       name: flatTypeDetail?.FlatTypeName || '',
       numberOfRoom: flatTypeDetail?.RoomCapacity || 0,
-      status: initStatus === 'True' ? true : false
+      status: flatTypeStatus
     },
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
@@ -47,7 +45,7 @@ export default function CreateFlatTypeForm({ flatTypeDetail }) {
           status: values.status
         };
         try {
-          const response = await axios.post('flats/type', createValue);
+          const response = await axios.put(`flats/type/${flatTypeDetail?.FlatTypeId}`, createValue);
 
           resetForm();
           enqueueSnackbar(response.data.message, { variant: 'success' });
@@ -64,10 +62,6 @@ export default function CreateFlatTypeForm({ flatTypeDetail }) {
       }
     }
   });
-
-  const handleChange = (event) => {
-    setInitSatus(event.target.checked);
-  };
 
   const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
 
@@ -100,11 +94,11 @@ export default function CreateFlatTypeForm({ flatTypeDetail }) {
                 <Stack direction="row" sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Box>
                     <span>
-                      <LabelStyle customColor={initStatus === 'True' ? 'green' : 'red'}>
+                      <LabelStyle customColor={flatTypeDetail?.Status === true ? 'green' : 'red'}>
                         {' '}
-                        {initStatus === 'True' ? 'Đang hoạt động' : 'Dừng hoạt động'}{' '}
+                        {flatTypeDetail?.Status === true ? 'Đang hoạt động' : 'Dừng hoạt động'}{' '}
                         <Switch
-                          checked={initStatus === 'True' ? true : false}
+                          checked={flatTypeStatus}
                           onChange={handleChange}
                           inputProps={{ 'aria-label': 'controlled' }}
                         />

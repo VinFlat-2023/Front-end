@@ -1,7 +1,7 @@
 import { filter } from 'lodash';
 import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 // material
@@ -11,7 +11,6 @@ import {
   Card,
   Table,
   Stack,
-  Avatar,
   Button,
   Checkbox,
   TableRow,
@@ -20,7 +19,8 @@ import {
   Container,
   Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  Switch
 } from '@material-ui/core';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -47,6 +47,7 @@ const TABLE_HEAD = [
   { id: 'RoomCapacity', label: 'Tổng số phòng', alignRight: false },
   // { id: 'phoneNumber', label: 'Số điện thoại', alignRight: false },
   { id: 'Status', label: 'Trạng thái', alignRight: false },
+  { id: '' },
   { id: '' }
 ];
 
@@ -96,11 +97,11 @@ export default function UserList() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [filterStatus, setFilterStatus] = useState();
 
- 
   useEffect(() => {
     getFlatTypeList(page + 1, rowsPerPage);
-  }, [filterName, page, rowsPerPage]);
+  }, [filterName, page, rowsPerPage, filterStatus]);
 
   const getFlatTypeList = async (page, size) => {
     try {
@@ -117,6 +118,8 @@ export default function UserList() {
     } catch (error) {
       console.log('error: ', error);
       enqueueSnackbar(error.message, { variant: 'error' });
+      setFlatTypeList([]);
+      setTotalCount(0);
     }
   };
 
@@ -167,7 +170,19 @@ export default function UserList() {
     setFilterName(event.target.value);
   };
 
-  
+  const handleChangeStatus = async (id, status) => {
+    try {
+      const response = await axios.put(`flats/type/${id}/toggle-status`);
+      enqueueSnackbar(response.data.message, { variant: 'success' });
+      if (id === filterStatus) {
+        id = -id;
+      }
+      setFilterStatus(id);
+    } catch (error) {
+      console.log('error: ', error);
+      enqueueSnackbar(error.message, { variant: 'error' });
+    }
+  };
 
   const isUserNotFound = filteredUsers?.length === 0;
 
@@ -232,16 +247,22 @@ export default function UserList() {
                             </Typography>
                           </Stack>
                         </TableCell>
-                        {/* <TableCell align="left">{Username}</TableCell> */}
-                        {/* <TableCell align="left">{Role.RoleName}</TableCell> */}
+
                         <TableCell align="left">{RoomCapacity}</TableCell>
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(Status === 'false' && 'error') || 'success'}
+                            color={Status ? 'success' : 'error'}
                           >
                             {Status ? 'Đang hoạt động' : 'Dừng hoạt động'}
                           </Label>
+                        </TableCell>
+                        <TableCell align="right">
+                          <Switch
+                            checked={Status}
+                            onChange={() => handleChangeStatus(FlatTypeId, Status)}
+                            inputProps={{ 'aria-label': 'controlled' }}
+                          />
                         </TableCell>
 
                         <TableCell align="right">

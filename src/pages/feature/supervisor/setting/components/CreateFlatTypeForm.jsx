@@ -2,32 +2,28 @@ import { Form, FormikProvider, useFormik } from 'formik';
 import { useSnackbar } from 'notistack5';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { styled } from '@material-ui/core/styles';
 import * as Yup from 'yup';
 
 // material
-import { Box, Card, FormHelperText, Grid, Stack, TextField, Typography } from '@material-ui/core';
-import { styled } from '@material-ui/core/styles';
+import { Box, Card, Grid, Stack, TextField, Typography } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 // utils
 import axios from '../../../../../utils/axios';
 // routes
 import { PATH_SUPERVISOR } from '../../../../../routes/paths';
-//
-import { useDispatch } from 'react-redux';
-import { uploadImage } from 'src/utils/firebase';
 
 // ----------------------------------------------------------------------
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
-  color: theme.palette.text.secondary,
+  color: 'green',
   marginBottom: theme.spacing(1)
 }));
-
+//----------------------------------------------------------------
 export default function CreateFlatTypeForm() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const dispatch = useDispatch();
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Tên đang trống'),
@@ -52,7 +48,7 @@ export default function CreateFlatTypeForm() {
           const response = await axios.post('flats/type', createValue);
 
           resetForm();
-          enqueueSnackbar('Thêm loại căn hộ thành công', { variant: 'success' });
+          enqueueSnackbar(response.data.message, { variant: 'success' });
           navigate(PATH_SUPERVISOR.setting.flatType);
         } catch (error) {
           console.log('error', error);
@@ -95,9 +91,13 @@ export default function CreateFlatTypeForm() {
                     helperText={touched.numberOfRoom && errors.numberOfRoom}
                   />
                 </Stack>
-                <Stack direction='row' sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Box>trạn thái: Active</Box>
-                  <Box >
+                <Stack direction="row" sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Box>
+                    <span>
+                      Trạng thái: <LabelStyle> Đang hoạt động</LabelStyle>
+                    </span>
+                  </Box>
+                  <Box>
                     <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                       Thêm loại căn hộ
                     </LoadingButton>

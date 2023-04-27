@@ -240,7 +240,7 @@ export default function UserList() {
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
                             color={(Status === 'false' && 'error') || 'success'}
                           >
-                            {sentenceCase(Status ? 'Active' : 'Banned')}
+                            {Status ? 'Đang hoạt động' : 'Dừng hoạt động'}
                           </Label>
                         </TableCell>
 

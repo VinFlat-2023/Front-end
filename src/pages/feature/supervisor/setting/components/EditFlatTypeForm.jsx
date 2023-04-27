@@ -2,63 +2,55 @@ import { Form, FormikProvider, useFormik } from 'formik';
 import { useSnackbar } from 'notistack5';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { styled } from '@material-ui/core/styles';
 import * as Yup from 'yup';
 
 // material
-import { Box, Card, FormHelperText, Grid, Stack, TextField, Typography } from '@material-ui/core';
-import { styled } from '@material-ui/core/styles';
+import { Box, Card, Grid, Stack, TextField, Typography, Switch } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 // utils
 import axios from '../../../../../utils/axios';
 // routes
 import { PATH_SUPERVISOR } from '../../../../../routes/paths';
-//
-import { useDispatch } from 'react-redux';
-import { uploadImage } from 'src/utils/firebase';
 
 // ----------------------------------------------------------------------
 
-const LabelStyle = styled(Typography)(({ theme }) => ({
+const LabelStyle = styled(Typography)(({ theme, customColor }) => ({
   ...theme.typography.subtitle2,
-  color: theme.palette.text.secondary,
+  color: customColor,
   marginBottom: theme.spacing(1)
 }));
-
-export default function EditFlatTypeForm() {
+//----------------------------------------------------------------
+export default function CreateFlatTypeForm({ flatTypeDetail }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const dispatch = useDispatch();
-
-  const [imageUpload, setImageUpload] = useState(null);
+  const [initStatus, setInitSatus] = useState(flatTypeDetail?.Status);
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Tên đang trống'),
-    location: Yup.string().required('vị trí đang trống'),
-    images: Yup.mixed().required('Ảnh đang trống')
+    numberOfRoom: Yup.number().required('Số phòng đang trống')
   });
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: '',
-      location: '',
-      images: null
+      name: flatTypeDetail?.FlatTypeName || '',
+      numberOfRoom: flatTypeDetail?.RoomCapacity || 0,
+      status: initStatus === 'True' ? true : false
     },
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
-        const url = await uploadImage(imageUpload);
         setSubmitting(false);
         const createValue = {
-          name: values.name,
-          location: values.location,
-          status: true,
-          imageUrl: url
+          flatTypeName: values.name,
+          roomCapacity: values.numberOfRoom,
+          status: values.status
         };
         try {
-          const response = await axios.post('areas', createValue);
+          const response = await axios.post('flats/type', createValue);
 
           resetForm();
-          enqueueSnackbar('Thêm loại căn hộ thành công', { variant: 'success' });
+          enqueueSnackbar(response.data.message, { variant: 'success' });
           navigate(PATH_SUPERVISOR.setting.flatType);
         } catch (error) {
           console.log('error', error);
@@ -73,30 +65,11 @@ export default function EditFlatTypeForm() {
     }
   });
 
+  const handleChange = (event) => {
+    setInitSatus(event.target.checked);
+  };
+
   const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
-
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
-      setImageUpload(file);
-      if (file) {
-        setFieldValue('images', {
-          ...file,
-          preview: URL.createObjectURL(file)
-        });
-      }
-    },
-    [setFieldValue]
-  );
-
-  const handleRemove = (file) => {
-    const filteredItems = values.images.filter((_file) => _file !== file);
-    setFieldValue('images', filteredItems);
-  };
-
-  const handleRemoveAll = () => {
-    setFieldValue('images', []);
-  };
 
   return (
     <FormikProvider value={formik}>
@@ -117,18 +90,33 @@ export default function EditFlatTypeForm() {
                 <Stack>
                   <TextField
                     fullWidth
+                    type="number"
                     label="Tổng số phòng"
-                    {...getFieldProps('name')}
-                    error={Boolean(touched.name && errors.name)}
-                    helperText={touched.name && errors.name}
+                    {...getFieldProps('numberOfRoom')}
+                    error={Boolean(touched.numberOfRoom && errors.numberOfRoom)}
+                    helperText={touched.numberOfRoom && errors.numberOfRoom}
                   />
                 </Stack>
-
-                <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
-                  <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Thêm loại căn hộ
-                  </LoadingButton>
-                </Box>
+                <Stack direction="row" sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Box>
+                    <span>
+                      <LabelStyle customColor={initStatus === 'True' ? 'green' : 'red'}>
+                        {' '}
+                        {initStatus === 'True' ? 'Đang hoạt động' : 'Dừng hoạt động'}{' '}
+                        <Switch
+                          checked={initStatus === 'True' ? true : false}
+                          onChange={handleChange}
+                          inputProps={{ 'aria-label': 'controlled' }}
+                        />
+                      </LabelStyle>{' '}
+                    </span>
+                  </Box>
+                  <Box>
+                    <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                      Lưu thay đổi
+                    </LoadingButton>
+                  </Box>
+                </Stack>
               </Stack>
             </Card>
           </Grid>

@@ -11,29 +11,35 @@ import { useNavigate } from 'react-router-dom';
 // material
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@material-ui/core';
 // routes
-import { PATH_ADMIN } from '../../../../../routes/paths';
+import { PATH_ADMIN, PATH_SUPERVISOR } from '../../../../../routes/paths';
 //
 import axios from '../../../../../utils/axios';
 
 // ----------------------------------------------------------------------
 
-AreaMoreMenu.propTypes = {
+FlatTypeMoreMenu.propTypes = {
   onDelete: PropTypes.func,
   id: PropTypes.number
 };
 
-export default function AreaMoreMenu({ id }) {
+export default function FlatTypeMoreMenu({ id }) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
-  const onDelete = async () => {
+  const handleDeleteFlatType = async () => {
     try {
-      const result = await axios.delete(`areas/${id}`);
-      enqueueSnackbar(result.data.message, { variant: 'success' });
-      window.location.reload();
+      const result = await axios.delete(`flats/type/${id}`);
+      if(result.data.message){
+        enqueueSnackbar(result.data.message, { variant: 'success' });
+      window.location.reload(); // reload page sau khi delete
+      }else {
+        enqueueSnackbar('Loại căn hộ đang được sử dụng', { variant: 'error' });
+      }
+      
     } catch (error) {
+      console.log('error: ', error);
       enqueueSnackbar(error.message, { variant: 'error' });
     }
   };
@@ -54,14 +60,14 @@ export default function AreaMoreMenu({ id }) {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem onClick={onDelete} sx={{ color: 'text.secondary' }}>
+        <MenuItem onClick={handleDeleteFlatType} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={trash2Outline} width={24} height={24} />
           </ListItemIcon>
           <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
-        <MenuItem component={RouterLink} to={`${PATH_ADMIN.area.root}/${id}`} sx={{ color: 'text.secondary' }}>
+        <MenuItem component={RouterLink} to={`${PATH_SUPERVISOR.setting.flatType}/${id}`} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />
           </ListItemIcon>

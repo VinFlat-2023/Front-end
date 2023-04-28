@@ -1,38 +1,58 @@
-import { Page } from "@react-pdf/renderer";
-import { Form, FormikProvider, useFormik } from "formik";
-import HeaderBreadcrumbs from "src/components/HeaderBreadcrumbs";
+import { Page } from '@react-pdf/renderer';
+import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
 import { LoadingButton } from '@material-ui/lab';
-import { PATH_SUPERVISOR } from "src/routes/paths";
-import {
-  Card,
-  Grid,
-  Stack,
-  TextField,
-  Container
-} from '@material-ui/core';
+import { PATH_SUPERVISOR } from 'src/routes/paths';
+import UploadMultiFile from '../../../../components/upload/UploadMultiFile';
+import { styled } from '@material-ui/core/styles';
+import { useEffect, useState } from 'react';
+import axios from '../../../../utils/axios';
+import { useSnackbar } from 'notistack5';
+
+import * as Yup from 'yup';
+import { Card, Grid, Stack, TextField, Container, Typography } from '@material-ui/core';
+import CreateEditBuildingForm from './components/CreateEditBuidingForm';
+
+const LabelStyle = styled(Typography)(({ theme }) => ({
+  ...theme.typography.subtitle2,
+  color: theme.palette.text.secondary,
+  marginBottom: theme.spacing(1)
+}));
 
 export default function Dormitory() {
+  const { enqueueSnackbar } = useSnackbar();
+  const [building, setBuilding] = useState('');
+  const [area, setArea] = useState([]);
+  const [buildingExists, setBuildingExists] = useState(false);
 
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: {
+  const getCurrentBuilding = async () => {
+    try {
+      const response = await axios.get('buildings/current');
+      setBuilding(response.data.data);
+      setBuildingExists(true);
+      enqueueSnackbar(response.data.message, { variant: 'success' });
+    } catch (error) {
+      if(error.data === -1){
+        setBuildingExists(false);
+        setBuilding(error.message);
+      }
+      
+      enqueueSnackbar(error.message, { variant: 'error' });
+    }
+  };
 
-    },
-    // validationSchema: NewUserSchema,
-    // onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
-    //     try {
-    //         await fakeRequest(500);
-    //         resetForm();
-    //         setSubmitting(false);
-    //         enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
-    //         navigate(PATH_DASHBOARD.user.list);
-    //     } catch (error) {
-    //         console.error(error);
-    //         setSubmitting(false);
-    //         setErrors(error);
-    //     }
-    // }
-  });
+  const getAllArea = async() => {
+    try {
+      const response = await axios.get('areas/no-paging');
+      setArea(response.data.data);
+    } catch (error) {
+      enqueueSnackbar(error.message, { variant: 'error' });
+    }
+  }
+
+  useEffect(() => {
+    getCurrentBuilding();
+    getAllArea();
+  }, []);
 
   return (
     <Page title="Toà nhà KTX">
@@ -48,104 +68,8 @@ export default function Dormitory() {
           ]}
         />
 
-        <FormikProvider value={formik}>
-          <Form>
-            <Grid container spacing={6}
-              justifyContent="center"
-              alignItems="center">
-              <Grid item xs={8} md={8}>
-                <Card sx={{ p: 3 }}>
-                  <Stack
-                    direction="row"
-                    justifyContent="center"
-                    alignItems="center"
-                    spacing={3}
-                    sx={{ p: 2 }}
-                  >
-                    <TextField
-                      label="Tên ký túc xá"
-                      style={{ width: '40%' }}
-                    // {...getFieldProps('name')}
-                    // error={Boolean(touched.name && errors.name)}
-                    // helperText={touched.name && errors.name}
-                    />
-                    <TextField
-                      label="Tổng số căn hộ"
-                      style={{ width: '40%' }}
-                    // {...getFieldProps('name')}
-                    // error={Boolean(touched.name && errors.name)}
-                    // helperText={touched.name && errors.name}
-                    />
-                  </ Stack>
-
-                  <Stack
-                    direction="row"
-                    justifyContent="center"
-                    alignItems="center"
-                    spacing={3}
-                    sx={{ p: 2 }}>
-                    <TextField
-                      label="Số điện thoại"
-                      style={{ width: '40%' }}
-                    // {...getFieldProps('name')}
-                    // error={Boolean(touched.name && errors.name)}
-                    // helperText={touched.name && errors.name}
-                    />
-                    <TextField
-                      label="Địa chỉ"
-                      style={{ width: '40%' }}
-                    // {...getFieldProps('name')}
-                    // error={Boolean(touched.name && errors.name)}
-                    // helperText={touched.name && errors.name}
-                    />
-                  </ Stack>
-
-                  <Stack
-                    direction="row"
-                    justifyContent="center"
-                    alignItems="center"
-                    spacing={3}
-                    sx={{ p: 2 }}>
-                    <TextField
-                      label="Khu vực"
-                      style={{ width: '40%' }}
-                    // {...getFieldProps('name')}
-                    // error={Boolean(touched.name && errors.name)}
-                    // helperText={touched.name && errors.name}
-                    />
-                    <TextField
-                      label="Người quản lý"
-                      style={{ width: '40%' }}
-                    // {...getFieldProps('name')}
-                    // error={Boolean(touched.name && errors.name)}
-                    // helperText={touched.name && errors.name}
-                    />
-                  </ Stack>
-
-                  <Stack
-                    direction="row"
-                    justifyContent="center"
-                    alignItems="center"
-                    spacing={3}
-                    sx={{ p: 2 }}>
-                    <TextField
-                      id="outlined-multiline-static"
-                      label="Description"
-                      multiline
-                      style={{ width: '85%' }}
-                      rows={4}
-                    />
-                  </ Stack>
-                  <LoadingButton style={{ float: 'right', width: '200px' }} type="submit" fullWidth variant="contained" size="large">
-                    Tạo toà nhà
-                    {/* {!isEdit ? 'Create Product' : 'Save Changes'} */}
-                  </LoadingButton>
-                </ Card>
-              </ Grid>
-            </ Grid>
-          </Form>
-        </FormikProvider>
+        <CreateEditBuildingForm area={area} building={building} buildingExists={buildingExists} />
       </Container>
     </Page>
-  )
+  );
 }

@@ -108,7 +108,7 @@ export default function Router() {
             { path: '/add', element: <AddAreaPage /> },
             { path: '/:id', element: <EditAreaPage /> }
           ]
-        }
+        },
         
       ]
     },
@@ -132,7 +132,7 @@ export default function Router() {
         {
           path: 'room',
           children: [
-            { path: '/list-building', element: <ListBuidingPage /> },
+            { path: '/list-flat', element: <ListFlatPage /> },
             { path: '/list-room', element: <ListRoomPage /> }
           ]
         },
@@ -157,6 +157,15 @@ export default function Router() {
           children: [
             { path: '/render-status', element: <RenderStatusPage /> },
             { path: '/service', element: <ServicesPage /> }
+          ]
+        },
+        {
+          path: 'setting',
+          children: [
+            { path: '/room-type', element: <RoomTypePage /> },
+            { path: '/flat-type', element: <FlatTypePage /> },
+            { path: '/flat-type/add', element: <CreateEditFlatTypePage /> },
+            { path: '/flat-type/:id', element: <CreateEditFlatTypePage /> }
           ]
         }
       ]
@@ -266,7 +275,7 @@ const EditAreaPage = Loadable(lazy(() => import('../pages/feature/admin/area/Edi
 // Supervisor
 const SupervisorDashboard = Loadable(lazy(() => import('../pages/feature/supervisor/dashboard/SupervisorDashboard')));
 const DomiritoryPage = Loadable(lazy(() => import('../pages/feature/supervisor/buildingKTX/BuildingKTXPage')));
-const ListBuidingPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/ListBuidingPage')));
+const ListFlatPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/ListFlatPage')));
 const ListRoomPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/ListRoomPage')));
 const ListContractPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/ListContractPage')));
 const ListGuestPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/ListGuestPage')));
@@ -275,6 +284,9 @@ const StatisticPage = Loadable(lazy(() => import('../pages/feature/supervisor/fi
 const ElectricPage = Loadable(lazy(() => import('../pages/feature/supervisor/electric/ElectricPage')));
 const RenderStatusPage = Loadable(lazy(() => import('../pages/feature/supervisor/report/StatusPage')));
 const ServicesPage = Loadable(lazy(() => import('../pages/feature/supervisor/report/ServicesPage')));
+const RoomTypePage = Loadable(lazy(() => import('../pages/feature/supervisor/setting/RoomType')));
+const FlatTypePage = Loadable(lazy(() => import('../pages/feature/supervisor/setting/FlatType')));
+const CreateEditFlatTypePage = Loadable(lazy(() => import('../pages/feature/supervisor/setting/CreateEditFlatTypePage')));
 
 // Others
 const UserEdit = Loadable(lazy(() => import('../pages/dashboard/UserEdit')));

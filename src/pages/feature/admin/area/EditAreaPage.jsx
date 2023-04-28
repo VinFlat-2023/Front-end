@@ -29,7 +29,7 @@ export default function AreaEditPage() {
     try {
       const data = await axios.get(`areas/${id}`);
       setAreaDetail(data.data.data);
-      console.log('data area',data.data.data )
+      
     } catch (error) {
       if (error.status === 'Not Found') {
         setAreaDetail('');

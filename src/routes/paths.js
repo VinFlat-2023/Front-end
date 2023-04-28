@@ -48,7 +48,7 @@ export const PATH_SUPERVISOR = {
   electric: path(ROOTS_SUPERVISOR, '/electric'),
   room: {
     root: path(ROOTS_SUPERVISOR, '/room'),
-    listBuilding: path(ROOTS_SUPERVISOR, '/room/list-building'),
+    listFlat: path(ROOTS_SUPERVISOR, '/room/list-flat'),
     listRoom: path(ROOTS_SUPERVISOR, '/room/list-room')
   },
   guest: {
@@ -65,6 +65,12 @@ export const PATH_SUPERVISOR = {
     root: path(ROOTS_SUPERVISOR, '/report'),
     renderStatus: path(ROOTS_SUPERVISOR, '/report/render-status'),
     service: path(ROOTS_SUPERVISOR, '/report/service'),
+  },
+  setting: {
+    root: path(ROOTS_SUPERVISOR, '/setting'),
+    roomType: path(ROOTS_SUPERVISOR, '/setting/room-type'),
+    flatType: path (ROOTS_SUPERVISOR, '/setting/flat-type'),
+    addFlatType: path(ROOTS_SUPERVISOR, '/setting/flat-type/add'),
   }
 };
 

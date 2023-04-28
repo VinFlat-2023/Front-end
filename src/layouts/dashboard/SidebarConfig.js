@@ -84,7 +84,7 @@ export const supervisorSlidebar = [
         path: PATH_SUPERVISOR.room.root,
         icon: ICONS.user,
         children: [
-          { title: 'Danh sách căn hộ', path: PATH_SUPERVISOR.room.listBuilding },
+          { title: 'Danh sách căn hộ', path: PATH_SUPERVISOR.room.listFlat },
           { title: 'Danh sách phòng', path: PATH_SUPERVISOR.room.listRoom }
         ]
       },
@@ -118,6 +118,15 @@ export const supervisorSlidebar = [
         children: [
           { title: 'Báo cáo tổng hợp tình trạng thuê', path: PATH_SUPERVISOR.report.renderStatus },
           { title: 'Báo cáo điện nước', path: PATH_SUPERVISOR.report.service }
+        ]
+      },
+      {
+        title: 'Cài đặt',
+        path: PATH_SUPERVISOR.setting.root,
+        icon: ICONS.user,
+        children: [
+          { title: 'Loại căn hộ', path: PATH_SUPERVISOR.setting.flatType },
+          { title: 'Loại phòng', path: PATH_SUPERVISOR.setting.roomType }
         ]
       }
     ]

@@ -5,26 +5,20 @@ import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
 // material
-import {
-  Box,
-  Card,
-  FormHelperText,
-  Grid,
-  Stack,
-  TextField,
-  Typography
-} from '@material-ui/core';
+import { Box, Card, FormHelperText, Grid, Stack, TextField, Typography } from '@material-ui/core';
 import { styled } from '@material-ui/core/styles';
 import { LoadingButton } from '@material-ui/lab';
 // utils
 import axios from '../../../../../utils/axios';
 // routes
-import { PATH_ADMIN } from '../../../../../routes/paths';
+import { PATH_ADMIN, PATH_SUPERVISOR } from '../../../../../routes/paths';
 //
 import { useDispatch } from 'react-redux';
 import { uploadImage } from 'src/utils/firebase';
 import UploadSingleFile from '../../../../../components/upload/UploadSingleFile';
 
+// ----------------------------------------------------------------------
+const locationFake = [{ id: '1', label: 'HCM' }];
 
 // ----------------------------------------------------------------------
 
@@ -34,20 +28,23 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(1)
 }));
 
-export default function CreateAreaForm() {
+export default function CreateRoomTypeForm() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
 
   const [imageUpload, setImageUpload] = useState(null);
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Tên đang trống'),
+    location: Yup.string().required('vị trí đang trống'),
     images: Yup.mixed().required('Ảnh đang trống')
   });
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       name: '',
+      location: '',
       images: null
     },
     validationSchema: NewUserSchema,
@@ -57,15 +54,16 @@ export default function CreateAreaForm() {
         setSubmitting(false);
         const createValue = {
           name: values.name,
+          location: values.location,
           status: true,
-          imageUrl: url,
+          imageUrl: url
         };
         try {
           const response = await axios.post('areas', createValue);
-          
+
           resetForm();
-          enqueueSnackbar('Thêm khu vực thành công', { variant: 'success' });
-          navigate(PATH_ADMIN.area.listAreas);
+          enqueueSnackbar('Thêm loại phòng thành công', { variant: 'success' });
+          navigate(PATH_SUPERVISOR.setting.roomType);
         } catch (error) {
           console.log('error', error);
           setErrors(error.message);
@@ -111,37 +109,28 @@ export default function CreateAreaForm() {
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 5 }}>
               <Stack spacing={3}>
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                <Stack>
                   <TextField
                     fullWidth
-                    label="Tên khu vực"
+                    label="Tên loại phòng"
+                    {...getFieldProps('name')}
+                    error={Boolean(touched.name && errors.name)}
+                    helperText={touched.name && errors.name}
+                  />
+                </Stack>
+                <Stack>
+                  <TextField
+                    fullWidth
+                    label="Tổng số giường"
                     {...getFieldProps('name')}
                     error={Boolean(touched.name && errors.name)}
                     helperText={touched.name && errors.name}
                   />
                 </Stack>
 
-                <Stack>
-                  <div>
-                    <LabelStyle>Hình ảnh khu vực ( tối đa 1 ảnh )</LabelStyle>
-                    <UploadSingleFile
-                      maxSize={5145728}
-                      accept="image/*"
-                      file={values.images}
-                      onDrop={handleDrop}
-                      error={Boolean(touched.images && errors.images)}
-                    />
-                    {touched.images && errors.images && (
-                      <FormHelperText error sx={{ px: 2 }}>
-                        {touched.images && errors.images}
-                      </FormHelperText>
-                    )}
-                  </div>
-                </Stack>
-
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Thêm khu vực
+                    Thêm loại phòng
                   </LoadingButton>
                 </Box>
               </Stack>

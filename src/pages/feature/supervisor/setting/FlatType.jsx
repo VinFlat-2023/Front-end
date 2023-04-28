@@ -1,50 +1,51 @@
-import { filter } from 'lodash';
-import { Icon } from '@iconify/react';
-import { sentenceCase } from 'change-case';
-import { useState, useEffect, useMemo } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
+import { Icon } from '@iconify/react';
+import { filter } from 'lodash';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { useTheme } from '@material-ui/core/styles';
 import {
-  Card,
-  Table,
-  Stack,
-  Avatar,
   Button,
+  Card,
   Checkbox,
-  TableRow,
+  Container,
+  Stack,
+  Switch,
+  Table,
   TableBody,
   TableCell,
-  Container,
-  Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  TableRow,
+  Typography
 } from '@material-ui/core';
-// redux
-import { useDispatch, useSelector } from '../../../../redux/store';
-import { getUserList, deleteUser } from '../../../../redux/slices/user';
+import { useTheme } from '@material-ui/core/styles';
+import { useSnackbar } from 'notistack5';
 // routes
 import { PATH_SUPERVISOR } from '../../../../routes/paths';
 // hooks
 import useSettings from '../../../../hooks/useSettings';
 // components
-import Page from '../../../../components/Page';
+import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
 import Label from '../../../../components/Label';
+import Page from '../../../../components/Page';
 import Scrollbar from '../../../../components/Scrollbar';
 import SearchNotFound from '../../../../components/SearchNotFound';
-import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../../components/_dashboard/user/list';
+import { UserListHead, UserListToolbar } from '../../../../components/_dashboard/user/list';
+import FlatTypeMoreMenu from './components/FlatTypeMoreMenu';
+// API
+import { useDispatch, useSelector } from 'react-redux';
+import { getFlatTypeList } from 'src/redux/slices/setting';
+import axios from '../../../../utils/axios';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'fullName', label: 'Tên hợp đồng', alignRight: false },
-  { id: 'fullName', label: 'Khách thuê', alignRight: false },
-  { id: 'userName', label: 'Chi tiết', alignRight: false },
-  { id: 'userName', label: 'Ngày bắt đầu', alignRight: false },
-  { id: 'role', label: 'Ngày kết thúc', alignRight: false },
-  { id: 'phoneNumber', label: 'Ngày kí', alignRight: false },
-  { id: 'status', label: 'Trạng thái', alignRight: false },
+  { id: 'FlatTypeName', label: 'Tên loại căn hộ', alignRight: false },
+  // { id: 'userName', label: 'Tài khoản', alignRight: false },
+  { id: 'RoomCapacity', label: 'Tổng số phòng', alignRight: false },
+  // { id: 'phoneNumber', label: 'Số điện thoại', alignRight: false },
+  { id: 'Status', label: 'Trạng thái', alignRight: false },
+  { id: '' },
   { id: '' }
 ];
 
@@ -74,16 +75,17 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.FlatTypeName.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis?.map((el) => el[0]);
 }
 
 export default function UserList() {
   const { themeStretch } = useSettings();
-  const theme = useTheme();
   const dispatch = useDispatch();
-  const { userList, total } = useSelector((state) => state.user);
+  const theme = useTheme();
+  const { enqueueSnackbar } = useSnackbar();
+  const { flatTypeList, flatTypeTotal } = useSelector((state) => state.setting);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -91,12 +93,11 @@ export default function UserList() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filteredUsers, setFilteredUsers] = useState([]);
-
+  const [filterStatus, setFilterStatus] = useState();
 
   useEffect(() => {
-    dispatch(getUserList(page +1 ,rowsPerPage));
-  }, [dispatch, page, rowsPerPage]);
-
+    dispatch(getFlatTypeList(page + 1, rowsPerPage));
+  }, [filterName, page, rowsPerPage, filterStatus]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -106,16 +107,16 @@ export default function UserList() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = userList.map((n) => n.Username);
+      const newSelecteds = flatTypeList.map((n) => n.FlatTypeId);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  useEffect(()=>{
-    setFilteredUsers(applySortFilter(userList, getComparator(order, orderBy), filterName));
-  },[userList])
+  useEffect(() => {
+    setFilteredUsers(applySortFilter(flatTypeList, getComparator(order, orderBy), filterName));
+  }, [flatTypeList]);
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -145,33 +146,40 @@ export default function UserList() {
     setFilterName(event.target.value);
   };
 
-  const handleDeleteUser = (userId) => {
-    dispatch(deleteUser(userId));
+  const handleChangeStatus = async (id) => {
+    try {
+      const response = await axios.put(`flats/type/${id}/toggle-status`);
+      enqueueSnackbar(response.data.message, { variant: 'success' });
+      if (id === filterStatus) {
+        id = -id;
+      }
+      setFilterStatus(id);
+    } catch (error) {
+      console.log('error: ', error);
+      enqueueSnackbar(error.message, { variant: 'error' });
+    }
   };
-
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
-
 
   const isUserNotFound = filteredUsers?.length === 0;
 
   return (
-    <Page title="Danh sách hợp đồng">
+    <Page title="Loại căn hộ">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Danh sách hợp đồng"
+          heading="Loại căn hộ"
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
-            { name: 'Khách thuê', href: PATH_SUPERVISOR.guest.listContract },
-            { name: 'Danh sách hợp đồng' }
+            { name: 'Cài đặt', href: PATH_SUPERVISOR.setting.flatType },
+            { name: 'Danh sách loại căn hộ' }
           ]}
           action={
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_SUPERVISOR.guest.listContract}
+              to={PATH_SUPERVISOR.setting.addFlatType}
               startIcon={<Icon icon={plusFill} />}
             >
-              Thêm hợp đồng
+              Thêm loại căn hộ
             </Button>
           }
         />
@@ -186,56 +194,59 @@ export default function UserList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={userList?.length}
+                  rowCount={flatTypeList?.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {userList.map((row) => {
-                    const { EmployeeId, FullName, Username, Status, Role, Phone } = row;
-                    const isItemSelected = selected.indexOf(Username) !== -1;
+                  {flatTypeList?.map((row) => {
+                    const { FlatTypeId, FlatTypeName, RoomCapacity, Status } = row.FlatType;                    ;
+                    const isItemSelected = selected.indexOf(FlatTypeId) !== -1;
 
                     return (
                       <TableRow
                         hover
-                        key={EmployeeId}
+                        key={FlatTypeId}
                         tabIndex={-1}
                         role="checkbox"
                         selected={isItemSelected}
                         aria-checked={isItemSelected}
                       >
                         <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, Username)} />
+                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, FlatTypeId)} />
                         </TableCell>
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
                             <Typography variant="subtitle2" noWrap>
-                              {FullName}
+                              {FlatTypeName}
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{Username}</TableCell>
-                        <TableCell align="left">{Username}</TableCell>
-                        <TableCell align="left">{Username}</TableCell>
-                        <TableCell align="left">{Role.RoleName}</TableCell>
-                        <TableCell align="left">{Phone}</TableCell>
+
+                        <TableCell align="left">{RoomCapacity}</TableCell>
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(Status === 'false' && 'error') || 'success'}
+                            color={Status ? 'success' : 'error'}
                           >
-                            {sentenceCase(Status ? "Active" : "Banned")}
+                            {Status ? 'Đang hoạt động' : 'Dừng hoạt động'}
                           </Label>
+                        </TableCell>
+                        <TableCell align="right">
+                          <Switch
+                            checked={Status}
+                            onChange={() => handleChangeStatus(FlatTypeId, Status)}
+                            inputProps={{ 'aria-label': 'controlled' }}
+                          />
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu  onDelete={() => handleDeleteUser(EmployeeId)} id={EmployeeId} />
+                          <FlatTypeMoreMenu id={FlatTypeId} />
                         </TableCell>
                       </TableRow>
                     );
                   })}
-
                 </TableBody>
                 {isUserNotFound && (
                   <TableBody>
@@ -253,7 +264,7 @@ export default function UserList() {
           <TablePagination
             rowsPerPageOptions={[5, 10]}
             component="div"
-            count={total}
+            count={flatTypeTotal}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

@@ -38,14 +38,12 @@ import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../../compone
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'fullName', label: 'Tên hợp đồng', alignRight: false },
-  { id: 'fullName', label: 'Khách thuê', alignRight: false },
-  { id: 'userName', label: 'Chi tiết', alignRight: false },
-  { id: 'userName', label: 'Ngày bắt đầu', alignRight: false },
-  { id: 'role', label: 'Ngày kết thúc', alignRight: false },
-  { id: 'phoneNumber', label: 'Ngày kí', alignRight: false },
+  { id: 'fullName', label: 'Tên phòng', alignRight: false },
+  // { id: 'userName', label: 'Tài khoản', alignRight: false },
+  // { id: 'role', label: 'Loại', alignRight: false },
+  { id: 'phoneNumber', label: 'Tổng số giường', alignRight: false },
   { id: 'status', label: 'Trạng thái', alignRight: false },
-  { id: '' }
+  { id: '' }  
 ];
 
 // ----------------------------------------------------------------------
@@ -155,23 +153,23 @@ export default function UserList() {
   const isUserNotFound = filteredUsers?.length === 0;
 
   return (
-    <Page title="Danh sách hợp đồng">
+    <Page title="Loại phòng">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Danh sách hợp đồng"
+          heading="Loại phòng"
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
-            { name: 'Khách thuê', href: PATH_SUPERVISOR.guest.listContract },
-            { name: 'Danh sách hợp đồng' }
+            { name: 'Cài đặt', href: PATH_SUPERVISOR.setting.roomType },
+            { name: 'Danh sách loại phòng' }
           ]}
           action={
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_SUPERVISOR.guest.listContract}
+              to={PATH_SUPERVISOR.setting.roomType}
               startIcon={<Icon icon={plusFill} />}
             >
-              Thêm hợp đồng
+              Thêm loại phòng
             </Button>
           }
         />
@@ -215,10 +213,8 @@ export default function UserList() {
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{Username}</TableCell>
-                        <TableCell align="left">{Username}</TableCell>
-                        <TableCell align="left">{Username}</TableCell>
-                        <TableCell align="left">{Role.RoleName}</TableCell>
+                        {/* <TableCell align="left">{Username}</TableCell> */}
+                        {/* <TableCell align="left">{Role.RoleName}</TableCell> */}
                         <TableCell align="left">{Phone}</TableCell>
                         <TableCell align="left">
                           <Label

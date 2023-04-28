@@ -1,41 +1,39 @@
-import plusFill from '@iconify/icons-eva/plus-fill';
-import { Icon } from '@iconify/react';
 import { filter } from 'lodash';
-import { useEffect, useState } from 'react';
+import { Icon } from '@iconify/react';
+import { useState, useEffect } from 'react';
+import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import {
-  Button,
-  Card,
-  Checkbox,
-  Container,
-  Stack,
-  Switch,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TablePagination,
-  TableRow,
-  Typography
-} from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
 import { useSnackbar } from 'notistack5';
+import {
+  Card,
+  Table,
+  Stack,
+  Button,
+  Checkbox,
+  TableRow,
+  TableBody,
+  TableCell,
+  Container,
+  Typography,
+  TableContainer,
+  TablePagination,
+  Switch
+} from '@material-ui/core';
 // routes
 import { PATH_SUPERVISOR } from '../../../../routes/paths';
 // hooks
 import useSettings from '../../../../hooks/useSettings';
 // components
-import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
-import Label from '../../../../components/Label';
 import Page from '../../../../components/Page';
+import Label from '../../../../components/Label';
 import Scrollbar from '../../../../components/Scrollbar';
 import SearchNotFound from '../../../../components/SearchNotFound';
+import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
 import { UserListHead, UserListToolbar } from '../../../../components/_dashboard/user/list';
 import FlatTypeMoreMenu from './components/FlatTypeMoreMenu';
 // API
-import { useDispatch, useSelector } from 'react-redux';
-import { getFlatTypeList } from 'src/redux/slices/setting';
 import axios from '../../../../utils/axios';
 // ----------------------------------------------------------------------
 
@@ -82,10 +80,11 @@ function applySortFilter(array, comparator, query) {
 
 export default function UserList() {
   const { themeStretch } = useSettings();
-  const dispatch = useDispatch();
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
-  const { flatTypeList, flatTypeTotal } = useSelector((state) => state.setting);
+  // const { userList, total } = useSelector((state) => state.user);
+  const [flatTypeList, setFlatTypeList] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -96,8 +95,27 @@ export default function UserList() {
   const [filterStatus, setFilterStatus] = useState();
 
   useEffect(() => {
-    dispatch(getFlatTypeList(page + 1, rowsPerPage));
+    getFlatTypeList(page + 1, rowsPerPage);
   }, [filterName, page, rowsPerPage, filterStatus]);
+
+  const getFlatTypeList = async (page, size) => {
+    try {
+      const response = await axios.get(`flats/type`, {
+        params: {
+          PageSize: size,
+          PageNumber: page,
+          FlatTypeName: filterName
+        }
+      });
+      setFlatTypeList(response.data.data);
+      setTotalCount(response.data.totalCount);
+
+    } catch (error) {
+      console.log('error: ', error);
+      setFlatTypeList([]);
+      setTotalCount(0);
+    }
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -200,8 +218,8 @@ export default function UserList() {
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {flatTypeList?.map((row) => {
-                    const { FlatTypeId, FlatTypeName, RoomCapacity, Status } = row.FlatType;                    ;
+                  {flatTypeList.map((row) => {
+                    const { FlatTypeId, FlatTypeName, RoomCapacity, Status } = row;
                     const isItemSelected = selected.indexOf(FlatTypeId) !== -1;
 
                     return (
@@ -264,7 +282,7 @@ export default function UserList() {
           <TablePagination
             rowsPerPageOptions={[5, 10]}
             component="div"
-            count={flatTypeTotal}
+            count={totalCount}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

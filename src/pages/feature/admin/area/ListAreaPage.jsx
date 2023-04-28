@@ -1,42 +1,41 @@
-import { filter } from 'lodash';
+import plusFill from '@iconify/icons-eva/plus-fill';
 import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
-import { useState, useEffect, useMemo } from 'react';
-import plusFill from '@iconify/icons-eva/plus-fill';
+import { filter } from 'lodash';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { useTheme } from '@material-ui/core/styles';
 import {
-  Card,
-  Table,
-  Stack,
-  Avatar,
   Button,
+  Card,
   Checkbox,
-  TableRow,
+  Container,
+  Stack,
+  Table,
   TableBody,
   TableCell,
-  Container,
-  Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  TableRow,
+  Typography
 } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 // redux
-import { useDispatch, useSelector } from '../../../../redux/store';
-import { getUserList, deleteUser } from '../../../../redux/slices/user';
+import { deleteUser } from '../../../../redux/slices/user';
+import { useDispatch } from '../../../../redux/store';
 // routes
 import { PATH_ADMIN } from '../../../../routes/paths';
 // hooks
 import useSettings from '../../../../hooks/useSettings';
 // components
-import Page from '../../../../components/Page';
+import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
 import Label from '../../../../components/Label';
+import Page from '../../../../components/Page';
 import Scrollbar from '../../../../components/Scrollbar';
 import SearchNotFound from '../../../../components/SearchNotFound';
-import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../../components/_dashboard/user/list';
-import AreaMoreMenu from './components/AreaMoreMenu'
+import { UserListHead, UserListToolbar } from '../../../../components/_dashboard/user/list';
 import axios from '../../../../utils/axios';
+import AreaMoreMenu from './components/AreaMoreMenu';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -96,8 +95,8 @@ export default function ListAreaPage() {
   const [filteredUsers, setFilteredUsers] = useState([]);
 
   useEffect(() => {
-    getData(rowsPerPage, page+1);
-  }, [page, rowsPerPage, filterName ]);
+    getData(rowsPerPage, page + 1);
+  }, [page, rowsPerPage, filterName]);
 
   const getData = async (pageSize, currentPage) => {
     try {
@@ -168,7 +167,13 @@ export default function ListAreaPage() {
     setFilterName(event.target.value);
   };
 
-  // const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - listArea.length) : 0;
+  const handleDeleteUser = (userId) => {
+    dispatch(deleteUser(userId));
+  };
+
+  const handleToggleAreaStatus = (areaId, status) => {
+
+  }
 
   const isUserNotFound = filteredUsers?.length === 0;
 
@@ -246,7 +251,7 @@ export default function ListAreaPage() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <AreaMoreMenu id={AreaId} />
+                          <AreaMoreMenu id={AreaId} onDelete={handleToggleAreaStatus} />
                         </TableCell>
                       </TableRow>
                     );
@@ -279,7 +284,3 @@ export default function ListAreaPage() {
     </Page>
   );
 }
-//paging
-//export to excel
-//user list
-//api call

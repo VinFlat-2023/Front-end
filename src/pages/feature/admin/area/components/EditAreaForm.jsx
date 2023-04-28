@@ -24,8 +24,6 @@ import axios from '../../../../../utils/axios';
 import { uploadImage } from 'src/utils/firebase';
 import UploadSingleFile from '../../../../../components/upload/UploadSingleFile';
 
-// ----------------------------------------------------------------------
-const locationFake = [{ id: '1', label: 'HCM' }];
 
 // ----------------------------------------------------------------------
 
@@ -46,7 +44,6 @@ export default function EditAreaForm({ areaDetail }) {
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Tên đang trống'),
-    location: Yup.string().required('vị trí đang trống'),
     images: Yup.mixed().required('Ảnh đang trống')
   });
 
@@ -55,8 +52,7 @@ export default function EditAreaForm({ areaDetail }) {
     enableReinitialize: true,
     initialValues: {
       name: areaDetail?.Name || '',
-      location: areaDetail?.Location || '',
-      images: areaDetail?.AreaImageUrl1 || []
+      images: areaDetail?.ImageUrl || []
     },
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
@@ -66,7 +62,6 @@ export default function EditAreaForm({ areaDetail }) {
         setSubmitting(false);
         const createValue = {
           name: values?.name,
-          location: values?.location,
           status: true,
           imageUrl: url
         };
@@ -117,22 +112,7 @@ export default function EditAreaForm({ areaDetail }) {
                     error={Boolean(touched.name && errors.name)}
                     helperText={touched.name && errors.name}
                   />
-                  <TextField
-                    select
-                    fullWidth
-                    label="Vị trí"
-                    {...getFieldProps('location')}
-                    SelectProps={{ native: true }}
-                    error={Boolean(touched.location && errors.location)}
-                    helperText={touched.location && errors.location}
-                  >
-                    <option value="" />
-                    {locationFake.map((option) => (
-                      <option key={option.id} value={option.label}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </TextField>
+                  
                 </Stack>
 
                 <Stack>

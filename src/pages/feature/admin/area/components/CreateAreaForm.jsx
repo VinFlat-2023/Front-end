@@ -25,8 +25,6 @@ import { useDispatch } from 'react-redux';
 import { uploadImage } from 'src/utils/firebase';
 import UploadSingleFile from '../../../../../components/upload/UploadSingleFile';
 
-// ----------------------------------------------------------------------
-const locationFake = [{ id: '1', label: 'HCM' }];
 
 // ----------------------------------------------------------------------
 
@@ -39,20 +37,17 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
 export default function CreateAreaForm() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const dispatch = useDispatch();
 
   const [imageUpload, setImageUpload] = useState(null);
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Tên đang trống'),
-    location: Yup.string().required('vị trí đang trống'),
     images: Yup.mixed().required('Ảnh đang trống')
   });
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       name: '',
-      location: '',
       images: null
     },
     validationSchema: NewUserSchema,
@@ -62,7 +57,6 @@ export default function CreateAreaForm() {
         setSubmitting(false);
         const createValue = {
           name: values.name,
-          location: values.location,
           status: true,
           imageUrl: url,
         };
@@ -125,22 +119,6 @@ export default function CreateAreaForm() {
                     error={Boolean(touched.name && errors.name)}
                     helperText={touched.name && errors.name}
                   />
-                  <TextField
-                    select
-                    fullWidth
-                    label="Vị trí"
-                    {...getFieldProps('location')}
-                    SelectProps={{ native: true }}
-                    error={Boolean(touched.location && errors.location)}
-                    helperText={touched.location && errors.location}
-                  >
-                    <option value="" />
-                    {locationFake.map((option) => (
-                      <option key={option.id} value={option.label}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </TextField>
                 </Stack>
 
                 <Stack>

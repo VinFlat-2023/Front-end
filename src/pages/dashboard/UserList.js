@@ -90,11 +90,9 @@ export default function UserList() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filteredUsers, setFilteredUsers] = useState([]);
 
-
   useEffect(() => {
-    dispatch(getUserList(page +1 ,rowsPerPage));
+    dispatch(getUserList(page + 1, rowsPerPage));
   }, [dispatch, page, rowsPerPage]);
-
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -111,9 +109,9 @@ export default function UserList() {
     setSelected([]);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     setFilteredUsers(applySortFilter(userList, getComparator(order, orderBy), filterName));
-  },[userList])
+  }, [userList]);
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -148,7 +146,6 @@ export default function UserList() {
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
-
 
   const isUserNotFound = filteredUsers?.length === 0;
 
@@ -221,17 +218,16 @@ export default function UserList() {
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
                             color={(Status === 'false' && 'error') || 'success'}
                           >
-                            {sentenceCase(Status ? "Active" : "Banned")}
+                            {sentenceCase(Status ? 'Active' : 'Banned')}
                           </Label>
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu  onDelete={() => handleDeleteUser(EmployeeId)} id={EmployeeId} />
+                          <UserMoreMenu onDelete={() => handleDeleteUser(EmployeeId)} id={EmployeeId} />
                         </TableCell>
                       </TableRow>
                     );
                   })}
-
                 </TableBody>
                 {isUserNotFound && (
                   <TableBody>
@@ -260,7 +256,3 @@ export default function UserList() {
     </Page>
   );
 }
-//paging
-//export to excel
-//user list
-//api call

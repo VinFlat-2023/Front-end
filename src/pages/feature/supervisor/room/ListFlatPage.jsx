@@ -1,47 +1,45 @@
-import { filter } from 'lodash';
+import plusFill from '@iconify/icons-eva/plus-fill';
 import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
-import { useState, useEffect, useMemo } from 'react';
-import plusFill from '@iconify/icons-eva/plus-fill';
+import { filter } from 'lodash';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { useTheme } from '@material-ui/core/styles';
 import {
-  Card,
-  Table,
-  Stack,
-  Avatar,
   Button,
+  Card,
   Checkbox,
-  TableRow,
+  Container,
+  Stack,
+  Table,
   TableBody,
   TableCell,
-  Container,
-  Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  TableRow,
+  Typography
 } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 // redux
+import { deleteUser, getUserList } from '../../../../redux/slices/user';
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { getUserList, deleteUser } from '../../../../redux/slices/user';
 // routes
 import { PATH_SUPERVISOR } from '../../../../routes/paths';
 // hooks
 import useSettings from '../../../../hooks/useSettings';
 // components
-import Page from '../../../../components/Page';
+import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
 import Label from '../../../../components/Label';
+import Page from '../../../../components/Page';
 import Scrollbar from '../../../../components/Scrollbar';
 import SearchNotFound from '../../../../components/SearchNotFound';
-import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../../components/_dashboard/user/list';
+import { getFlatList } from 'src/redux/slices/room';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'fullName', label: 'Tên', alignRight: false },
-  // { id: 'userName', label: 'Tài khoản', alignRight: false },
-  { id: 'role', label: 'Loại', alignRight: false },
-  // { id: 'phoneNumber', label: 'Số điện thoại', alignRight: false },
+  { id: 'name', label: 'Tên', alignRight: false },
+  { id: 'type', label: 'Loại', alignRight: false },
   { id: 'status', label: 'Trạng thái', alignRight: false },
   { id: '' }  
 ];
@@ -77,11 +75,11 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis?.map((el) => el[0]);
 }
 
-export default function UserList() {
+export default function FlatList() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { userList, total } = useSelector((state) => state.user);
+  const { flatList, flatTotal } = useSelector((state) => state.room);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -92,7 +90,7 @@ export default function UserList() {
 
 
   useEffect(() => {
-    dispatch(getUserList(page +1 ,rowsPerPage));
+    dispatch(getFlatList(page +1 ,rowsPerPage));
   }, [dispatch, page, rowsPerPage]);
 
 
@@ -104,7 +102,7 @@ export default function UserList() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = userList.map((n) => n.Username);
+      const newSelecteds = flatList?.map((n) => n.Username);
       setSelected(newSelecteds);
       return;
     }
@@ -112,8 +110,8 @@ export default function UserList() {
   };
 
   useEffect(()=>{
-    setFilteredUsers(applySortFilter(userList, getComparator(order, orderBy), filterName));
-  },[userList])
+    setFilteredUsers(applySortFilter(flatList, getComparator(order, orderBy), filterName));
+  },[flatList])
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -147,7 +145,7 @@ export default function UserList() {
     dispatch(deleteUser(userId));
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - flatList.length) : 0;
 
 
   const isUserNotFound = filteredUsers?.length === 0;
@@ -184,38 +182,36 @@ export default function UserList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={userList?.length}
+                  rowCount={flatList?.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {userList.map((row) => {
-                    const { EmployeeId, FullName, Username, Status, Role, Phone } = row;
-                    const isItemSelected = selected.indexOf(Username) !== -1;
+                  {flatList?.map((row) => {
+                    const { FlatId, Name, FlatType, Status } = row;
+                    const isItemSelected = selected.indexOf(Name) !== -1;
 
                     return (
                       <TableRow
                         hover
-                        key={EmployeeId}
+                        key={FlatId}
                         tabIndex={-1}
                         role="checkbox"
                         selected={isItemSelected}
                         aria-checked={isItemSelected}
                       >
                         <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, Username)} />
+                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, Name)} />
                         </TableCell>
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
                             <Typography variant="subtitle2" noWrap>
-                              {FullName}
+                              {Name}
                             </Typography>
                           </Stack>
                         </TableCell>
-                        {/* <TableCell align="left">{Username}</TableCell> */}
-                        <TableCell align="left">{Role.RoleName}</TableCell>
-                        {/* <TableCell align="left">{Phone}</TableCell> */}
+                        <TableCell align="left">{FlatType.FlatTypeName}</TableCell>
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
@@ -226,7 +222,7 @@ export default function UserList() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu  onDelete={() => handleDeleteUser(EmployeeId)} id={EmployeeId} />
+                          <UserMoreMenu  onDelete={() => handleDeleteUser(FlatId)} id={FlatId} />
                         </TableCell>
                       </TableRow>
                     );
@@ -249,7 +245,7 @@ export default function UserList() {
           <TablePagination
             rowsPerPageOptions={[5, 10]}
             component="div"
-            count={total}
+            count={flatTotal}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

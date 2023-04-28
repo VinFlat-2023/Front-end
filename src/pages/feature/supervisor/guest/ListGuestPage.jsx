@@ -1,40 +1,36 @@
-import { filter } from 'lodash';
-import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
-import { useState, useEffect, useMemo } from 'react';
-import plusFill from '@iconify/icons-eva/plus-fill';
-import { Link as RouterLink } from 'react-router-dom';
+import { filter } from 'lodash';
+import { useEffect, useState } from 'react';
 // material
-import { useTheme } from '@material-ui/core/styles';
 import {
   Card,
-  Table,
-  Stack,
-  Avatar,
-  Button,
   Checkbox,
-  TableRow,
+  Container,
+  Stack,
+  Table,
   TableBody,
   TableCell,
-  Container,
-  Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  TableRow,
+  Typography
 } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 // redux
+import { deleteUser, getUserList } from '../../../../redux/slices/user';
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { getUserList, deleteUser } from '../../../../redux/slices/user';
 // routes
 import { PATH_SUPERVISOR } from '../../../../routes/paths';
 // hooks
 import useSettings from '../../../../hooks/useSettings';
 // components
-import Page from '../../../../components/Page';
+import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
 import Label from '../../../../components/Label';
+import Page from '../../../../components/Page';
 import Scrollbar from '../../../../components/Scrollbar';
 import SearchNotFound from '../../../../components/SearchNotFound';
-import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../../components/_dashboard/user/list';
+import { getGuestList } from 'src/redux/slices/guest';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -78,11 +74,11 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis?.map((el) => el[0]);
 }
 
-export default function UserList() {
+export default function ListGuestPage() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { userList, total } = useSelector((state) => state.user);
+  const { guestList, guestTotal } = useSelector((state) => state.guest);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -93,7 +89,7 @@ export default function UserList() {
 
 
   useEffect(() => {
-    dispatch(getUserList(page +1 ,rowsPerPage));
+    dispatch(getGuestList(page +1 ,rowsPerPage));
   }, [dispatch, page, rowsPerPage]);
 
 
@@ -105,7 +101,7 @@ export default function UserList() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = userList.map((n) => n.Username);
+      const newSelecteds = guestList.map((n) => n.Username);
       setSelected(newSelecteds);
       return;
     }
@@ -113,8 +109,8 @@ export default function UserList() {
   };
 
   useEffect(()=>{
-    setFilteredUsers(applySortFilter(userList, getComparator(order, orderBy), filterName));
-  },[userList])
+    setFilteredUsers(applySortFilter(guestList, getComparator(order, orderBy), filterName));
+  },[guestList])
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -148,7 +144,7 @@ export default function UserList() {
     dispatch(deleteUser(userId));
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - guestList?.length) : 0;
 
 
   const isUserNotFound = filteredUsers?.length === 0;
@@ -163,16 +159,6 @@ export default function UserList() {
             { name: 'Khách thuê', href: PATH_SUPERVISOR.guest.listGuest },
             { name: 'Danh sách khách thuê' }
           ]}
-          // action={
-          //   <Button
-          //     variant="contained"
-          //     component={RouterLink}
-          //     to={PATH_SUPERVISOR.room.listBuilding}
-          //     startIcon={<Icon icon={plusFill} />}
-          //   >
-          //     Thêm khách thuê
-          //   </Button>
-          // }
         />
 
         <Card>
@@ -185,13 +171,13 @@ export default function UserList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={userList?.length}
+                  rowCount={guestList?.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {userList.map((row) => {
+                  {guestList?.map((row) => {
                     const { EmployeeId, FullName, Username, Status, Role, Phone } = row;
                     const isItemSelected = selected.indexOf(Username) !== -1;
 
@@ -252,7 +238,7 @@ export default function UserList() {
           <TablePagination
             rowsPerPageOptions={[5, 10]}
             component="div"
-            count={total}
+            count={guestTotal}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

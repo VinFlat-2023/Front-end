@@ -9,8 +9,8 @@ import userReducer from './slices/user';
 import productReducer from './slices/product';
 import calendarReducer from './slices/calendar';
 import kanbanReducer from './slices/kanban';
-import flatReducer from './slices/flat';
-
+import settingReducer from './slices/setting';
+import roomReducer from './slices/room';
 // ----------------------------------------------------------------------
 
 const rootPersistConfig = {
@@ -35,7 +35,8 @@ const rootReducer = combineReducers({
   calendar: calendarReducer,
   kanban: kanbanReducer,
   product: persistReducer(productPersistConfig, productReducer),
-  flat: flatReducer,
+  setting: settingReducer,
+  room: roomReducer,
 });
 
 export { rootPersistConfig, rootReducer };

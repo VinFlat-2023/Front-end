@@ -35,7 +35,7 @@ import { UserListHead, UserListToolbar } from '../../../../components/_dashboard
 import FlatTypeMoreMenu from './components/FlatTypeMoreMenu';
 // API
 import { useDispatch, useSelector } from 'react-redux';
-import { getFlatTypeList } from 'src/redux/slices/flat';
+import { getFlatTypeList } from 'src/redux/slices/setting';
 import axios from '../../../../utils/axios';
 // ----------------------------------------------------------------------
 
@@ -85,7 +85,7 @@ export default function UserList() {
   const dispatch = useDispatch();
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
-  const { flatTypeList, total } = useSelector((state) => state.flat);
+  const { flatTypeList, flatTypeTotal } = useSelector((state) => state.setting);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -264,7 +264,7 @@ export default function UserList() {
           <TablePagination
             rowsPerPageOptions={[5, 10]}
             component="div"
-            count={total}
+            count={flatTypeTotal}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

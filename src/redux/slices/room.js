@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { omit } from 'lodash';
 // utils
 import axios from '../../utils/axios';
 
@@ -9,11 +8,11 @@ const initialState = {
   isLoading: false,
   error: false,
   flatTypeList: [],
-  total: 0,
+  flatTypeTotal: 0,
 };
 
 const slice = createSlice({
-  name: 'flat',
+  name: 'room',
   initialState,
   reducers: {
     // START LOADING
@@ -28,10 +27,9 @@ const slice = createSlice({
     },
 
     getFlatListSuccess(state, action) {
-        console.log("action", action);
         state.isLoading = false;
-        state.flatTypeList = action.payload.flatList;
-        state.total = action.payload.total;
+        state.flatList = action.payload.flatList;
+        state.flatTotal = action.payload.total;
     },
   }
 });
@@ -41,7 +39,7 @@ export default slice.reducer;
 
 export const { actions } = slice;
 
-export function getFlatTypeList(pageNumber, pageSize) {
+export function getFlatList(pageNumber, pageSize) {
     return async (dispatch) => {
       dispatch(slice.actions.startLoading());
       try {

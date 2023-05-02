@@ -40,17 +40,6 @@ export default function CreateEditFlatTypePage() {
     }
   };
 
-  const handleChange = async () => {
-    // try {
-    //   const response = await axios.put(`flats/type/${id}/toggle-status`);
-    //   enqueueSnackbar(response.data.message, { variant: 'success' });
-    //   setStatus(!status);
-    // } catch (error) {
-    //   console.log('error: ', error);
-    //   enqueueSnackbar(error.message, { variant: 'error' });
-    // }
-  };
-
   return (
     <Page title={id ? 'Chỉnh sửa phòng' : 'Thêm phòng'}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -64,7 +53,7 @@ export default function CreateEditFlatTypePage() {
           ]}
         />
         {id ? (
-          <EditRoomTypeForm handleChange={handleChange} roomTypeDetail={roomTypeDetail} />
+          <EditRoomTypeForm  roomTypeDetail={roomTypeDetail} />
         ) : (
           <CreateRoomForm />
         )}

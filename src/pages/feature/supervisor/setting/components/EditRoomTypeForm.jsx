@@ -13,13 +13,6 @@ import axios from '../../../../../utils/axios';
 // routes
 import { PATH_SUPERVISOR } from '../../../../../routes/paths';
 
-// ----------------------------------------------------------------------
-
-const LabelStyle = styled(Typography)(({ theme }) => ({
-  ...theme.typography.subtitle2,
-  color: 'green',
-  marginBottom: theme.spacing(1)
-}));
 //----------------------------------------------------------------
 export default function EditRoomTypeForm({ roomTypeDetail }) {
   const navigate = useNavigate();

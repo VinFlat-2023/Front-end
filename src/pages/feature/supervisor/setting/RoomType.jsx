@@ -91,11 +91,10 @@ export default function UserList() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filteredUsers, setFilteredUsers] = useState([]);
-  const [filterStatus, setFilterStatus] = useState();
 
   useEffect(() => {
     getFlatTypeList(page + 1, rowsPerPage);
-  }, [filterName, page, rowsPerPage, filterStatus]);
+  }, [filterName, page, rowsPerPage]);
 
   const getFlatTypeList = async (page, size) => {
     try {
@@ -162,20 +161,6 @@ export default function UserList() {
   const handleFilterByName = (event) => {
     setFilterName(event.target.value);
   };
-
-  // const handleChangeStatus = async (id) => {
-  //   try {
-  //     const response = await axios.put(`flats/type/${id}/toggle-status`);
-  //     enqueueSnackbar(response.data.message, { variant: 'success' });
-  //     if (id === filterStatus) {
-  //       id = -id;
-  //     }
-  //     setFilterStatus(id);
-  //   } catch (error) {
-  //     console.log('error: ', error);
-  //     enqueueSnackbar(error.message, { variant: 'error' });
-  //   }
-  // };
 
   const isUserNotFound = filteredUsers?.length === 0;
 
@@ -250,13 +235,6 @@ export default function UserList() {
                             {Status}
                           </Label>
                         </TableCell>
-                        {/* <TableCell align="right">
-                          <Switch
-                            checked={Status}
-                            onChange={() => handleChangeStatus(RoomId, Status)}
-                            inputProps={{ 'aria-label': 'controlled' }}
-                          />
-                        </TableCell> */}
 
                         <TableCell align="right">
                           <RoomTypeMoreMenu id={RoomId} />

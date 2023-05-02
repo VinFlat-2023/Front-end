@@ -58,7 +58,7 @@ export default function EditRoomTypeForm({ roomTypeDetail }) {
     }
   });
 
-  const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
   return (
     <FormikProvider value={formik}>
@@ -97,15 +97,11 @@ export default function EditRoomTypeForm({ roomTypeDetail }) {
                     helperText={touched.status && errors.status}
                   >
                     <option value=""></option>
-
-                    <option key={1} value="Active">
-                      Active
+                    <option key={1} value="Available">
+                      Còn chỗ
                     </option>
                     <option key={2} value="Maintenance">
-                      Maintenance
-                    </option>
-                    <option key={3} value="Available">
-                      Available
+                      Đang bảo trì
                     </option>
                   </TextField>
                 </Stack>

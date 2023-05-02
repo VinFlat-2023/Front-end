@@ -104,15 +104,11 @@ export default function CreateRoomTypeForm() {
                     helperText={touched.status && errors.status}
                   >
                     <option value=""></option>
-
-                    <option key={1} value="Active">
-                      Active
+                    <option key={1} value="Available">
+                      Còn chỗ
                     </option>
                     <option key={2} value="Maintenance">
-                      Maintenance
-                    </option>
-                    <option key={3} value="Available">
-                      Available
+                      Đang bảo trì
                     </option>
                   </TextField>
                 </Stack>

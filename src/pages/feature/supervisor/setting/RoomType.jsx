@@ -40,10 +40,10 @@ import axios from '../../../../utils/axios';
 const TABLE_HEAD = [
   { id: 'RoomSignName', label: 'Tên phòng', alignRight: false },
   // { id: 'userName', label: 'Tài khoản', alignRight: false },
-  { id: 'TotalSlot', label: 'Tổng giường', alignRight: false },
+  { id: 'TotalSlot', label: 'Số slot trống', alignRight: false },
   // { id: 'phoneNumber', label: 'Số điện thoại', alignRight: false },
   { id: 'Status', label: 'Trạng thái', alignRight: false },
-  { id: '' },
+  { id: '' }
 ];
 
 // ----------------------------------------------------------------------
@@ -72,7 +72,7 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.FlatTypeName.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.RoomSignName.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis?.map((el) => el[0]);
 }
@@ -102,12 +102,11 @@ export default function UserList() {
         params: {
           PageSize: size,
           PageNumber: page,
-          RoomName: filterName
+          RoomSignName: filterName
         }
       });
       setRoomTypeList(response.data.data);
       setTotalCount(response.data.totalCount);
-
     } catch (error) {
       console.log('error: ', error);
       setRoomTypeList([]);
@@ -123,7 +122,7 @@ export default function UserList() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = roomTypeList.map((n) => n.FlatTypeId);
+      const newSelecteds = roomTypeList.map((n) => n.RoomId);
       setSelected(newSelecteds);
       return;
     }
@@ -230,9 +229,11 @@ export default function UserList() {
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={Status === 'Active' ? 'success' : 'warning'}
+                            color={
+                              Status === 'Available' ? 'success' : Status === 'Maintenance' ? 'default' : 'error'
+                            }
                           >
-                            {Status}
+                            {Status === 'Available' ? 'Còn chỗ' : Status === 'Maintenance' ? 'Đang bảo trì' : 'Hết chỗ'}
                           </Label>
                         </TableCell>
 

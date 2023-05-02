@@ -165,7 +165,9 @@ export default function Router() {
             { path: '/room-type', element: <RoomTypePage /> },
             { path: '/flat-type', element: <FlatTypePage /> },
             { path: '/flat-type/add', element: <CreateEditFlatTypePage /> },
-            { path: '/flat-type/:id', element: <CreateEditFlatTypePage /> }
+            { path: '/flat-type/:id', element: <CreateEditFlatTypePage /> },
+            { path: '/room-type/add', element: <CreateEditRoomTypePage /> },
+            { path: '/room-type/:id', element: <CreateEditRoomTypePage /> },
           ]
         }
       ]
@@ -287,6 +289,7 @@ const ServicesPage = Loadable(lazy(() => import('../pages/feature/supervisor/rep
 const RoomTypePage = Loadable(lazy(() => import('../pages/feature/supervisor/setting/RoomType')));
 const FlatTypePage = Loadable(lazy(() => import('../pages/feature/supervisor/setting/FlatType')));
 const CreateEditFlatTypePage = Loadable(lazy(() => import('../pages/feature/supervisor/setting/CreateEditFlatTypePage')));
+const CreateEditRoomTypePage = Loadable(lazy(() => import('../pages/feature/supervisor/setting/CreateEditRoomTypePage')));
 
 // Others
 const UserEdit = Loadable(lazy(() => import('../pages/dashboard/UserEdit')));

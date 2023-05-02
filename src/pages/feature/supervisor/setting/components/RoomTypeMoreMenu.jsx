@@ -60,18 +60,18 @@ export default function RoomTypeMoreMenu({ id }) {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem onClick={handleDeleteRoomType} sx={{ color: 'text.secondary' }}>
+        {/* <MenuItem onClick={handleDeleteRoomType} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={trash2Outline} width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
-        </MenuItem>
+          <ListItemText primary="Xóa" primaryTypographyProps={{ variant: 'body2' }} />
+        </MenuItem> */}
 
         <MenuItem component={RouterLink} to={`${PATH_SUPERVISOR.setting.roomType}/${id}`} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText primary="Chỉnh sửa" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
       </Menu>
     </>

@@ -1,10 +1,12 @@
 import { Form, FormikProvider, useFormik } from 'formik';
 import { useSnackbar } from 'notistack5';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@material-ui/core/styles';
 import * as Yup from 'yup';
+
 // material
-import { Box, Card, Grid, Stack, TextField, Typography, Switch } from '@material-ui/core';
+import { Box, Card, Grid, Stack, TextField, Typography } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 // utils
 import axios from '../../../../../utils/axios';
@@ -13,42 +15,43 @@ import { PATH_SUPERVISOR } from '../../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
-const LabelStyle = styled(Typography)(({ theme, customColor }) => ({
+const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
-  color: customColor,
+  color: 'green',
   marginBottom: theme.spacing(1)
 }));
 //----------------------------------------------------------------
-export default function EditRoomTypeForm({ roomTypeDetail, handleChange, flatTypeStatus }) {
+export default function EditRoomTypeForm({ roomTypeDetail }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Tên đang trống'),
-    numberOfRoom: Yup.number().required('Số phòng đang trống')
+    numberOfslot: Yup.number().required('Số giường đang trống') && Yup.number().positive('Must be more than 0'),
+    status: Yup.string().required('trạng thái đang trống')
   });
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: roomTypeDetail?.FlatTypeName || '',
-      numberOfRoom: roomTypeDetail?.RoomCapacity || 0,
-      status: flatTypeStatus
+      name: roomTypeDetail.RoomSignName || '',
+      numberOfslot: roomTypeDetail.TotalSlot || 0,
+      status: roomTypeDetail.Status || ''
     },
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
         setSubmitting(false);
         const createValue = {
-          flatTypeName: values.name,
-          roomCapacity: values.numberOfRoom,
+          roomSignName: values.name,
+          totalSlot: values.numberOfslot,
           status: values.status
         };
         try {
-          const response = await axios.put(`flats/type/${roomTypeDetail?.FlatTypeId}`, createValue);
+          const response = await axios.put(`building/room/${roomTypeDetail.RoomId}`, createValue);
 
           resetForm();
           enqueueSnackbar(response.data.message, { variant: 'success' });
-          navigate(PATH_SUPERVISOR.setting.flatType);
+          navigate(PATH_SUPERVISOR.setting.roomType);
         } catch (error) {
           console.log('error', error);
           setErrors(error.message);
@@ -62,7 +65,7 @@ export default function EditRoomTypeForm({ roomTypeDetail, handleChange, flatTyp
     }
   });
 
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+  const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
 
   return (
     <FormikProvider value={formik}>
@@ -74,7 +77,7 @@ export default function EditRoomTypeForm({ roomTypeDetail, handleChange, flatTyp
                 <Stack>
                   <TextField
                     fullWidth
-                    label="Tên loại căn hộ"
+                    label="Tên Phòng"
                     {...getFieldProps('name')}
                     error={Boolean(touched.name && errors.name)}
                     helperText={touched.name && errors.name}
@@ -84,32 +87,40 @@ export default function EditRoomTypeForm({ roomTypeDetail, handleChange, flatTyp
                   <TextField
                     fullWidth
                     type="number"
-                    label="Tổng số phòng"
-                    {...getFieldProps('numberOfRoom')}
-                    error={Boolean(touched.numberOfRoom && errors.numberOfRoom)}
-                    helperText={touched.numberOfRoom && errors.numberOfRoom}
+                    label="Tổng số slot"
+                    {...getFieldProps('numberOfslot')}
+                    error={Boolean(touched.numberOfslot && errors.numberOfslot)}
+                    helperText={touched.numberOfslot && errors.numberOfslot}
                   />
                 </Stack>
-                <Stack direction="row" sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Box>
-                    <span>
-                      <LabelStyle customColor={roomTypeDetail?.Status === true ? 'green' : 'red'}>
-                        {' '}
-                        {roomTypeDetail?.Status === true ? 'Đang hoạt động' : 'Dừng hoạt động'}{' '}
-                        <Switch
-                          checked={flatTypeStatus}
-                          onChange={handleChange}
-                          inputProps={{ 'aria-label': 'controlled' }}
-                        />
-                      </LabelStyle>{' '}
-                    </span>
-                  </Box>
-                  <Box>
-                    <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                      Lưu thay đổi
-                    </LoadingButton>
-                  </Box>
+                <Stack>
+                  <TextField
+                    select
+                    fullWidth
+                    label="Trạng thái"
+                    {...getFieldProps('status')}
+                    SelectProps={{ native: true }}
+                    error={Boolean(touched.status && errors.status)}
+                    helperText={touched.status && errors.status}
+                  >
+                    <option value=""></option>
+
+                    <option key={1} value="Active">
+                      Active
+                    </option>
+                    <option key={2} value="Maintenance">
+                      Maintenance
+                    </option>
+                    <option key={3} value="Available">
+                      Available
+                    </option>
+                  </TextField>
                 </Stack>
+                <Box>
+                  <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                    Chỉnh sửa phòng
+                  </LoadingButton>
+                </Box>
               </Stack>
             </Card>
           </Grid>

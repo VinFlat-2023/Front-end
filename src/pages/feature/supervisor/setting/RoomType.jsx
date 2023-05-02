@@ -32,7 +32,7 @@ import Scrollbar from '../../../../components/Scrollbar';
 import SearchNotFound from '../../../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
 import { UserListHead, UserListToolbar } from '../../../../components/_dashboard/user/list';
-import FlatTypeMoreMenu from './components/FlatTypeMoreMenu';
+import RoomTypeMoreMenu from './components/RoomTypeMoreMenu';
 // API
 import axios from '../../../../utils/axios';
 // ----------------------------------------------------------------------
@@ -44,7 +44,6 @@ const TABLE_HEAD = [
   // { id: 'phoneNumber', label: 'Số điện thoại', alignRight: false },
   { id: 'Status', label: 'Trạng thái', alignRight: false },
   { id: '' },
-  { id: '' }
 ];
 
 // ----------------------------------------------------------------------
@@ -164,40 +163,40 @@ export default function UserList() {
     setFilterName(event.target.value);
   };
 
-  const handleChangeStatus = async (id) => {
-    try {
-      const response = await axios.put(`flats/type/${id}/toggle-status`);
-      enqueueSnackbar(response.data.message, { variant: 'success' });
-      if (id === filterStatus) {
-        id = -id;
-      }
-      setFilterStatus(id);
-    } catch (error) {
-      console.log('error: ', error);
-      enqueueSnackbar(error.message, { variant: 'error' });
-    }
-  };
+  // const handleChangeStatus = async (id) => {
+  //   try {
+  //     const response = await axios.put(`flats/type/${id}/toggle-status`);
+  //     enqueueSnackbar(response.data.message, { variant: 'success' });
+  //     if (id === filterStatus) {
+  //       id = -id;
+  //     }
+  //     setFilterStatus(id);
+  //   } catch (error) {
+  //     console.log('error: ', error);
+  //     enqueueSnackbar(error.message, { variant: 'error' });
+  //   }
+  // };
 
   const isUserNotFound = filteredUsers?.length === 0;
 
   return (
-    <Page title="Loại căn hộ">
+    <Page title="Phòng">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Loại căn hộ"
+          heading="Phòng"
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
-            { name: 'Cài đặt', href: PATH_SUPERVISOR.setting.flatType },
-            { name: 'Danh sách loại căn hộ' }
+            { name: 'Cài đặt', href: PATH_SUPERVISOR.setting.roomType },
+            { name: 'Danh sách các phòng' }
           ]}
           action={
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_SUPERVISOR.setting.addFlatType}
+              to={PATH_SUPERVISOR.setting.addRoomType}
               startIcon={<Icon icon={plusFill} />}
             >
-              Thêm loại căn hộ
+              Thêm phòng
             </Button>
           }
         />
@@ -246,9 +245,9 @@ export default function UserList() {
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={Status ? 'success' : 'error'}
+                            color={Status === 'Active' ? 'success' : 'warning'}
                           >
-                            {Status ? 'Đang hoạt động' : 'Dừng hoạt động'}
+                            {Status}
                           </Label>
                         </TableCell>
                         {/* <TableCell align="right">
@@ -260,7 +259,7 @@ export default function UserList() {
                         </TableCell> */}
 
                         <TableCell align="right">
-                          <FlatTypeMoreMenu id={RoomId} />
+                          <RoomTypeMoreMenu id={RoomId} />
                         </TableCell>
                       </TableRow>
                     );

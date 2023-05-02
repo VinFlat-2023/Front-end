@@ -2,67 +2,55 @@ import { Form, FormikProvider, useFormik } from 'formik';
 import { useSnackbar } from 'notistack5';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { styled } from '@material-ui/core/styles';
 import * as Yup from 'yup';
 
 // material
-import { Box, Card, FormHelperText, Grid, Stack, TextField, Typography } from '@material-ui/core';
-import { styled } from '@material-ui/core/styles';
+import { Box, Card, Grid, Stack, TextField, Typography } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 // utils
 import axios from '../../../../../utils/axios';
 // routes
-import { PATH_ADMIN, PATH_SUPERVISOR } from '../../../../../routes/paths';
-//
-import { useDispatch } from 'react-redux';
-import { uploadImage } from 'src/utils/firebase';
-import UploadSingleFile from '../../../../../components/upload/UploadSingleFile';
-
-// ----------------------------------------------------------------------
-const locationFake = [{ id: '1', label: 'HCM' }];
+import { PATH_SUPERVISOR } from '../../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
-  color: theme.palette.text.secondary,
+  color: 'green',
   marginBottom: theme.spacing(1)
 }));
-
+//----------------------------------------------------------------
 export default function CreateRoomTypeForm() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const dispatch = useDispatch();
-
-  const [imageUpload, setImageUpload] = useState(null);
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Tên đang trống'),
-    location: Yup.string().required('vị trí đang trống'),
-    images: Yup.mixed().required('Ảnh đang trống')
+    numberOfslot: Yup.number().required('Số giường đang trống') && Yup.number().positive('Must be more than 0'),
+    status: Yup.string().required('trạng thái đang trống')
   });
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       name: '',
-      location: '',
-      images: null
+      numberOfslot: 0,
+      status: ''
     },
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
-        const url = await uploadImage(imageUpload);
         setSubmitting(false);
         const createValue = {
-          name: values.name,
-          location: values.location,
-          status: true,
-          imageUrl: url
+          roomSignName: values.name,
+          totalSlot: values.numberOfslot,
+          status: values.status
         };
         try {
-          const response = await axios.post('areas', createValue);
+          const response = await axios.post('building/room', createValue);
 
           resetForm();
-          enqueueSnackbar('Thêm loại phòng thành công', { variant: 'success' });
+          enqueueSnackbar(response.data.message, { variant: 'success' });
           navigate(PATH_SUPERVISOR.setting.roomType);
         } catch (error) {
           console.log('error', error);
@@ -79,29 +67,6 @@ export default function CreateRoomTypeForm() {
 
   const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
 
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
-      setImageUpload(file);
-      if (file) {
-        setFieldValue('images', {
-          ...file,
-          preview: URL.createObjectURL(file)
-        });
-      }
-    },
-    [setFieldValue]
-  );
-
-  const handleRemove = (file) => {
-    const filteredItems = values.images.filter((_file) => _file !== file);
-    setFieldValue('images', filteredItems);
-  };
-
-  const handleRemoveAll = () => {
-    setFieldValue('images', []);
-  };
-
   return (
     <FormikProvider value={formik}>
       <Form noValidate autoComplete="off" onSubmit={handleSubmit}>
@@ -112,7 +77,7 @@ export default function CreateRoomTypeForm() {
                 <Stack>
                   <TextField
                     fullWidth
-                    label="Tên loại phòng"
+                    label="Tên Phòng"
                     {...getFieldProps('name')}
                     error={Boolean(touched.name && errors.name)}
                     helperText={touched.name && errors.name}
@@ -121,16 +86,39 @@ export default function CreateRoomTypeForm() {
                 <Stack>
                   <TextField
                     fullWidth
-                    label="Tổng số giường"
-                    {...getFieldProps('name')}
-                    error={Boolean(touched.name && errors.name)}
-                    helperText={touched.name && errors.name}
+                    type="number"
+                    label="Tổng số slot"
+                    {...getFieldProps('numberOfslot')}
+                    error={Boolean(touched.numberOfslot && errors.numberOfslot)}
+                    helperText={touched.numberOfslot && errors.numberOfslot}
                   />
                 </Stack>
+                <Stack>
+                  <TextField
+                    select
+                    fullWidth
+                    label="Trạng thái"
+                    {...getFieldProps('status')}
+                    SelectProps={{ native: true }}
+                    error={Boolean(touched.status && errors.status)}
+                    helperText={touched.status && errors.status}
+                  >
+                    <option value=""></option>
 
-                <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
+                    <option key={1} value="Active">
+                      Active
+                    </option>
+                    <option key={2} value="Maintenance">
+                      Maintenance
+                    </option>
+                    <option key={3} value="Available">
+                      Available
+                    </option>
+                  </TextField>
+                </Stack>
+                <Box>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Thêm loại phòng
+                    Thêm phòng
                   </LoadingButton>
                 </Box>
               </Stack>

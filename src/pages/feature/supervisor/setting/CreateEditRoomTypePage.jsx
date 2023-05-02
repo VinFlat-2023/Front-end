@@ -10,8 +10,8 @@ import useSettings from '../../../../hooks/useSettings';
 // components
 import Page from '../../../../components/Page';
 import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
-import CreateRoomForm from '../room/components/CreateRoomForm';
-import EditRoomTypeForm from '../room/components/EditRoomForm';
+import CreateRoomForm from './components/CreateRoomTypeForm';
+import EditRoomTypeForm from './components/EditRoomTypeForm';
 // API
 import axios from '../../../../utils/axios';
 
@@ -23,17 +23,15 @@ export default function CreateEditFlatTypePage() {
   const { enqueueSnackbar } = useSnackbar();
 
   const [roomTypeDetail, setRoomTypeDetail] = useState('');
-  const [status, setStatus] = useState(false);
 
   useEffect(() => {
     getData();
-  }, [id, status]);
+  }, [id]);
 
   const getData = async () => {
     try {
       const response = await axios.get(`building/room/${id}`);
       setRoomTypeDetail(response.data.data);
-      setStatus(response.data.data.Status);
     } catch (error) {
       if (error.status === 'Not Found') {
         setRoomTypeDetail('');
@@ -43,21 +41,21 @@ export default function CreateEditFlatTypePage() {
   };
 
   const handleChange = async () => {
-    try {
-      const response = await axios.put(`flats/type/${id}/toggle-status`);
-      enqueueSnackbar(response.data.message, { variant: 'success' });
-      setStatus(!status);
-    } catch (error) {
-      console.log('error: ', error);
-      enqueueSnackbar(error.message, { variant: 'error' });
-    }
+    // try {
+    //   const response = await axios.put(`flats/type/${id}/toggle-status`);
+    //   enqueueSnackbar(response.data.message, { variant: 'success' });
+    //   setStatus(!status);
+    // } catch (error) {
+    //   console.log('error: ', error);
+    //   enqueueSnackbar(error.message, { variant: 'error' });
+    // }
   };
 
   return (
-    <Page title={id ? 'Chỉnh sửa loại căn hộ' : 'Thêm loại căn hộ'}>
+    <Page title={id ? 'Chỉnh sửa phòng' : 'Thêm phòng'}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={id ? 'Chỉnh sửa loại căn hộ' : 'Thêm loại căn hộ'}
+          heading={id ? 'Chỉnh sửa phòng' : 'Thêm phòng'}
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
             { name: 'Cài đặt', href: PATH_SUPERVISOR.setting.roomType },
@@ -66,7 +64,7 @@ export default function CreateEditFlatTypePage() {
           ]}
         />
         {id ? (
-          <EditRoomTypeForm handleChange={handleChange} flatTypeDetail={roomTypeDetail} flatTypeStatus={status} />
+          <EditRoomTypeForm handleChange={handleChange} roomTypeDetail={roomTypeDetail} />
         ) : (
           <CreateRoomForm />
         )}

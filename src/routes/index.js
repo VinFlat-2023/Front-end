@@ -97,7 +97,7 @@ export default function Router() {
           path: 'admin_profile',
           children: [
             { path: '/home', element: <AdminProfilePage /> },
-            { path: '/edit', element: <AdminEditProfile /> },
+            { path: '/edit', element: <AdminEditProfile /> }
           ]
         },
         {
@@ -108,8 +108,7 @@ export default function Router() {
             { path: '/add', element: <AddAreaPage /> },
             { path: '/:id', element: <EditAreaPage /> }
           ]
-        },
-        
+        }
       ]
     },
 
@@ -140,7 +139,8 @@ export default function Router() {
           path: 'guest',
           children: [
             { path: '/contracts', element: <ListContractPage /> },
-            { path: '/list-guest', element: <ListGuestPage /> }
+            { path: '/list-guest', element: <ListGuestPage /> },
+            { path: '/requests', element: <ListRequestPage /> }
           ]
         },
         { path: '/dormitory', element: <DomiritoryPage /> },
@@ -167,7 +167,7 @@ export default function Router() {
             { path: '/flat-type/add', element: <CreateEditFlatTypePage /> },
             { path: '/flat-type/:id', element: <CreateEditFlatTypePage /> },
             { path: '/room-type/add', element: <CreateEditRoomTypePage /> },
-            { path: '/room-type/:id', element: <CreateEditRoomTypePage /> },
+            { path: '/room-type/:id', element: <CreateEditRoomTypePage /> }
           ]
         }
       ]
@@ -288,8 +288,13 @@ const RenderStatusPage = Loadable(lazy(() => import('../pages/feature/supervisor
 const ServicesPage = Loadable(lazy(() => import('../pages/feature/supervisor/report/ServicesPage')));
 const RoomTypePage = Loadable(lazy(() => import('../pages/feature/supervisor/setting/RoomType')));
 const FlatTypePage = Loadable(lazy(() => import('../pages/feature/supervisor/setting/FlatType')));
-const CreateEditFlatTypePage = Loadable(lazy(() => import('../pages/feature/supervisor/setting/CreateEditFlatTypePage')));
-const CreateEditRoomTypePage = Loadable(lazy(() => import('../pages/feature/supervisor/setting/CreateEditRoomTypePage')));
+const CreateEditFlatTypePage = Loadable(
+  lazy(() => import('../pages/feature/supervisor/setting/CreateEditFlatTypePage'))
+);
+const CreateEditRoomTypePage = Loadable(
+  lazy(() => import('../pages/feature/supervisor/setting/CreateEditRoomTypePage'))
+);
+const ListRequestPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/ListRequestPage')));
 
 // Others
 const UserEdit = Loadable(lazy(() => import('../pages/dashboard/UserEdit')));

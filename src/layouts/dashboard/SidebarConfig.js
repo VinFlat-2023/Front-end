@@ -94,7 +94,8 @@ export const supervisorSlidebar = [
         icon: ICONS.user,
         children: [
           { title: 'Danh sách hợp đồng', path: PATH_SUPERVISOR.guest.listContract },
-          { title: 'Danh sách khách thuê', path: PATH_SUPERVISOR.guest.listGuest }
+          { title: 'Danh sách khách thuê', path: PATH_SUPERVISOR.guest.listGuest },
+          { title: 'Danh sách yêu cầu', path: PATH_SUPERVISOR.guest.listRequest }
         ]
       },
       {

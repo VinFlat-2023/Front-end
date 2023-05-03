@@ -1,16 +1,15 @@
 import { filter } from 'lodash';
 import { Icon } from '@iconify/react';
-import { sentenceCase } from 'change-case';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { useTheme } from '@material-ui/core/styles';
+import { useSnackbar } from 'notistack5';
 import {
   Card,
   Table,
   Stack,
-  Avatar,
   Button,
   Checkbox,
   TableRow,
@@ -19,11 +18,9 @@ import {
   Container,
   Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  Switch
 } from '@material-ui/core';
-// redux
-import { useDispatch, useSelector } from '../../../../redux/store';
-import { getUserList, deleteUser } from '../../../../redux/slices/user';
 // routes
 import { PATH_SUPERVISOR } from '../../../../routes/paths';
 // hooks
@@ -34,16 +31,19 @@ import Label from '../../../../components/Label';
 import Scrollbar from '../../../../components/Scrollbar';
 import SearchNotFound from '../../../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../../components/_dashboard/user/list';
+import { UserListHead, UserListToolbar } from '../../../../components/_dashboard/user/list';
+import RoomTypeMoreMenu from './components/RoomTypeMoreMenu';
+// API
+import axios from '../../../../utils/axios';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'fullName', label: 'Tên phòng', alignRight: false },
+  { id: 'RoomSignName', label: 'Tên phòng', alignRight: false },
   // { id: 'userName', label: 'Tài khoản', alignRight: false },
-  // { id: 'role', label: 'Loại', alignRight: false },
-  { id: 'phoneNumber', label: 'Tổng số giường', alignRight: false },
-  { id: 'status', label: 'Trạng thái', alignRight: false },
-  { id: '' }  
+  { id: 'TotalSlot', label: 'Số slot trống', alignRight: false },
+  // { id: 'phoneNumber', label: 'Số điện thoại', alignRight: false },
+  { id: 'Status', label: 'Trạng thái', alignRight: false },
+  { id: '' }
 ];
 
 // ----------------------------------------------------------------------
@@ -72,7 +72,7 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.RoomSignName.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis?.map((el) => el[0]);
 }
@@ -80,8 +80,10 @@ function applySortFilter(array, comparator, query) {
 export default function UserList() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
-  const dispatch = useDispatch();
-  const { userList, total } = useSelector((state) => state.user);
+  const { enqueueSnackbar } = useSnackbar();
+  // const { userList, total } = useSelector((state) => state.user);
+  const [roomTypeList, setRoomTypeList] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -90,11 +92,27 @@ export default function UserList() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filteredUsers, setFilteredUsers] = useState([]);
 
-
   useEffect(() => {
-    dispatch(getUserList(page +1 ,rowsPerPage));
-  }, [dispatch, page, rowsPerPage]);
+    getFlatTypeList(page + 1, rowsPerPage);
+  }, [filterName, page, rowsPerPage]);
 
+  const getFlatTypeList = async (page, size) => {
+    try {
+      const response = await axios.get(`building/room`, {
+        params: {
+          PageSize: size,
+          PageNumber: page,
+          RoomSignName: filterName
+        }
+      });
+      setRoomTypeList(response.data.data);
+      setTotalCount(response.data.totalCount);
+    } catch (error) {
+      console.log('error: ', error);
+      setRoomTypeList([]);
+      setTotalCount(0);
+    }
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -104,16 +122,16 @@ export default function UserList() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = userList.map((n) => n.Username);
+      const newSelecteds = roomTypeList.map((n) => n.RoomId);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  useEffect(()=>{
-    setFilteredUsers(applySortFilter(userList, getComparator(order, orderBy), filterName));
-  },[userList])
+  useEffect(() => {
+    setFilteredUsers(applySortFilter(roomTypeList, getComparator(order, orderBy), filterName));
+  }, [roomTypeList]);
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -143,33 +161,26 @@ export default function UserList() {
     setFilterName(event.target.value);
   };
 
-  const handleDeleteUser = (userId) => {
-    dispatch(deleteUser(userId));
-  };
-
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
-
-
   const isUserNotFound = filteredUsers?.length === 0;
 
   return (
-    <Page title="Loại phòng">
+    <Page title="Phòng">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Loại phòng"
+          heading="Phòng"
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
             { name: 'Cài đặt', href: PATH_SUPERVISOR.setting.roomType },
-            { name: 'Danh sách loại phòng' }
+            { name: 'Danh sách các phòng' }
           ]}
           action={
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_SUPERVISOR.setting.roomType}
+              to={PATH_SUPERVISOR.setting.addRoomType}
               startIcon={<Icon icon={plusFill} />}
             >
-              Thêm loại phòng
+              Thêm phòng
             </Button>
           }
         />
@@ -184,54 +195,54 @@ export default function UserList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={userList?.length}
+                  rowCount={roomTypeList?.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {userList.map((row) => {
-                    const { EmployeeId, FullName, Username, Status, Role, Phone } = row;
-                    const isItemSelected = selected.indexOf(Username) !== -1;
+                  {roomTypeList.map((row) => {
+                    const { RoomId, RoomSignName, TotalSlot, Status } = row;
+                    const isItemSelected = selected.indexOf(RoomId) !== -1;
 
                     return (
                       <TableRow
                         hover
-                        key={EmployeeId}
+                        key={RoomId}
                         tabIndex={-1}
                         role="checkbox"
                         selected={isItemSelected}
                         aria-checked={isItemSelected}
                       >
                         <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, Username)} />
+                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, RoomId)} />
                         </TableCell>
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
                             <Typography variant="subtitle2" noWrap>
-                              {FullName}
+                              {RoomSignName}
                             </Typography>
                           </Stack>
                         </TableCell>
-                        {/* <TableCell align="left">{Username}</TableCell> */}
-                        {/* <TableCell align="left">{Role.RoleName}</TableCell> */}
-                        <TableCell align="left">{Phone}</TableCell>
+
+                        <TableCell align="left">{TotalSlot}</TableCell>
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(Status === 'false' && 'error') || 'success'}
+                            color={
+                              Status === 'Available' ? 'success' : Status === 'Maintenance' ? 'default' : 'error'
+                            }
                           >
-                            {sentenceCase(Status ? "Active" : "Banned")}
+                            {Status === 'Available' ? 'Còn chỗ' : Status === 'Maintenance' ? 'Đang bảo trì' : 'Hết chỗ'}
                           </Label>
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu  onDelete={() => handleDeleteUser(EmployeeId)} id={EmployeeId} />
+                          <RoomTypeMoreMenu id={RoomId} />
                         </TableCell>
                       </TableRow>
                     );
                   })}
-
                 </TableBody>
                 {isUserNotFound && (
                   <TableBody>
@@ -249,7 +260,7 @@ export default function UserList() {
           <TablePagination
             rowsPerPageOptions={[5, 10]}
             component="div"
-            count={total}
+            count={totalCount}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

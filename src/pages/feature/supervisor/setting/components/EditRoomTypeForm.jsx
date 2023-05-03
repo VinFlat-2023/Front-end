@@ -13,15 +13,8 @@ import axios from '../../../../../utils/axios';
 // routes
 import { PATH_SUPERVISOR } from '../../../../../routes/paths';
 
-// ----------------------------------------------------------------------
-
-const LabelStyle = styled(Typography)(({ theme }) => ({
-  ...theme.typography.subtitle2,
-  color: 'green',
-  marginBottom: theme.spacing(1)
-}));
 //----------------------------------------------------------------
-export default function CreateRoomTypeForm() {
+export default function EditRoomTypeForm({ roomTypeDetail }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -33,9 +26,9 @@ export default function CreateRoomTypeForm() {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: '',
-      numberOfslot: 0,
-      status: ''
+      name: roomTypeDetail.RoomSignName || '',
+      numberOfslot: roomTypeDetail.TotalSlot || 0,
+      status: roomTypeDetail.Status || ''
     },
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
@@ -47,7 +40,7 @@ export default function CreateRoomTypeForm() {
           status: values.status
         };
         try {
-          const response = await axios.post('building/room', createValue);
+          const response = await axios.put(`building/room/${roomTypeDetail.RoomId}`, createValue);
 
           resetForm();
           enqueueSnackbar(response.data.message, { variant: 'success' });
@@ -65,7 +58,7 @@ export default function CreateRoomTypeForm() {
     }
   });
 
-  const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
   return (
     <FormikProvider value={formik}>
@@ -114,7 +107,7 @@ export default function CreateRoomTypeForm() {
                 </Stack>
                 <Box>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Thêm phòng
+                    Chỉnh sửa phòng
                   </LoadingButton>
                 </Box>
               </Stack>

@@ -27,10 +27,15 @@ const slice = createSlice({
     },
 
     getInvoiceListSuccess(state, action) {
-      console.log('action ',action)
       state.isLoading = false;
       state.invoiceList = action.payload.invoiceList;
       state.invoiceTotal = action.payload.total;
+    },
+
+    resetInvoiceList(state) {
+      state.isLoading = false;
+      state.invoiceList = [];
+      state.invoiceTotal = 0;
     }
   }
 });
@@ -40,15 +45,16 @@ export default slice.reducer;
 
 export const { actions } = slice;
 
-export function getInvoiceList(pageNumber, pageSize, status) {
+export function getInvoiceList(pageNumber, pageSize, invoiceType, status) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const url = status
-        ? `/invoices?PageNumber=${pageNumber ?? 1}&PageSize=${pageSize ?? 5}&Status=${status}`
-        : `/invoices?PageNumber=${pageNumber ?? 1}&PageSize=${pageSize ?? 5}`;
+        ? `/invoices?PageNumber=${pageNumber ?? 1}&PageSize=${
+            pageSize ?? 5
+          }&InvoiceTypeId=${invoiceType}&Status=${status}`
+        : `/invoices?PageNumber=${pageNumber ?? 1}&PageSize=${pageSize ?? 5}&InvoiceTypeId=${invoiceType}`;
       const response = await axios.get(url);
-      console.log("url", url);
       dispatch(
         slice.actions.getInvoiceListSuccess({
           invoiceList: response.data.data,
@@ -57,6 +63,7 @@ export function getInvoiceList(pageNumber, pageSize, status) {
       );
     } catch (error) {
       dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.resetInvoiceList());
     }
   };
 }

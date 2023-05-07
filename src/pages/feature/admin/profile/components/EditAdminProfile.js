@@ -12,7 +12,7 @@ import { PATH_ADMIN } from '../../../../../routes/paths';
 import useSettings from 'src/hooks/useSettings';
 // components
 import UserNewForm from 'src/components/_dashboard/user/UserNewForm';
-import { getAccountTabLabel } from 'src/utils/formatText';
+import { getTabLabel } from 'src/utils/formatText';
 import HeaderBreadcrumbs from '../../../../../components/HeaderBreadcrumbs';
 import Page from '../../../../../components/Page';
 import { getProfile } from 'src/redux/slices/user';
@@ -72,7 +72,7 @@ export default function EditAdminProfile() {
               <Tab
                 disableRipple
                 key={tab.value}
-                label={getAccountTabLabel(tab.value)}
+                label={getTabLabel(tab.value)}
                 icon={tab.icon}
                 value={tab.value}
               />

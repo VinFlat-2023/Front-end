@@ -14,7 +14,7 @@ import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
 import Page from '../../../../components/Page';
 import { getProfile } from '../../../../redux/slices/user';
 import ViewProfile from './components/ViewProfile';
-import { getAccountTabLabel } from 'src/utils/formatText';
+import { getTabLabel } from 'src/utils/formatText';
 
 // ----------------------------------------------------------------------
 
@@ -61,7 +61,7 @@ export default function AdminProfilePage() {
             onChange={handleChangeTab}
           >
             {ADMIN_TABS.map((tab) => (
-              <Tab disableRipple key={tab.value} label={getAccountTabLabel(tab.value)} icon={tab.icon} value={tab.value} />
+              <Tab disableRipple key={tab.value} label={getTabLabel(tab.value)} icon={tab.icon} value={tab.value} />
             ))}
           </Tabs>
 

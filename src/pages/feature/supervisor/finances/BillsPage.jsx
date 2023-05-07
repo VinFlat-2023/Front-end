@@ -1,51 +1,32 @@
 // hooks
-import useAuth from '../../../../hooks/useAuth';
 import useSettings from '../../../../hooks/useSettings';
 // components
-import Page from '../../../../components/Page';
-import { PATH_SUPERVISOR } from 'src/routes/paths';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Icon } from '@iconify/react';
-import { sentenceCase } from 'change-case';
 import { Link as RouterLink } from 'react-router-dom';
+import { PATH_SUPERVISOR } from 'src/routes/paths';
+import Page from '../../../../components/Page';
 // material
 import {
+  Box,
   Button,
-  Card,
-  Checkbox,
   Container,
   Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TablePagination,
-  TableRow,
-  Typography
+  Tab,
+  Tabs
 } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
 // components
-import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
-import Label from 'src/components/Label';
-import Scrollbar from 'src/components/Scrollbar';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../../components/_dashboard/user/list';
-import { useEffect, useState } from 'react';
-import { getInvoiceList } from 'src/redux/slices/finance';
-import SearchNotFound from 'src/components/SearchNotFound';
+import receiptIcon from '@iconify/icons-ic/receipt';
+import roundAccountBox from '@iconify/icons-ic/round-account-box';
 import { filter } from 'lodash';
+import { useEffect, useState } from 'react';
+import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
+import { getInvoiceList } from 'src/redux/slices/finance';
 import { useDispatch, useSelector } from 'src/redux/store';
-// ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-  { id: 'name', label: 'Tên Hóa đơn', alignRight: false },
-  { id: 'guest', label: 'Người thuê', alignRight: false },
-  { id: 'manager', label: 'Người quản lí', alignRight: false },
-  { id: 'total', label: 'Tổng tiền', alignRight: false },
-  { id: 'expriteDare', label: 'Hạn thanh toán', alignRight: false },
-  { id: 'completeDate', label: 'Ngày thanh toán', alignRight: false },
-  { id: 'status', label: 'Trạng thái', alignRight: false },
-  { id: '' }
-];
+import { getTabLabel } from 'src/utils/formatText';
+import { BillTable } from './components/BillTable';
+import { INVOICE_TYPE } from './type';
 
 // ----------------------------------------------------------------------
 
@@ -80,9 +61,29 @@ function applySortFilter(array, comparator, query) {
 
 // ----------------------------------------------------------------------
 
+const INCOME_TABLE_HEAD = [
+  { id: 'name', label: 'Tên Hóa đơn', alignRight: false },
+  { id: 'guest', label: 'Người thuê', alignRight: false },
+  { id: 'manager', label: 'Người quản lí', alignRight: false },
+  { id: 'total', label: 'Tổng tiền', alignRight: false },
+  { id: 'expriteDare', label: 'Hạn thanh toán', alignRight: false },
+  { id: 'completeDate', label: 'Ngày thanh toán', alignRight: false },
+  { id: 'status', label: 'Trạng thái', alignRight: false },
+  { id: '' }
+];
+
+const EXPENSE_TABLE_HEAD = [
+  { id: 'name', label: 'Tên Hóa đơn', alignRight: false },
+  { id: 'manager', label: 'Người quản lí', alignRight: false },
+  { id: 'total', label: 'Tổng tiền', alignRight: false },
+  { id: '' }
+];
+
+// ----------------------------------------------------------------------
+
 export default function BillsPage() {
   const { themeStretch } = useSettings();
-  const { invoiceList, invoiceTotal } = useSelector(state => { console.log(state);  return state.finance});
+  const { invoiceList, invoiceTotal } = useSelector(state => state.finance);
   const theme = useTheme();
   const dispatch = useDispatch();
   const [page, setPage] = useState(0);
@@ -92,15 +93,26 @@ export default function BillsPage() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [currentTab, setCurrentTab] = useState('income');
 
   useEffect(() => {
-    dispatch(getInvoiceList(page + 1, rowsPerPage));
-  }, [dispatch, page, rowsPerPage]);
+    let invoiceType;
+    if (currentTab === 'income') {
+      invoiceType = 1
+    } else if (currentTab === 'expense') {
+      invoiceType = 2
+    }
+    dispatch(getInvoiceList(page + 1, rowsPerPage, invoiceType));
+  }, [dispatch, page, rowsPerPage, currentTab]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+  };
+
+  const handleChangeTab = (event, newValue) => {
+    setCurrentTab(newValue);
   };
 
   const handleSelectAllClick = (event) => {
@@ -145,12 +157,67 @@ export default function BillsPage() {
   };
 
   const handleDeleteUser = (userId) => {
-    
+
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - invoiceList.length) : 0;
 
   const isUserNotFound = filteredUsers?.length === 0;
+
+  const INVOICE_TABS = [
+    {
+      key: 1,
+      value: 'income',
+      icon: <Icon icon={roundAccountBox} width={20} height={20} />,
+      component: <BillTable
+        selected={selected}
+        type={INVOICE_TYPE.INCOME}
+        page={page}
+        filterName={filterName}
+        theme={theme}
+        order={order}
+        orderBy={orderBy}
+        invoiceList={invoiceList}
+        isUserNotFound={isUserNotFound}
+        invoiceTotal={invoiceTotal}
+        rowsPerPage={rowsPerPage}
+        tableHead={INCOME_TABLE_HEAD}
+        handleChangePage={handleChangePage}
+        handleRequestSort={handleRequestSort}
+        handleSelectAllClick={handleSelectAllClick}
+        handleClick={handleClick}
+        handleDeleteUser={handleDeleteUser}
+        handleFilterByName={handleFilterByName}
+        handleChangeRowsPerPage={handleChangeRowsPerPage}
+      />
+    },
+    {
+      key: 2,
+      value: 'expense',
+      icon: <Icon icon={receiptIcon} width={20} height={20} />,
+      component: <BillTable
+        selected={selected}
+        type={INVOICE_TYPE.EXPENSE}
+        page={page}
+        filterName={filterName}
+        theme={theme}
+        order={order}
+        orderBy={orderBy}
+        invoiceList={invoiceList}
+        isUserNotFound={isUserNotFound}
+        invoiceTotal={invoiceTotal}
+        rowsPerPage={rowsPerPage}
+        tableHead={EXPENSE_TABLE_HEAD}
+        handleChangePage={handleChangePage}
+        handleFilterByName={handleFilterByName}
+        handleRequestSort={handleRequestSort}
+        handleSelectAllClick={handleSelectAllClick}
+        handleClick={handleClick}
+        handleDeleteUser={handleDeleteUser}
+        handleChangeRowsPerPage={handleChangeRowsPerPage}
+      />
+    }
+  ];
 
   return (
     <Page title="Danh sách hóa đơn VinFlat">
@@ -173,90 +240,31 @@ export default function BillsPage() {
             </Button>
           }
         />
+        <Stack spacing={5}>
+          <Tabs
+            value={currentTab}
+            scrollButtons="auto"
+            variant="scrollable"
+            allowScrollButtonsMobile
+            onChange={handleChangeTab}
+          >
+            {INVOICE_TABS.map((tab) => (
+              <Tab
+                disableRipple
+                key={tab.value}
+                label={getTabLabel(tab.value)}
+                icon={tab.icon}
+                value={tab.value}
+              />
+            ))}
+          </Tabs>
 
-        <Card>
-          <UserListToolbar selected={selected} filterName={filterName} onFilterName={handleFilterByName} />
+          {INVOICE_TABS.map((tab) => {
+            const isMatched = tab.value === currentTab;
+            return isMatched && <Box key={tab.value}>{tab.component}</Box>;
+          })}
+        </Stack>
 
-          <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
-              <Table>
-                <UserListHead
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={invoiceList?.length}
-                  numSelected={selected.length}
-                  onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
-                />
-                <TableBody>
-                  {invoiceList.map((row) => {
-                    const { InvoiceId, Name, Renter, Employee, InvoiceDetails, DueDate, PaymentTime, InvoiceType } = row;
-                    const isItemSelected = selected.indexOf(Name) !== -1;
-
-                    return (
-                      <TableRow
-                        hover
-                        key={InvoiceId}
-                        tabIndex={-1}
-                        role="checkbox"
-                        selected={isItemSelected}
-                        aria-checked={isItemSelected}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, Name)} />
-                        </TableCell>
-                        <TableCell component="th" scope="row" padding="none">
-                          <Stack direction="row" alignItems="center" spacing={2}>
-                            <Typography variant="subtitle2" noWrap>
-                              {Name}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-                        <TableCell align="left">{Renter.Username}</TableCell>
-                        <TableCell align="left">{Employee.Username}</TableCell>
-                        <TableCell align="left">{InvoiceDetails.Amount}</TableCell>
-                        <TableCell align="left">{DueDate}</TableCell>
-                        <TableCell align="left">{PaymentTime}</TableCell>
-                        <TableCell align="left">
-                          <Label
-                            variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(InvoiceType.Status === 'false' && 'error') || 'success'}
-                          >
-                            {InvoiceType.Status ? 'Đã thanh toán' : 'Chưa thanh toán'}
-                          </Label>
-                        </TableCell>
-
-                        <TableCell align="right">
-                          <UserMoreMenu onDelete={() => handleDeleteUser(InvoiceId)} id={InvoiceId} />
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-                {isUserNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
-              </Table>
-            </TableContainer>
-          </Scrollbar>
-
-          <TablePagination
-            rowsPerPageOptions={[5, 10]}
-            component="div"
-            count={invoiceTotal}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Card>
       </Container>
     </Page>
   );

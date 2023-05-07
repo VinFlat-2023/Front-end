@@ -5,8 +5,8 @@ export function getTabLabel(value){
         case 'change_password':
             return "Đổi mật khẩu"
         case 'income':
-            return 'Phiếu thu'
+            return 'Hóa đơn thu'
         case 'expense':
-            return 'Phiếu chi'
+            return 'Hóa đơn chi'
     }
 }

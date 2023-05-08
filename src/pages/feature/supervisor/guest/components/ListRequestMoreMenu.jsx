@@ -53,12 +53,6 @@ export default function ListRequestMoreMenu({ id }) {
           </ListItemIcon>
           <ListItemText primary="Cập nhật trạng thái" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
-        <MenuItem component={RouterLink} to={``} sx={{ color: 'text.secondary' }}>
-          <ListItemIcon>
-            <Icon icon={trash2Outline} width={24} height={24} />
-          </ListItemIcon>
-          <ListItemText primary="Xóa" primaryTypographyProps={{ variant: 'body2' }} />
-        </MenuItem>
       </Menu>
     </>
   );

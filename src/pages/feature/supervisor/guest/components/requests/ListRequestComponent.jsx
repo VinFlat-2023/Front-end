@@ -217,7 +217,7 @@ export default function ListRequestComponent() {
                         {Status === STATUS_ACTIVE
                           ? 'Mới tạo'
                           : Status === STATUS_PROCESSING
-                          ? 'Đã nhận ticket'
+                          ? 'Đã tiếp nhận'
                           : Status === STATUS_CONFORMING
                           ? 'Đang đợi renter xác nhận'
                           : Status === STATUS_SOLVED

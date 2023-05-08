@@ -140,7 +140,8 @@ export default function Router() {
           children: [
             { path: '/contracts', element: <ListContractPage /> },
             { path: '/list-guest', element: <ListGuestPage /> },
-            { path: '/requests', element: <ListRequestPage /> }
+            { path: '/requests', element: <ListRequestPage /> },
+            { path: '/requests/:id', element: <DetailRequestPage /> }
           ]
         },
         { path: '/dormitory', element: <DomiritoryPage /> },
@@ -295,6 +296,7 @@ const CreateEditRoomTypePage = Loadable(
   lazy(() => import('../pages/feature/supervisor/setting/CreateEditRoomTypePage'))
 );
 const ListRequestPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/ListRequestPage')));
+const DetailRequestPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/components/requests/DetailRequestPage')));
 
 // Others
 const UserEdit = Loadable(lazy(() => import('../pages/dashboard/UserEdit')));

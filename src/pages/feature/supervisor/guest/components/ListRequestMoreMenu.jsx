@@ -43,8 +43,11 @@ export default function ListRequestMoreMenu({ id }) {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-
-        <MenuItem component={RouterLink} to={``} sx={{ color: 'text.secondary' }}>
+        <MenuItem
+          component={RouterLink}
+          to={`${PATH_SUPERVISOR.guest.listRequest}/${id}`}
+          sx={{ color: 'text.secondary' }}
+        >
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />
           </ListItemIcon>

@@ -62,10 +62,10 @@ const SUCCESS = {
 };
 const WARNING = {
   lighter: '#FFF5CC',
-  light: '#FFAC82',
-  main: '#FF5630',
-  dark: '#B71D18',
-  darker: '#7A0916',
+  light: '#FFD666',
+  main: '#FFAB00',
+  dark: '#B76E00',
+  darker: '#7A4100',
   contrastText: GREY[800]
 };
 const ERROR = {

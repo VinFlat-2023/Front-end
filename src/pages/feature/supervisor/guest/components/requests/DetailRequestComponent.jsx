@@ -1,10 +1,11 @@
 import { Form, FormikProvider, useFormik } from 'formik';
 import { useSnackbar } from 'notistack5';
 import { useNavigate } from 'react-router-dom';
+import { LoadingButton } from '@material-ui/lab';
 import * as Yup from 'yup';
 
 // material
-import { Card, Grid, Stack, TextField } from '@material-ui/core';
+import { Box, Card, Grid, Stack, TextField } from '@material-ui/core';
 // utils
 import axios from '../../../../../../utils/axios';
 // routes
@@ -39,32 +40,30 @@ export default function DetailRequestComponent({ detailRequest }) {
       status: detailRequest?.Status || '',
       description: detailRequest?.Description || ''
     },
-    validationSchema: NewUserSchema
-    // onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
-    //   try {
-    //     setSubmitting(false);
-    //     const createValue = {
-    //       roomSignName: values.name,
-    //       totalSlot: values.numberOfslot,
-    //       status: values.status
-    //     };
-    //     try {
-    //       const response = await axios.put(`building/room/${roomTypeDetail.RoomId}`, createValue);
+    validationSchema: NewUserSchema,
+    onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
+      try {
+        setSubmitting(false);
+        const changeValue = {
+          status: values.status
+        };
+        try {
+          const response = await axios.put(`tickets/${detailRequest.TicketId}/status`, changeValue);
 
-    //       resetForm();
-    //       enqueueSnackbar(response.data.message, { variant: 'success' });
-    //       navigate(PATH_SUPERVISOR.setting.roomType);
-    //     } catch (error) {
-    //       console.log('error', error);
-    //       setErrors(error.message);
-    //       enqueueSnackbar(error.message, { variant: 'error' });
-    //     }
-    //   } catch (error) {
-    //     console.error(error);
-    //     setSubmitting(false);
-    //     setErrors(error);
-    //   }
-    // }
+          resetForm();
+          enqueueSnackbar(response.data.message, { variant: 'success' });
+          navigate(PATH_SUPERVISOR.guest.listRequest);
+        } catch (error) {
+          console.log('error', error);
+          setErrors(error.message);
+          enqueueSnackbar(error.message, { variant: 'error' });
+        }
+      } catch (error) {
+        console.error(error);
+        setSubmitting(false);
+        setErrors(error);
+      }
+    }
   });
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
@@ -170,6 +169,11 @@ export default function DetailRequestComponent({ detailRequest }) {
                     helperText={touched.description && errors.description}
                   />
                 </Stack>
+                <Box>
+                  <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                    Lưu trạng thái
+                  </LoadingButton>
+                </Box>
               </Stack>
             </Card>
           </Grid>

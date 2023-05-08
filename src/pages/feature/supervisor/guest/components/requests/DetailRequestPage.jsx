@@ -39,6 +39,8 @@ export default function DetailRequestPage() {
     }
   };
 
+
+
   return (
     <Page title={'Cập nhật trạng thái'}>
       <Container maxWidth={themeStretch ? false : 'lg'}>

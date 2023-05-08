@@ -42,15 +42,15 @@ export default function DetailRequestPage() {
 
 
   return (
-    <Page title={'Cập nhật trạng thái'}>
+    <Page title={'Cập nhật yêu cầu'}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={'Cập nhật trạng thái'}
+          heading={'Cập nhật yêu cầu'}
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
             { name: 'Khách thuê', href: PATH_SUPERVISOR.guest.root },
             { name: 'Danh sách yêu cầu', href: PATH_SUPERVISOR.guest.listRequest },
-            { name: 'Cập nhật trạng thái' }
+            { name: 'Cập nhật yêu cầu' }
           ]}
         />
        <DetailRequestComponent detailRequest={detailRequest}/>

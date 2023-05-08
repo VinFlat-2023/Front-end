@@ -171,7 +171,7 @@ export default function DetailRequestComponent({ detailRequest }) {
                 </Stack>
                 <Box>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Lưu trạng thái
+                    Cập nhật yêu cầu
                   </LoadingButton>
                 </Box>
               </Stack>

@@ -61,7 +61,6 @@ export const BillTable = ({
                                 const { InvoiceId, Name, Renter, Employee, InvoiceDetails, DueDateReturn, PaymentTimeReturn, Status } = row;
                                 const isItemSelected = selected.indexOf(Name) !== -1;
                                 const toEditPath = `${PATH_SUPERVISOR.finances.root}/${InvoiceId}`;
-                                console.log("toedit", toEditPath)
                                 return (
                                     <TableRow
                                         hover

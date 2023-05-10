@@ -97,11 +97,11 @@ export function updateInvoice(id, payload, navigate, enqueueSnackbar) {
         status: payload.status,
         dueDate: payload.dueDate,
         detail: payload.detail,
-        paymentTime: payload.completedDate,
+        paymentTime: payload.completedDate
       };
 
       const response = await axios.put(url, data);
-      navigate(`${PATH_SUPERVISOR.finances.root}/${id}`)
+      navigate(`${PATH_SUPERVISOR.finances.root}/${id}`);
       enqueueSnackbar('Cập nhật hóa đơn thành công', { variant: 'success' });
     } catch (error) {
       enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
@@ -110,15 +110,25 @@ export function updateInvoice(id, payload, navigate, enqueueSnackbar) {
   };
 }
 
-// export function createInvoice(id) {
-//   return async (dispatch) => {
-//     dispatch(slice.actions.startLoading());
-//     try {
-//       const url = `/invoices/${id}`;
-//       const response = await axios.get(url);
-//       dispatch(slice.actions.getCurrentBillSuccess({ data: response.data.data }));
-//     } catch (error) {
-//       dispatch(slice.actions.hasError(error));
-//     }
-//   };
-// }
+export function createInvoice(payload, navigate, enqueueSnackbar) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const url = `/invoices/`;
+      const data = {
+        name: payload.name,
+        status: payload.status,
+        dueDate: payload.completedDate,
+        detail: payload.detail,
+        renterId: 1,
+        invoiceTypeId: 1
+      };
+      const response = await axios.post(url, data);
+      navigate(PATH_SUPERVISOR.finances.bill);
+      enqueueSnackbar('Tạo hóa đơn thành công', { variant: 'success' });
+    } catch (error) {
+      enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}

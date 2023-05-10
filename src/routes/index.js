@@ -149,6 +149,7 @@ export default function Router() {
           path: 'finances',
           children: [
             { path: '/bills', element: <BillsPage /> },
+            { path: '/create', element: <CreateBill /> },
             { path: '/:id', element: <ViewBill /> },
             { path: '/statistic', element: <StatisticPage /> }
           ]
@@ -284,6 +285,7 @@ const ListRoomPage = Loadable(lazy(() => import('../pages/feature/supervisor/roo
 const ListContractPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/ListContractPage')));
 const ListGuestPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/ListGuestPage')));
 const BillsPage = Loadable(lazy(() => import('../pages/feature/supervisor/finances/BillsPage')));
+const CreateBill = Loadable(lazy(() => import('../pages/feature/supervisor/finances/CreateBill')));
 const ViewBill = Loadable(lazy(() => import('../pages/feature/supervisor/finances/ViewBill')));
 const StatisticPage = Loadable(lazy(() => import('../pages/feature/supervisor/finances/StatisticPage')));
 const ElectricPage = Loadable(lazy(() => import('../pages/feature/supervisor/electric/ElectricPage')));

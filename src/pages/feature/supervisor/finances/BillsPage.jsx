@@ -233,7 +233,7 @@ export default function BillsPage() {
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_SUPERVISOR.finances.bill}
+              to={PATH_SUPERVISOR.finances.create}
               startIcon={<Icon icon={plusFill} />}
             >
               Thêm hóa đơn

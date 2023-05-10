@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../utils/axios';
+import { PATH_SUPERVISOR } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -8,7 +9,8 @@ const initialState = {
   isLoading: false,
   error: false,
   invoiceList: [],
-  invoiceTotal: 0
+  invoiceTotal: 0,
+  currentBill: null
 };
 
 const slice = createSlice({
@@ -36,6 +38,10 @@ const slice = createSlice({
       state.isLoading = false;
       state.invoiceList = [];
       state.invoiceTotal = 0;
+    },
+
+    getCurrentBillSuccess(state, action) {
+      state.currentBill = action.payload.data;
     }
   }
 });
@@ -67,3 +73,52 @@ export function getInvoiceList(pageNumber, pageSize, invoiceType, status) {
     }
   };
 }
+
+export function getInvoiceById(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const url = `/invoices/${id}`;
+      const response = await axios.get(url);
+      dispatch(slice.actions.getCurrentBillSuccess({ data: response.data.data }));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function updateInvoice(id, payload, navigate, enqueueSnackbar) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const url = `/invoices/${id}`;
+      const data = {
+        name: payload.name,
+        status: payload.status,
+        dueDate: payload.dueDate,
+        detail: payload.detail,
+        paymentTime: payload.completedDate,
+      };
+
+      const response = await axios.put(url, data);
+      navigate(`${PATH_SUPERVISOR.finances.root}/${id}`)
+      enqueueSnackbar('Cập nhật hóa đơn thành công', { variant: 'success' });
+    } catch (error) {
+      enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// export function createInvoice(id) {
+//   return async (dispatch) => {
+//     dispatch(slice.actions.startLoading());
+//     try {
+//       const url = `/invoices/${id}`;
+//       const response = await axios.get(url);
+//       dispatch(slice.actions.getCurrentBillSuccess({ data: response.data.data }));
+//     } catch (error) {
+//       dispatch(slice.actions.hasError(error));
+//     }
+//   };
+// }

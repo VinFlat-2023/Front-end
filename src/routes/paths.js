@@ -59,6 +59,7 @@ export const PATH_SUPERVISOR = {
   finances: {
     root: path(ROOTS_SUPERVISOR, '/finances'),
     bill: path(ROOTS_SUPERVISOR, '/finances/bills'),
+    view: path(ROOTS_SUPERVISOR, '/finances/:id'),
     statistic: path(ROOTS_SUPERVISOR, '/finances/statistic')
   },
   report: {

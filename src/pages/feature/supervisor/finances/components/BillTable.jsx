@@ -14,8 +14,10 @@ import SearchNotFound from 'src/components/SearchNotFound';
 
 import Label from 'src/components/Label';
 import Scrollbar from 'src/components/Scrollbar';
-import { UserListHead, UserListToolbar, UserMoreMenu } from 'src/components/_dashboard/user/list';
+import { UserListHead, UserListToolbar } from 'src/components/_dashboard/user/list';
 import { INVOICE_TYPE } from '../type';
+import MoreMenu from '../../shared/MoreMenu';
+import { PATH_SUPERVISOR } from 'src/routes/paths';
 
 export const BillTable = ({
     selected,
@@ -56,8 +58,10 @@ export const BillTable = ({
                         />
                         <TableBody>
                             {invoiceList.map((row) => {
-                                const { InvoiceId, Name, Renter, Employee, InvoiceDetails, DueDate, PaymentTime, InvoiceType } = row;
+                                const { InvoiceId, Name, Renter, Employee, InvoiceDetails, DueDateReturn, PaymentTimeReturn, Status } = row;
                                 const isItemSelected = selected.indexOf(Name) !== -1;
+                                const toEditPath = `${PATH_SUPERVISOR.finances.root}/${InvoiceId}`;
+                                console.log("toedit", toEditPath)
                                 return (
                                     <TableRow
                                         hover
@@ -82,21 +86,21 @@ export const BillTable = ({
                                         <TableCell align="left">{Employee.Username}</TableCell>
                                         <TableCell align="left">{InvoiceDetails.Amount}</TableCell>
                                         {type === INVOICE_TYPE.INCOME &&
-                                            <TableCell align="left">{DueDate}</TableCell>}
+                                            <TableCell align="left">{DueDateReturn}</TableCell>}
                                         {type === INVOICE_TYPE.INCOME &&
-                                            <TableCell align="left">{PaymentTime}</TableCell>}
+                                            <TableCell align="left">{PaymentTimeReturn}</TableCell>}
                                         {type === INVOICE_TYPE.INCOME &&
                                             <TableCell align="left">
                                                 <Label
                                                     variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                                                    color={(InvoiceType.Status === 'false' && 'error') || 'success'}
+                                                    color={Status ? 'success' : 'error'}
                                                 >
-                                                    {InvoiceType.Status ? 'Đã thanh toán' : 'Chưa thanh toán'}
+                                                    {Status ? 'Đã thanh toán' : 'Chưa thanh toán'}
                                                 </Label>
                                             </TableCell>}
 
                                         <TableCell align="right">
-                                            <UserMoreMenu onDelete={() => handleDeleteUser(InvoiceId)} id={InvoiceId} />
+                                            <MoreMenu id={InvoiceId} editPath={toEditPath} onDelete={() => handleDeleteUser(InvoiceId)} />
                                         </TableCell>
                                     </TableRow>
                                 );

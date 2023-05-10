@@ -1,10 +1,11 @@
-import { Form, FormikProvider, useFormik } from 'formik';
-import { useSnackbar } from 'notistack5';
+import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useCallback } from 'react';
+import { useSnackbar } from 'notistack5';
 import { useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
+import { Form, FormikProvider, useFormik } from 'formik';
 // material
+import { LoadingButton } from '@material-ui/lab';
 import {
   Box,
   Card,
@@ -12,25 +13,22 @@ import {
   Stack,
   TextField,
 } from '@material-ui/core';
-import { LoadingButton } from '@material-ui/lab';
 //
 import { useDispatch } from 'react-redux';
-import { createNewEmployee, updateUserProfile } from 'src/redux/slices/user';
-import { roles } from './roles';
 
 // ----------------------------------------------------------------------
 
-UserNewForm.propTypes = {
+BillForm.propTypes = {
   isEdit: PropTypes.bool,
   currentUser: PropTypes.object
 };
 
-export default function UserNewForm({ isEdit, currentUser }) {
+export default function NewBillForm({ isEdit, currentBill }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
 
-  const NewUserSchema = Yup.object().shape({
+  const BillFormSchema = Yup.object().shape({
     username: Yup.string().required('User name is required'),
     fullname: Yup.string().required('Full name is required'),
     email: Yup.string().required('Email is required').email(),
@@ -50,7 +48,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
       roleId: currentUser?.Role.RoleId || '',
       status: currentUser?.Status || ''
     },
-    validationSchema: NewUserSchema,
+    validationSchema: BillFormSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
         setSubmitting(false);

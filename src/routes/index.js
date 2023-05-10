@@ -149,6 +149,8 @@ export default function Router() {
           path: 'finances',
           children: [
             { path: '/bills', element: <BillsPage /> },
+            { path: '/create', element: <CreateBill /> },
+            { path: '/:id', element: <ViewBill /> },
             { path: '/statistic', element: <StatisticPage /> }
           ]
         },
@@ -283,6 +285,8 @@ const ListRoomPage = Loadable(lazy(() => import('../pages/feature/supervisor/roo
 const ListContractPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/ListContractPage')));
 const ListGuestPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/ListGuestPage')));
 const BillsPage = Loadable(lazy(() => import('../pages/feature/supervisor/finances/BillsPage')));
+const CreateBill = Loadable(lazy(() => import('../pages/feature/supervisor/finances/CreateBill')));
+const ViewBill = Loadable(lazy(() => import('../pages/feature/supervisor/finances/ViewBill')));
 const StatisticPage = Loadable(lazy(() => import('../pages/feature/supervisor/finances/StatisticPage')));
 const ElectricPage = Loadable(lazy(() => import('../pages/feature/supervisor/electric/ElectricPage')));
 const RenderStatusPage = Loadable(lazy(() => import('../pages/feature/supervisor/report/StatusPage')));
@@ -301,32 +305,6 @@ const DetailRequestPage = Loadable(lazy(() => import('../pages/feature/superviso
 // Others
 const UserEdit = Loadable(lazy(() => import('../pages/dashboard/UserEdit')));
 
-// Dashboard
-const Dormitory = Loadable(lazy(() => import('../pages/dashboard/Dormitory')));
-const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
-const GeneralEcommerce = Loadable(lazy(() => import('../pages/dashboard/GeneralEcommerce')));
-const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralAnalytics')));
-const GeneralBanking = Loadable(lazy(() => import('../pages/dashboard/GeneralBanking')));
-const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBooking')));
-const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
-const EcommerceProductDetails = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductDetails')));
-const EcommerceProductList = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductList')));
-const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate')));
-const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
-const EcommerceInvoice = Loadable(lazy(() => import('../pages/dashboard/EcommerceInvoice')));
-const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
-const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));
-const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')));
-const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));
-const UserCards = Loadable(lazy(() => import('../pages/dashboard/UserCards')));
-const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
-const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
-const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
-
-const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
-const Mail = Loadable(lazy(() => import('../pages/dashboard/Mail')));
-const Calendar = Loadable(lazy(() => import('../pages/dashboard/Calendar')));
-const Kanban = Loadable(lazy(() => import('../pages/dashboard/Kanban')));
 // Main
 const LandingPage = Loadable(lazy(() => import('../pages/LandingPage')));
 const About = Loadable(lazy(() => import('../pages/About')));

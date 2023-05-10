@@ -12,6 +12,7 @@ import kanbanReducer from './slices/kanban';
 import settingReducer from './slices/setting';
 import roomReducer from './slices/room';
 import guestReducer from './slices/guest';
+import financeReducer from './slices/finance';
 // ----------------------------------------------------------------------
 
 const rootPersistConfig = {
@@ -39,6 +40,10 @@ const rootReducer = combineReducers({
   setting: settingReducer,
   room: roomReducer,
   guest: guestReducer,
+  finance: financeReducer,
 });
 
 export { rootPersistConfig, rootReducer };
+
+
+//bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJTdXBlcnZpc29yIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoia2hvaWh1eUBtYWlsIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwOS8wOS9pZGVudGl0eS9jbGFpbXMvYWN0b3IiOiJzdXAzIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IjMiLCJleHAiOjE2ODUyNzA5ODMsImlzcyI6Imh0dHBzOi8vdmluZmxhdC13ZWJhcHAuYXp1cmV3ZWJzaXRlcy5uZXQvIiwiYXVkIjoiaHR0cHM6Ly92aW5mbGF0LXdlYmFwcC5henVyZXdlYnNpdGVzLm5ldC8ifQ.AFwtVg1Imhdjtya4zrkZxybsYwflV-7ECPvojsVnJxSsd47LR7B-ilx37bDDHZYT_GSV5nQF0KhQauSdGUWrdw

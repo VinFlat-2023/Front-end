@@ -10,7 +10,7 @@ import productReducer from './slices/product';
 import calendarReducer from './slices/calendar';
 import kanbanReducer from './slices/kanban';
 import settingReducer from './slices/setting';
-import roomReducer from './slices/room';
+import flatReducer from './slices/flat';
 import guestReducer from './slices/guest';
 import financeReducer from './slices/finance';
 // ----------------------------------------------------------------------
@@ -38,7 +38,7 @@ const rootReducer = combineReducers({
   kanban: kanbanReducer,
   product: persistReducer(productPersistConfig, productReducer),
   setting: settingReducer,
-  room: roomReducer,
+  flat: flatReducer,
   guest: guestReducer,
   finance: financeReducer,
 });

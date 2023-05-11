@@ -38,7 +38,7 @@ const TABLE_HEAD = [
   { id: 'PhoneNumber', label: 'Số điện thoại', alignRight: false },
   { id: 'Email', label: 'Địa chỉ email', alignRight: false },
   { id: 'Address', label: 'Địa chỉ', alignRight: false },
-  { id: 'BirthDayReturn', label: 'Ngày sinh', alignRight: false },
+  { id: 'BirthDateReturn', label: 'Ngày sinh', alignRight: false },
   { id: 'Gender', label: 'Giới tính', alignRight: false }, 
   { id: 'Status', label: 'Trạng thái', alignRight: false },
   { id: ''}
@@ -179,7 +179,7 @@ export default function ListGuestPage() {
                 />
                 <TableBody>
                   {guestList?.map((row) => {
-                    const {RenterId, FullName, PhoneNumber, Email, Address, BirthDayReturn, Gender, Status } = row;
+                    const {RenterId, FullName, PhoneNumber, Email, Address, BirthDateReturn, Gender, Status } = row;
                     const isItemSelected = selected.indexOf(FullName) !== -1;
 
                    
@@ -206,7 +206,7 @@ export default function ListGuestPage() {
                         <TableCell align="left">{PhoneNumber}</TableCell>
                         <TableCell align="left">{Email}</TableCell>
                         <TableCell align="left">{Address}</TableCell>
-                        <TableCell align="left">{BirthDayReturn}</TableCell>
+                        <TableCell align="left">{BirthDateReturn}</TableCell>
                         <TableCell align="left">{Gender}</TableCell>
                        
                         <TableCell align="left">

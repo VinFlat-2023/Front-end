@@ -34,7 +34,7 @@ import Page from '../../../../components/Page';
 import Scrollbar from '../../../../components/Scrollbar';
 import SearchNotFound from '../../../../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../../components/_dashboard/user/list';
-import { getFlatList } from 'src/redux/slices/room';
+import { getFlatList } from 'src/redux/slices/flat';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -79,7 +79,7 @@ export default function FlatList() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { flatList, flatTotal } = useSelector((state) => state.room);
+  const { flatList, flatTotal } = useSelector((state) => state.flat);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);

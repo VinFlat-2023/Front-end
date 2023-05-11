@@ -34,14 +34,15 @@ import { getGuestList } from 'src/redux/slices/guest';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'fullName', label: 'Họ và tên', alignRight: false },
-  { id: 'phoneNumber', label: 'Số điện thoại', alignRight: false },
-  { id: 'userName', label: 'Địa chỉ email', alignRight: false },
-  { id: 'userName', label: 'Ngày sinh', alignRight: false },
-  { id: 'role', label: 'Giới tính', alignRight: false }, 
-  { id: 'status', label: 'Trạng thái', alignRight: false },
-  { id: '' }
-];
+  { id: 'FullName', label: 'Họ và tên', alignRight: false },
+  { id: 'PhoneNumber', label: 'Số điện thoại', alignRight: false },
+  { id: 'Email', label: 'Địa chỉ email', alignRight: false },
+  { id: 'Address', label: 'Địa chỉ', alignRight: false },
+  { id: 'BirthDayReturn', label: 'Ngày sinh', alignRight: false },
+  { id: 'Gender', label: 'Giới tính', alignRight: false }, 
+  { id: 'Status', label: 'Trạng thái', alignRight: false },
+  { id: ''}
+];  
 
 // ----------------------------------------------------------------------
 
@@ -101,7 +102,7 @@ export default function ListGuestPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = guestList.map((n) => n.Username);
+      const newSelecteds = guestList.map((n) => n.FullName);
       setSelected(newSelecteds);
       return;
     }
@@ -178,21 +179,23 @@ export default function ListGuestPage() {
                 />
                 <TableBody>
                   {guestList?.map((row) => {
-                    const { EmployeeId, FullName, Username, Status, Role, Phone } = row;
-                    const isItemSelected = selected.indexOf(Username) !== -1;
+                    const {RenterId, FullName, PhoneNumber, Email, Address, BirthDayReturn, Gender, Status } = row;
+                    const isItemSelected = selected.indexOf(FullName) !== -1;
 
+                   
                     return (
                       <TableRow
                         hover
-                        key={EmployeeId}
+                        key={RenterId}
                         tabIndex={-1}
                         role="checkbox"
                         selected={isItemSelected}
                         aria-checked={isItemSelected}
                       >
                         <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, Username)} />
+                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, FullName)} />
                         </TableCell>
+
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
                             <Typography variant="subtitle2" noWrap>
@@ -200,10 +203,11 @@ export default function ListGuestPage() {
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{Phone}</TableCell>
-                        <TableCell align="left">{Username}</TableCell>
-                        <TableCell align="left">{Username}</TableCell>
-                        <TableCell align="left">{Role.RoleName}</TableCell>
+                        <TableCell align="left">{PhoneNumber}</TableCell>
+                        <TableCell align="left">{Email}</TableCell>
+                        <TableCell align="left">{Address}</TableCell>
+                        <TableCell align="left">{BirthDayReturn}</TableCell>
+                        <TableCell align="left">{Gender}</TableCell>
                        
                         <TableCell align="left">
                           <Label
@@ -215,7 +219,7 @@ export default function ListGuestPage() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu  onDelete={() => handleDeleteUser(EmployeeId)} id={EmployeeId} />
+                          <UserMoreMenu  onDelete={() => handleDeleteUser(RenterId)} id={RenterId} />
                         </TableCell>
                       </TableRow>
                     );

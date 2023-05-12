@@ -30,7 +30,7 @@ export default function CreateEditFlatTypePage() {
 
   const getData = async () => {
     try {
-      const response = await axios.get(`building/room/${id}`);
+      const response = await axios.get(`building/room-type/${id}`);
       setRoomTypeDetail(response.data.data);
     } catch (error) {
       if (error.status === 'Not Found') {
@@ -41,15 +41,15 @@ export default function CreateEditFlatTypePage() {
   };
 
   return (
-    <Page title={id ? 'Chỉnh sửa phòng' : 'Thêm phòng'}>
+    <Page title={id ? 'Chỉnh sửa phòng' : 'Thêm loại phòng'}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={id ? 'Chỉnh sửa phòng' : 'Thêm phòng'}
+          heading={id ? 'Chỉnh sửa phòng' : 'Thêm loại phòng'}
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
             { name: 'Cài đặt', href: PATH_SUPERVISOR.setting.roomType },
-            { name: 'Danh sách phòng', href: PATH_SUPERVISOR.setting.roomType },
-            { name: id ? 'Chỉnh sửa phòng' : 'Thêm phòng' }
+            { name: 'Danh sách loại phòng', href: PATH_SUPERVISOR.setting.roomType },
+            { name: id ? 'Chỉnh sửa phòng' : 'Thêm loại phòng' }
           ]}
         />
         {id ? (

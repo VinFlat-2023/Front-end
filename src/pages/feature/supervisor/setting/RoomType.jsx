@@ -38,9 +38,9 @@ import axios from '../../../../utils/axios';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'RoomSignName', label: 'Tên phòng', alignRight: false },
+  { id: 'RoomTypeName', label: 'Tên phòng', alignRight: false },
   // { id: 'userName', label: 'Tài khoản', alignRight: false },
-  { id: 'TotalSlot', label: 'Số slot trống', alignRight: false },
+  { id: 'TotalSlot', label: 'Tổng số giường', alignRight: false },
   // { id: 'phoneNumber', label: 'Số điện thoại', alignRight: false },
   { id: 'Status', label: 'Trạng thái', alignRight: false },
   { id: '' }
@@ -72,7 +72,7 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.RoomSignName.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.RoomTypeName.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis?.map((el) => el[0]);
 }
@@ -98,11 +98,11 @@ export default function UserList() {
 
   const getFlatTypeList = async (page, size) => {
     try {
-      const response = await axios.get(`building/room`, {
+      const response = await axios.get(`building/room-type`, {
         params: {
           PageSize: size,
           PageNumber: page,
-          RoomSignName: filterName
+          RoomTypeName: filterName
         }
       });
       setRoomTypeList(response.data.data);
@@ -122,7 +122,7 @@ export default function UserList() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = roomTypeList.map((n) => n.RoomId);
+      const newSelecteds = roomTypeList.map((n) => n.RoomTypeId);
       setSelected(newSelecteds);
       return;
     }
@@ -164,14 +164,14 @@ export default function UserList() {
   const isUserNotFound = filteredUsers?.length === 0;
 
   return (
-    <Page title="Phòng">
+    <Page title="Loại Phòng">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Phòng"
+          heading="Loại Phòng"
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
             { name: 'Cài đặt', href: PATH_SUPERVISOR.setting.roomType },
-            { name: 'Danh sách các phòng' }
+            { name: 'Danh sách loại phòng' }
           ]}
           action={
             <Button
@@ -180,7 +180,7 @@ export default function UserList() {
               to={PATH_SUPERVISOR.setting.addRoomType}
               startIcon={<Icon icon={plusFill} />}
             >
-              Thêm phòng
+              Thêm loại
             </Button>
           }
         />
@@ -202,25 +202,25 @@ export default function UserList() {
                 />
                 <TableBody>
                   {roomTypeList.map((row) => {
-                    const { RoomId, RoomSignName, TotalSlot, Status } = row;
-                    const isItemSelected = selected.indexOf(RoomId) !== -1;
+                    const { RoomTypeId, RoomTypeName, TotalSlot, Status } = row;
+                    const isItemSelected = selected.indexOf(RoomTypeId) !== -1;
 
                     return (
                       <TableRow
                         hover
-                        key={RoomId}
+                        key={RoomTypeId}
                         tabIndex={-1}
                         role="checkbox"
                         selected={isItemSelected}
                         aria-checked={isItemSelected}
                       >
                         <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, RoomId)} />
+                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, RoomTypeId)} />
                         </TableCell>
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
                             <Typography variant="subtitle2" noWrap>
-                              {RoomSignName}
+                              {RoomTypeName}
                             </Typography>
                           </Stack>
                         </TableCell>
@@ -230,15 +230,15 @@ export default function UserList() {
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
                             color={
-                              Status === 'Available' ? 'success' : Status === 'Maintenance' ? 'default' : 'error'
+                              Status === 'Active' ? 'success' : Status === 'Inactive' ? 'default' : 'error'
                             }
                           >
-                            {Status === 'Available' ? 'Còn chỗ' : Status === 'Maintenance' ? 'Đang bảo trì' : 'Hết chỗ'}
+                            {Status === 'Active' ? 'Còn sử dụng' : Status === 'Inactive' ? 'Không sử dụng' : 'error'}
                           </Label>
                         </TableCell>
 
                         <TableCell align="right">
-                          <RoomTypeMoreMenu id={RoomId} />
+                          <RoomTypeMoreMenu id={RoomTypeId} />
                         </TableCell>
                       </TableRow>
                     );

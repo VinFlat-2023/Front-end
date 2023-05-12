@@ -26,7 +26,7 @@ export default function EditRoomTypeForm({ roomTypeDetail }) {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: roomTypeDetail.RoomSignName || '',
+      name: roomTypeDetail.RoomTypeName || '',
       numberOfslot: roomTypeDetail.TotalSlot || 0,
       status: roomTypeDetail.Status || ''
     },
@@ -35,12 +35,12 @@ export default function EditRoomTypeForm({ roomTypeDetail }) {
       try {
         setSubmitting(false);
         const createValue = {
-          roomSignName: values.name,
+          roomTypeName: values.name,
           totalSlot: values.numberOfslot,
           status: values.status
         };
         try {
-          const response = await axios.put(`building/room/${roomTypeDetail.RoomId}`, createValue);
+          const response = await axios.put(`building/room-type/${roomTypeDetail.RoomTypeId}`, createValue);
 
           resetForm();
           enqueueSnackbar(response.data.message, { variant: 'success' });
@@ -70,7 +70,7 @@ export default function EditRoomTypeForm({ roomTypeDetail }) {
                 <Stack>
                   <TextField
                     fullWidth
-                    label="Tên Phòng"
+                    label="Tên loại phòng"
                     {...getFieldProps('name')}
                     error={Boolean(touched.name && errors.name)}
                     helperText={touched.name && errors.name}
@@ -97,17 +97,17 @@ export default function EditRoomTypeForm({ roomTypeDetail }) {
                     helperText={touched.status && errors.status}
                   >
                     <option value=""></option>
-                    <option key={1} value="Available">
-                      Còn chỗ
+                    <option key={1} value="Active">
+                      Còn sử dụng
                     </option>
-                    <option key={2} value="Maintenance">
-                      Đang bảo trì
+                    <option key={2} value="Inactive">
+                      Không sử dụng
                     </option>
                   </TextField>
                 </Stack>
                 <Box>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Chỉnh sửa phòng
+                    Chỉnh sửa loại phòng
                   </LoadingButton>
                 </Box>
               </Stack>

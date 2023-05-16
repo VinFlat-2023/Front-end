@@ -13,6 +13,9 @@ import settingReducer from './slices/setting';
 import flatReducer from './slices/flat';
 import guestReducer from './slices/guest';
 import financeReducer from './slices/finance';
+import contractReducer from './slices/contract';
+import buildingReducer from './slices/building';
+import roomReducer from './slices/room';
 // ----------------------------------------------------------------------
 
 const rootPersistConfig = {
@@ -41,6 +44,9 @@ const rootReducer = combineReducers({
   flat: flatReducer,
   guest: guestReducer,
   finance: financeReducer,
+  contract: contractReducer,
+  building: buildingReducer,
+  room: roomReducer,
 });
 
 export { rootPersistConfig, rootReducer };

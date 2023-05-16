@@ -42,12 +42,12 @@ export default function CreateRoomTypeForm() {
       try {
         setSubmitting(false);
         const createValue = {
-          roomSignName: values.name,
+          roomTypeName: values.name,
           totalSlot: values.numberOfslot,
           status: values.status
         };
         try {
-          const response = await axios.post('building/room', createValue);
+          const response = await axios.post('building/room-type', createValue);
 
           resetForm();
           enqueueSnackbar(response.data.message, { variant: 'success' });
@@ -77,7 +77,7 @@ export default function CreateRoomTypeForm() {
                 <Stack>
                   <TextField
                     fullWidth
-                    label="Tên Phòng"
+                    label="Tên loại phòng"
                     {...getFieldProps('name')}
                     error={Boolean(touched.name && errors.name)}
                     helperText={touched.name && errors.name}
@@ -87,7 +87,7 @@ export default function CreateRoomTypeForm() {
                   <TextField
                     fullWidth
                     type="number"
-                    label="Tổng số slot"
+                    label="Tổng số giường"
                     {...getFieldProps('numberOfslot')}
                     error={Boolean(touched.numberOfslot && errors.numberOfslot)}
                     helperText={touched.numberOfslot && errors.numberOfslot}
@@ -104,17 +104,17 @@ export default function CreateRoomTypeForm() {
                     helperText={touched.status && errors.status}
                   >
                     <option value=""></option>
-                    <option key={1} value="Available">
-                      Còn chỗ
+                    <option key={1} value="Active">
+                      Còn sửa dụng
                     </option>
-                    <option key={2} value="Maintenance">
-                      Đang bảo trì
+                    <option key={2} value="Inactive">
+                      Không sử dụng
                     </option>
                   </TextField>
                 </Stack>
                 <Box>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Thêm phòng
+                    Thêm loại phòng
                   </LoadingButton>
                 </Box>
               </Stack>

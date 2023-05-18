@@ -1,6 +1,6 @@
 import { Form, FormikProvider, useFormik } from 'formik';
 import { useSnackbar } from 'notistack5';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
@@ -9,16 +9,19 @@ import { Box, Card, FormHelperText, Grid, Stack, TextField, Typography } from '@
 import { styled } from '@material-ui/core/styles';
 import { LoadingButton } from '@material-ui/lab';
 // utils
-import axios from '../../../../../utils/axios';
 // routes
-import { PATH_ADMIN } from '../../../../../routes/paths';
 //
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCurrentBuilding } from 'src/redux/slices/building';
+import { createContract } from 'src/redux/slices/contract';
+import { getFlatList } from 'src/redux/slices/flat';
+import { getGuestList } from 'src/redux/slices/guest';
+import { getRoomList } from 'src/redux/slices/room';
 import { uploadImage } from 'src/utils/firebase';
 import UploadSingleFile from '../../../../../components/upload/UploadSingleFile';
 
 // ----------------------------------------------------------------------
-const locationFake = [{ id: '1', label: 'HCM' }];
+const gender = [{ id: '1', label: 'Nam' }, { id: '2', label: 'Nữ' }];
 
 // ----------------------------------------------------------------------
 
@@ -32,40 +35,71 @@ export default function CreateContractForm() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
+  const { currentBuilding } = useSelector(state => state.building);
+  const { flatList } = useSelector(state => state.flat);
+  const { roomList } = useSelector(state => state.room);
 
-  const [imageUpload, setImageUpload] = useState(null);
+
+  const [frontCitizenCard, setFrontCitizenCard] = useState(null);
+  const [backCitizenCard, setBackCitizenCard] = useState(null);
+
+  useEffect(() => {
+    dispatch(getCurrentBuilding());
+    dispatch(getRoomList());
+    dispatch(getGuestList());
+    dispatch(getFlatList());
+  }, [])
 
   const NewUserSchema = Yup.object().shape({
-    name: Yup.string().required('Tên đang trống'),
-    location: Yup.string().required('Vui lòng không bỏ trống'),
-    images: Yup.mixed().required('Ảnh đang trống')
+    contractName: Yup.string().required('Tên hợp đồng đang trống'),
+    flatId: Yup.number().required('Tên căn hộ đang trống'),
+    roomId: Yup.string().required('Tên phòng đang trống'),
+    priceForRent: Yup.string().required('Tiền thuê KTX đang trống'),
+    priceForService: Yup.string().required('Tiền dịch vụ đang trống'),
+    priceForElecticity: Yup.string().required('Tiền điện đang trống'),
+    priceForWater: Yup.string().required('Tiền nước đang trống'),
+    dateSigned: Yup.string().required('Ngày kí đang trống'),
+    startDate: Yup.string().required('Ngày bắt đầu đang trống'),
+    endDate: Yup.string().required('Ngày kết thúc đang trống'),
+    fullName: Yup.string().required('Tên khách thuê đang trống'),
+
   });
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: '',
-      location: '',
-      images: null
+      contractName: "",
+      dateSigned: "",
+      startDate: "",
+      description: "",
+      endDate: "",
+      contractStatus: "active",
+      priceForWater: "",
+      priceForElectricity: "",
+      priceForService: "",
+      priceForRent: "",
+      flatId: "",
+      roomId: "",
+      renterUserName: "",
+      fullName: "",
+      renterEmail: "",
+      renterPhone: "",
+      renterBirthDate: "",
+      address: "",
+      gender: "",
+      citizenNumber: "",
+      images: [],
+      backCitizenCard: [],
     },
-    validationSchema: NewUserSchema,
+
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
-        const url = await uploadImage(imageUpload);
-        setSubmitting(false);
-        const createValue = {
-          name: values.name,
-          location: values.location,
-          status: true,
-          imageUrl: url
-        };
+        console.log(values);
+        const fronCitizenCardUrl = await uploadImage(frontCitizenCard);
+        const backCitizenCardUrl = await uploadImage(backCitizenCard);
         try {
-          const response = await axios.post('areas', createValue);
-
-          resetForm();
-          enqueueSnackbar('Thêm khu vực thành công', { variant: 'success' });
-          navigate(PATH_ADMIN.area.listAreas);
+          dispatch(createContract({ ...values, citizenCardFrontImageUrl: fronCitizenCardUrl, citizenCardBackImageUrl: backCitizenCardUrl }, navigate, enqueueSnackbar))
         } catch (error) {
-          console.log('error', error);
+          console.error('error', error);
           setErrors(error.message);
           enqueueSnackbar(error.message, { variant: 'error' });
         }
@@ -82,9 +116,23 @@ export default function CreateContractForm() {
   const handleDrop = useCallback(
     (acceptedFiles) => {
       const file = acceptedFiles[0];
-      setImageUpload(file);
+      setFrontCitizenCard(file);
       if (file) {
         setFieldValue('images', {
+          ...file,
+          preview: URL.createObjectURL(file)
+        });
+      }
+    },
+    [setFieldValue]
+  );
+
+  const handleBackCitizenCardDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+      setBackCitizenCard(file);
+      if (file) {
+        setFieldValue('backCitizenCard', {
           ...file,
           preview: URL.createObjectURL(file)
         });
@@ -113,17 +161,16 @@ export default function CreateContractForm() {
                   <TextField
                     fullWidth
                     label="Tên hợp đồng"
-                    {...getFieldProps('name')}
-                    error={Boolean(touched.name && errors.name)}
-                    helperText={touched.name && errors.name}
+                    {...getFieldProps('contractName')}
+                    error={Boolean(touched.contractName && errors.contractName)}
+                    helperText={touched.contractName && errors.contractName}
                   />
+
                   <TextField
                     fullWidth
                     disabled
                     label="Tên tòa nhà kTX xá đang quản lý"
-                    {...getFieldProps('name')}
-                    error={Boolean(touched.name && errors.name)}
-                    helperText={touched.name && errors.name}
+                    value={currentBuilding?.BuildingAddress}
                   />
                 </Stack>
 
@@ -132,15 +179,15 @@ export default function CreateContractForm() {
                     select
                     fullWidth
                     label="Căn hộ"
-                    {...getFieldProps('location')}
+                    {...getFieldProps('flatId')}
                     SelectProps={{ native: true }}
-                    error={Boolean(touched.location && errors.location)}
-                    helperText={touched.location && errors.location}
+                    error={Boolean(touched.flatId && errors.flatId)}
+                    helperText={touched.flatId && errors.flatId}
                   >
                     <option value="" />
-                    {locationFake.map((option) => (
-                      <option key={option.id} value={option.label}>
-                        {option.label}
+                    {flatList?.map((option) => (
+                      <option key={option.FlatId} value={option.FlatId}>
+                        {option.Description}
                       </option>
                     ))}
                   </TextField>
@@ -148,15 +195,15 @@ export default function CreateContractForm() {
                     select
                     fullWidth
                     label="Phòng"
-                    {...getFieldProps('location')}
+                    {...getFieldProps('roomId')}
                     SelectProps={{ native: true }}
-                    error={Boolean(touched.location && errors.location)}
-                    helperText={touched.location && errors.location}
+                    error={Boolean(touched.roomId && errors.roomId)}
+                    helperText={touched.roomId && errors.roomId}
                   >
                     <option value="" />
-                    {locationFake.map((option) => (
-                      <option key={option.id} value={option.label}>
-                        {option.label}
+                    {roomList?.map((option) => (
+                      <option key={option.RoomId} value={option.RoomId}>
+                        {option.RoomName}
                       </option>
                     ))}
                   </TextField>
@@ -166,16 +213,16 @@ export default function CreateContractForm() {
                   <TextField
                     fullWidth
                     label="Tiền thuê KTX (tháng)"
-                    {...getFieldProps('name')}
-                    error={Boolean(touched.name && errors.name)}
-                    helperText={touched.name && errors.name}
+                    {...getFieldProps('priceForRent')}
+                    error={Boolean(touched.priceForRent && errors.priceForRent)}
+                    helperText={touched.priceForRent && errors.priceForRent}
                   />
-                   <TextField
+                  <TextField
                     fullWidth
                     label="Tiền dịch vụ (tháng)"
-                    {...getFieldProps('name')}
-                    error={Boolean(touched.name && errors.name)}
-                    helperText={touched.name && errors.name}
+                    {...getFieldProps('priceForService')}
+                    error={Boolean(touched.priceForService && errors.priceForService)}
+                    helperText={touched.priceForService && errors.priceForService}
                   />
                 </Stack>
 
@@ -183,16 +230,16 @@ export default function CreateContractForm() {
                   <TextField
                     fullWidth
                     label="Tiền điện trên số"
-                    {...getFieldProps('name')}
+                    {...getFieldProps('priceForElectricity')}
                     error={Boolean(touched.name && errors.name)}
                     helperText={touched.name && errors.name}
                   />
-                   <TextField
+                  <TextField
                     fullWidth
                     label="Tiền nước trên số"
-                    {...getFieldProps('name')}
-                    error={Boolean(touched.name && errors.name)}
-                    helperText={touched.name && errors.name}
+                    {...getFieldProps('priceForWater')}
+                    error={Boolean(touched.priceForElectricity && errors.priceForElectricity)}
+                    helperText={touched.priceForElectricity && errors.priceForElectricity}
                   />
                 </Stack>
 
@@ -200,9 +247,7 @@ export default function CreateContractForm() {
                   <TextField
                     fullWidth
                     label="Thông tin thêm về hợp đồng"
-                    {...getFieldProps('name')}
-                    error={Boolean(touched.name && errors.name)}
-                    helperText={touched.name && errors.name}
+                    {...getFieldProps('description')}
                   />
                 </Stack>
 
@@ -210,23 +255,23 @@ export default function CreateContractForm() {
                   <TextField
                     fullWidth
                     label="Ngày kí"
-                    {...getFieldProps('name')}
-                    error={Boolean(touched.name && errors.name)}
-                    helperText={touched.name && errors.name}
+                    {...getFieldProps('dateSigned')}
+                    error={Boolean(touched.dateSigned && errors.dateSigned)}
+                    helperText={touched.dateSigned && errors.dateSigned}
                   />
                   <TextField
                     fullWidth
                     label="Ngày bắt đầu"
-                    {...getFieldProps('name')}
-                    error={Boolean(touched.name && errors.name)}
-                    helperText={touched.name && errors.name}
+                    {...getFieldProps('startDate')}
+                    error={Boolean(touched.startDate && errors.startDate)}
+                    helperText={touched.startDate && errors.startDate}
                   />
                   <TextField
                     fullWidth
                     label="Ngày kết thúc"
-                    {...getFieldProps('name')}
-                    error={Boolean(touched.name && errors.name)}
-                    helperText={touched.name && errors.name}
+                    {...getFieldProps('endDate')}
+                    error={Boolean(touched.endDate && errors.endDate)}
+                    helperText={touched.endDate && errors.endDate}
                   />
                 </Stack>
 
@@ -238,16 +283,16 @@ export default function CreateContractForm() {
                   <TextField
                     fullWidth
                     label="Họ và tên"
-                    {...getFieldProps('name')}
-                    error={Boolean(touched.name && errors.name)}
-                    helperText={touched.name && errors.name}
+                    {...getFieldProps('fullName')}
+                    error={Boolean(touched.fullName && errors.fullName)}
+                    helperText={touched.fullName && errors.fullName}
                   />
                   <TextField
                     fullWidth
                     label="Địa chỉ email"
-                    {...getFieldProps('name')}
-                    error={Boolean(touched.name && errors.name)}
-                    helperText={touched.name && errors.name}
+                    {...getFieldProps('renterEmail')}
+                    error={Boolean(touched.renterEmail && errors.renterEmail)}
+                    helperText={touched.renterEmail && errors.renterEmail}
                   />
                 </Stack>
 
@@ -255,16 +300,16 @@ export default function CreateContractForm() {
                   <TextField
                     fullWidth
                     label="Tên tài khoản"
-                    {...getFieldProps('name')}
-                    error={Boolean(touched.name && errors.name)}
-                    helperText={touched.name && errors.name}
+                    {...getFieldProps('renterUserName')}
+                    error={Boolean(touched.fullName && errors.fullName)}
+                    helperText={touched.fullName && errors.fullName}
                   />
                   <TextField
                     fullWidth
                     label="Ngày sinh"
-                    {...getFieldProps('name')}
-                    error={Boolean(touched.name && errors.name)}
-                    helperText={touched.name && errors.name}
+                    {...getFieldProps('renterBirthDate')}
+                    error={Boolean(touched.renterBirthDate && errors.renterBirthDate)}
+                    helperText={touched.renterBirthDate && errors.renterBirthDate}
                   />
                 </Stack>
 
@@ -272,17 +317,42 @@ export default function CreateContractForm() {
                   <TextField
                     fullWidth
                     label="Số điện thoại"
-                    {...getFieldProps('name')}
-                    error={Boolean(touched.name && errors.name)}
-                    helperText={touched.name && errors.name}
+                    {...getFieldProps('renterPhone')}
+                    error={Boolean(touched.renterPhone && errors.renterPhone)}
+                    helperText={touched.renterPhone && errors.renterPhone}
                   />
                   <TextField
                     fullWidth
                     label="Địa chỉ"
-                    {...getFieldProps('name')}
-                    error={Boolean(touched.name && errors.name)}
-                    helperText={touched.name && errors.name}
+                    {...getFieldProps('address')}
+                    error={Boolean(touched.address && errors.address)}
+                    helperText={touched.address && errors.address}
                   />
+                </Stack>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                  <TextField
+                    fullWidth
+                    label="CMND/CCCD"
+                    {...getFieldProps('citizenNumber')}
+                    error={Boolean(touched.citizenNumber && errors.citizenNumber)}
+                    helperText={touched.citizenNumber && errors.citizenNumber}
+                  />
+                  <TextField
+                    select
+                    fullWidth
+                    label="Giới tính"
+                    {...getFieldProps('gender')}
+                    SelectProps={{ native: true }}
+                    error={Boolean(touched.gender && errors.gender)}
+                    helperText={touched.gender && errors.gender}
+                  >
+                    <option value="" />
+                    {gender.map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </TextField>
                 </Stack>
 
                 <Stack>
@@ -304,23 +374,24 @@ export default function CreateContractForm() {
                 </Stack>
 
                 <Stack>
-                <TextField
-                    select
-                    fullWidth
-                    label="Giới tính"
-                    {...getFieldProps('location')}
-                    SelectProps={{ native: true }}
-                    error={Boolean(touched.location && errors.location)}
-                    helperText={touched.location && errors.location}
-                  >
-                    <option value="" />
-                    {locationFake.map((option) => (
-                      <option key={option.id} value={option.label}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </TextField>
+                  <div>
+                    <LabelStyle>Hình ảnh hợp đồng</LabelStyle>
+                    <UploadSingleFile
+                      maxSize={5145728}
+                      accept="image/*"
+                      file={values.backCitizenCard}
+                      onDrop={handleBackCitizenCardDrop}
+                      error={Boolean(touched.backCitizenCard && errors.backCitizenCard)}
+                    />
+                    {touched.backCitizenCard && errors.backCitizenCard && (
+                      <FormHelperText error sx={{ px: 2 }}>
+                        {touched.backCitizenCard && errors.backCitizenCard}
+                      </FormHelperText>
+                    )}
+                  </div>
                 </Stack>
+
+
 
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>

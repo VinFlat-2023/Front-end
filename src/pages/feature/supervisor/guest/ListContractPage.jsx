@@ -1,49 +1,48 @@
-import { filter } from 'lodash';
+import plusFill from '@iconify/icons-eva/plus-fill';
 import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
-import { useState, useEffect, useMemo } from 'react';
-import plusFill from '@iconify/icons-eva/plus-fill';
+import { filter } from 'lodash';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { useTheme } from '@material-ui/core/styles';
 import {
-  Card,
-  Table,
-  Stack,
-  Avatar,
   Button,
+  Card,
   Checkbox,
-  TableRow,
+  Container,
+  Stack,
+  Table,
   TableBody,
   TableCell,
-  Container,
-  Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  TableRow,
+  Typography
 } from '@material-ui/core';
+import { useTheme } from '@material-ui/core/styles';
 // redux
+import { deleteUser } from '../../../../redux/slices/user';
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { getUserList, deleteUser } from '../../../../redux/slices/user';
 // routes
 import { PATH_SUPERVISOR } from '../../../../routes/paths';
 // hooks
 import useSettings from '../../../../hooks/useSettings';
 // components
-import Page from '../../../../components/Page';
-import Label from '../../../../components/Label';
-import Scrollbar from '../../../../components/Scrollbar';
-import SearchNotFound from '../../../../components/SearchNotFound';
+import { getContractList } from 'src/redux/slices/contract';
 import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
+import Label from '../../../../components/Label';
+import Page from '../../../../components/Page';
+import Scrollbar from '../../../../components/Scrollbar';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../../components/_dashboard/user/list';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'fullName', label: 'Tên hợp đồng', alignRight: false },
-  { id: 'fullName', label: 'Khách thuê', alignRight: false },
-  { id: 'userName', label: 'Chi tiết', alignRight: false },
-  { id: 'userName', label: 'Ngày bắt đầu', alignRight: false },
-  { id: 'role', label: 'Ngày kết thúc', alignRight: false },
-  { id: 'phoneNumber', label: 'Ngày kí', alignRight: false },
+  { id: 'name', label: 'Tên hợp đồng', alignRight: false },
+  { id: 'renter', label: 'Khách thuê', alignRight: false },
+  { id: 'contractDetail', label: 'Chi tiết', alignRight: false },
+  { id: 'startDate', label: 'Ngày bắt đầu', alignRight: false },
+  { id: 'endDate', label: 'Ngày kết thúc', alignRight: false },
+  { id: 'signedDate', label: 'Ngày kí', alignRight: false },
   { id: 'status', label: 'Trạng thái', alignRight: false },
   { id: '' }
 ];
@@ -79,11 +78,11 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis?.map((el) => el[0]);
 }
 
-export default function UserList() {
+export default function ContractList() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { userList, total } = useSelector((state) => state.user);
+  const { contractList, total } = useSelector((state) => { console.log("sttae", state); return state.contract});
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -94,7 +93,7 @@ export default function UserList() {
 
 
   useEffect(() => {
-    dispatch(getUserList(page +1 ,rowsPerPage));
+    dispatch(getContractList(page +1 ,rowsPerPage));
   }, [dispatch, page, rowsPerPage]);
 
 
@@ -106,7 +105,7 @@ export default function UserList() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = userList.map((n) => n.Username);
+      const newSelecteds = contractList?.map((n) => n.Username);
       setSelected(newSelecteds);
       return;
     }
@@ -114,8 +113,8 @@ export default function UserList() {
   };
 
   useEffect(()=>{
-    setFilteredUsers(applySortFilter(userList, getComparator(order, orderBy), filterName));
-  },[userList])
+    setFilteredUsers(applySortFilter(contractList, getComparator(order, orderBy), filterName));
+  },[contractList])
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -149,7 +148,7 @@ export default function UserList() {
     dispatch(deleteUser(userId));
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - contractList.length) : 0;
 
 
   const isUserNotFound = filteredUsers?.length === 0;
@@ -168,7 +167,7 @@ export default function UserList() {
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_SUPERVISOR.guest.listContract}
+              to={PATH_SUPERVISOR.guest.createContract}
               startIcon={<Icon icon={plusFill} />}
             >
               Thêm hợp đồng
@@ -186,62 +185,62 @@ export default function UserList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={userList?.length}
+                  rowCount={contractList?.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {userList.map((row) => {
-                    const { EmployeeId, FullName, Username, Status, Role, Phone } = row;
-                    const isItemSelected = selected.indexOf(Username) !== -1;
+                  {contractList?.map((row) => {
+                    const { ContractId, Renter, ContractName, Description, StartDate, EndDate, DateSigned, ContractStatus  } = row;
+                    const isItemSelected = selected.indexOf(ContractName) !== -1;
 
                     return (
                       <TableRow
                         hover
-                        key={EmployeeId}
+                        key={ContractId}
                         tabIndex={-1}
                         role="checkbox"
                         selected={isItemSelected}
                         aria-checked={isItemSelected}
                       >
                         <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, Username)} />
+                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, ContractName)} />
                         </TableCell>
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
                             <Typography variant="subtitle2" noWrap>
-                              {FullName}
+                              {ContractName}
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{Username}</TableCell>
-                        <TableCell align="left">{Username}</TableCell>
-                        <TableCell align="left">{Username}</TableCell>
-                        <TableCell align="left">{Role.RoleName}</TableCell>
-                        <TableCell align="left">{Phone}</TableCell>
+                        <TableCell align="left">{Renter.FullName}</TableCell>
+                        <TableCell align="left">{Description}</TableCell>
+                        <TableCell align="left">{StartDate}</TableCell>
+                        <TableCell align="left">{EndDate}</TableCell>
+                        <TableCell align="left">{DateSigned}</TableCell>
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(Status === 'false' && 'error') || 'success'}
+                            color={(ContractStatus === 'false' && 'error') || 'success'}
                           >
-                            {sentenceCase(Status ? "Active" : "Banned")}
+                            {sentenceCase(ContractStatus ? "Active" : "Banned")}
                           </Label>
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu  onDelete={() => handleDeleteUser(EmployeeId)} id={EmployeeId} />
+                          <UserMoreMenu  onDelete={() => handleDeleteUser(ContractId)} id={ContractId} />
                         </TableCell>
                       </TableRow>
                     );
                   })}
 
                 </TableBody>
-                {isUserNotFound && (
+                {!contractList && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
+                      No contract found for this building managed by this supervisor
                       </TableCell>
                     </TableRow>
                   </TableBody>
@@ -253,7 +252,7 @@ export default function UserList() {
           <TablePagination
             rowsPerPageOptions={[5, 10]}
             component="div"
-            count={total}
+            count={total ?? 0}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

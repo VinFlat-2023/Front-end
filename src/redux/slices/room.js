@@ -9,6 +9,7 @@ const initialState = {
   error: false,
   roomList: [],
   total: 0,
+  roomInFlats: []
 };
 
 const slice = createSlice({
@@ -27,10 +28,14 @@ const slice = createSlice({
     },
 
     getRoomListSuccess(state, action) {
-        state.isLoading = false;
-        state.roomList = action.payload.roomList;
-        state.total = action.payload.total;
+      state.isLoading = false;
+      state.roomList = action.payload.roomList;
+      state.total = action.payload.total;
     },
+    getRoomInFlatSuccess(state, action) {
+      state.isLoading = false;
+      state.roomInFlats = action.payload;
+    }
   }
 });
 
@@ -39,7 +44,7 @@ export default slice.reducer;
 
 export const { actions } = slice;
 
-export function getRoomList(){
+export function getRoomList() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -50,6 +55,19 @@ export function getRoomList(){
           total: response.data.totalCount
         })
       );
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getRoomByFlatId(flatId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    const url = `building/room/flat/${flatId}/rooms`;
+    try {
+      const response = await axios.get(url);
+      dispatch(slice.actions.getRoomInFlatSuccess(response.data.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

@@ -2,26 +2,29 @@ import { Form, FormikProvider, useFormik } from 'formik';
 import { useSnackbar } from 'notistack5';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
-
-// material
 import { Box, Card, FormHelperText, Grid, Stack, TextField, Typography } from '@material-ui/core';
 import { styled } from '@material-ui/core/styles';
 import { LoadingButton } from '@material-ui/lab';
-// utils
-// routes
-//
 import { useDispatch, useSelector } from 'react-redux';
+import { UploadMultiFile } from 'src/components/upload';
 import { getCurrentBuilding } from 'src/redux/slices/building';
-import { createContract } from 'src/redux/slices/contract';
-import { getFlatList } from 'src/redux/slices/flat';
-import { getGuestList } from 'src/redux/slices/guest';
-import { getRoomList } from 'src/redux/slices/room';
+import { createContractForExistingUser, createContractForNewUser } from 'src/redux/slices/contract';
+import { getActiveFlats } from 'src/redux/slices/flat';
+import { getGuestWithoutContract } from 'src/redux/slices/guest';
+import { getRoomByFlatId } from 'src/redux/slices/room';
 import { uploadImage } from 'src/utils/firebase';
 import UploadSingleFile from '../../../../../components/upload/UploadSingleFile';
+import { ExistedGuestForm } from './ExistedGuestForm';
+import { NewGuestForm } from './NewGuestForm';
+import { getValidationSchema } from './validationSchema';
 
 // ----------------------------------------------------------------------
 const gender = [{ id: '1', label: 'Nam' }, { id: '2', label: 'Nữ' }];
+const contractStatus = [
+  { id: '1', label: 'Đang hoạt động', value: 'active' },
+  { id: '2', label: 'Hết hạn', value: 'inActive' },
+  { id: '3', label: 'Tạm dừng', value: 'suspend' },
+];
 
 // ----------------------------------------------------------------------
 
@@ -31,94 +34,134 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(1)
 }));
 
-export default function CreateContractForm() {
+export default function CreateContractForm({ currentContract, isNewUser, isEditPage }) {
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
-  const { currentBuilding } = useSelector(state => state.building);
-  const { flatList } = useSelector(state => state.flat);
-  const { roomList } = useSelector(state => state.room);
+  const { enqueueSnackbar } = useSnackbar();
 
+  const { activeFlats } = useSelector(state => state.flat);
+  const { roomInFlats } = useSelector(state => state.room);
+  const { currentBuilding } = useSelector(state => state.building);
+  const { guestWithoutContract } = useSelector(state => state.guest);
+
+  const [isEdit, setIsEdit] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [flatId, setFlatId] = useState(currentContract?.FlatId);
+  const [submitButtonLabel, setSubmitButtonLabel] = useState('');
 
   const [frontCitizenCard, setFrontCitizenCard] = useState(null);
   const [backCitizenCard, setBackCitizenCard] = useState(null);
+  const [contractImages, setContractImages] = useState([]);
+
+
 
   useEffect(() => {
+    setIsEdit(!isEditPage)
+    setSubmitButtonLabel(isEditPage ? "Cập nhật hợp đồng" : "Nhập hợp đồng");
+    dispatch(getActiveFlats());
     dispatch(getCurrentBuilding());
-    dispatch(getRoomList());
-    dispatch(getGuestList());
-    dispatch(getFlatList());
-  }, [])
+    dispatch(getGuestWithoutContract());
+  }, []);
 
-  const NewUserSchema = Yup.object().shape({
-    contractName: Yup.string().required('Tên hợp đồng đang trống'),
-    flatId: Yup.number().required('Tên căn hộ đang trống'),
-    roomId: Yup.string().required('Tên phòng đang trống'),
-    priceForRent: Yup.string().required('Tiền thuê KTX đang trống'),
-    priceForService: Yup.string().required('Tiền dịch vụ đang trống'),
-    priceForElecticity: Yup.string().required('Tiền điện đang trống'),
-    priceForWater: Yup.string().required('Tiền nước đang trống'),
-    dateSigned: Yup.string().required('Ngày kí đang trống'),
-    startDate: Yup.string().required('Ngày bắt đầu đang trống'),
-    endDate: Yup.string().required('Ngày kết thúc đang trống'),
-    fullName: Yup.string().required('Tên khách thuê đang trống'),
+  useEffect(() => {
+    dispatch(getRoomByFlatId(flatId));
+  }, [flatId]);
 
-  });
+
   const formik = useFormik({
     enableReinitialize: true,
+    validationSchema: getValidationSchema(isEditPage, isNewUser),
     initialValues: {
-      contractName: "",
-      dateSigned: "",
-      startDate: "",
-      description: "",
-      endDate: "",
+      contractName: currentContract?.ContractName || "",
+      dateSigned: currentContract?.DateSignedReturn || "",
+      startDate: currentContract?.StartDateReturn || "",
+      description: currentContract?.Description || "",
+      endDate: currentContract?.EndDateReturn || "",
       contractStatus: "active",
-      priceForWater: "",
-      priceForElectricity: "",
-      priceForService: "",
-      priceForRent: "",
-      flatId: "",
-      roomId: "",
-      renterUserName: "",
-      fullName: "",
+      priceForWater: currentContract?.PriceForWater || "",
+      priceForElectricity: currentContract?.PriceForElectricity || "",
+      priceForService: currentContract?.PriceForService || "",
+      priceForRent: currentContract?.PriceForRent || "",
+      flatId: currentContract?.FlatId || "",
+      roomId: currentContract?.RoomId || "",
+      renterUserName: currentContract?.Renter?.Username || "",
+      fullName: currentContract?.Renter?.FullName || "",
       renterEmail: "",
       renterPhone: "",
       renterBirthDate: "",
       address: "",
       gender: "",
       citizenNumber: "",
-      images: [],
-      backCitizenCard: [],
+      frontCitizenCard: null,
+      backCitizenCard: null,
+      contractImages: currentContract?.ImageUrls || [],
     },
 
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
-      try {
-        console.log(values);
-        const fronCitizenCardUrl = await uploadImage(frontCitizenCard);
-        const backCitizenCardUrl = await uploadImage(backCitizenCard);
+      console.log("submit", values, errors)
+
+      if (isEdit) {
         try {
-          dispatch(createContract({ ...values, citizenCardFrontImageUrl: fronCitizenCardUrl, citizenCardBackImageUrl: backCitizenCardUrl }, navigate, enqueueSnackbar))
+          try {
+            const contractImages = contractImages.map(async (item) => {
+              await uploadImage(item);
+            });
+            if (isEditPage) {
+              //update
+              console.log("update values", values);
+            } else {
+              console.log("create value", values)
+              const frontCitizenCardUrl = await uploadImage(frontCitizenCard);
+              const backCitizenCardUrl = await uploadImage(backCitizenCard);
+              dispatch(isNewUser ?
+                createContractForNewUser({ ...values, citizenCardFrontImageUrl: frontCitizenCardUrl, citizenCardBackImageUrl: backCitizenCardUrl }, navigate, enqueueSnackbar)
+                : createContractForExistingUser({ ...values, citizenCardFrontImageUrl: frontCitizenCardUrl, citizenCardBackImageUrl: backCitizenCardUrl, RenterId: selectedUser.RenterId }, enqueueSnackbar, navigate)
+              )
+            }
+          } catch (error) {
+            console.error('error', error);
+            setErrors(error.message);
+            enqueueSnackbar(error.message, { variant: 'error' });
+          }
         } catch (error) {
-          console.error('error', error);
-          setErrors(error.message);
-          enqueueSnackbar(error.message, { variant: 'error' });
+          console.error(error);
+          setSubmitting(false);
+          setErrors(error);
         }
-      } catch (error) {
-        console.error(error);
-        setSubmitting(false);
-        setErrors(error);
+      } else {
+        setIsEdit(true);
+        setSubmitButtonLabel("Lưu thay đổi");
       }
     }
   });
 
-  const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
 
-  const handleDrop = useCallback(
+  const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps, getFieldMeta } = formik;
+
+  console.log("Values", values, errors);
+
+  const handleSelectUser = (event) => {
+    const newUser = guestWithoutContract.find(item => item.Username === event.target.value);
+    setSelectedUser(newUser);
+    setFieldValue('fullName', newUser.FullName);
+  };
+
+  const handleFlatChange = (event) => {
+    // get field
+    const id = event.target.value;
+    //add custom logic on field
+    setFlatId(id);
+    //set field on formik
+    setFieldValue('flatId', id);
+  };
+
+
+  const handleFrontCitizenCardDrop = useCallback(
     (acceptedFiles) => {
       const file = acceptedFiles[0];
       setFrontCitizenCard(file);
       if (file) {
-        setFieldValue('images', {
+        setFieldValue('frontCitizenCard', {
           ...file,
           preview: URL.createObjectURL(file)
         });
@@ -137,18 +180,33 @@ export default function CreateContractForm() {
           preview: URL.createObjectURL(file)
         });
       }
+    }, [setFieldValue]);
+
+  const handContractImagesDrop = useCallback(
+    (acceptedFiles) => {
+      const files = acceptedFiles.slice(0, 4);
+      setContractImages(files);
+      setFieldValue(
+        'contractImages',
+        files.map((file) =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file)
+          })
+        )
+      );
     },
     [setFieldValue]
   );
 
   const handleRemove = (file) => {
     const filteredItems = values.images.filter((_file) => _file !== file);
-    setFieldValue('images', filteredItems);
+    setFieldValue('contractImages', filteredItems);
   };
 
   const handleRemoveAll = () => {
-    setFieldValue('images', []);
+    setFieldValue('contractImages', []);
   };
+
 
   return (
     <FormikProvider value={formik}>
@@ -160,6 +218,7 @@ export default function CreateContractForm() {
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                   <TextField
                     fullWidth
+                    disabled={!isEdit}
                     label="Tên hợp đồng"
                     {...getFieldProps('contractName')}
                     error={Boolean(touched.contractName && errors.contractName)}
@@ -176,24 +235,27 @@ export default function CreateContractForm() {
 
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                   <TextField
-                    select
+                    select={!isEditPage}
+                    disabled={isEditPage}
                     fullWidth
                     label="Căn hộ"
                     {...getFieldProps('flatId')}
+                    onChange={handleFlatChange}
                     SelectProps={{ native: true }}
                     error={Boolean(touched.flatId && errors.flatId)}
                     helperText={touched.flatId && errors.flatId}
                   >
                     <option value="" />
-                    {flatList?.map((option) => (
+                    {activeFlats?.map((option) => (
                       <option key={option.FlatId} value={option.FlatId}>
                         {option.Description}
                       </option>
                     ))}
                   </TextField>
                   <TextField
-                    select
                     fullWidth
+                    select={!isEditPage}
+                    disabled={isEditPage}
                     label="Phòng"
                     {...getFieldProps('roomId')}
                     SelectProps={{ native: true }}
@@ -201,7 +263,7 @@ export default function CreateContractForm() {
                     helperText={touched.roomId && errors.roomId}
                   >
                     <option value="" />
-                    {roomList?.map((option) => (
+                    {roomInFlats?.map((option) => (
                       <option key={option.RoomId} value={option.RoomId}>
                         {option.RoomName}
                       </option>
@@ -212,6 +274,7 @@ export default function CreateContractForm() {
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                   <TextField
                     fullWidth
+                    disabled={!isEdit}
                     label="Tiền thuê KTX (tháng)"
                     {...getFieldProps('priceForRent')}
                     error={Boolean(touched.priceForRent && errors.priceForRent)}
@@ -219,6 +282,7 @@ export default function CreateContractForm() {
                   />
                   <TextField
                     fullWidth
+                    disabled={!isEdit}
                     label="Tiền dịch vụ (tháng)"
                     {...getFieldProps('priceForService')}
                     error={Boolean(touched.priceForService && errors.priceForService)}
@@ -230,6 +294,7 @@ export default function CreateContractForm() {
                   <TextField
                     fullWidth
                     label="Tiền điện trên số"
+                    disabled={!isEdit}
                     {...getFieldProps('priceForElectricity')}
                     error={Boolean(touched.name && errors.name)}
                     helperText={touched.name && errors.name}
@@ -237,6 +302,7 @@ export default function CreateContractForm() {
                   <TextField
                     fullWidth
                     label="Tiền nước trên số"
+                    disabled={!isEdit}
                     {...getFieldProps('priceForWater')}
                     error={Boolean(touched.priceForElectricity && errors.priceForElectricity)}
                     helperText={touched.priceForElectricity && errors.priceForElectricity}
@@ -244,8 +310,17 @@ export default function CreateContractForm() {
                 </Stack>
 
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                  {isEditPage && <TextField
+                    fullWidth
+                    disabled
+                    label="Mã hợp đồng"
+                    value={currentContract?.ContractSerialNumber}
+                  />}
+
                   <TextField
                     fullWidth
+                    disabled={!isEdit}
+                    multiline={true}
                     label="Thông tin thêm về hợp đồng"
                     {...getFieldProps('description')}
                   />
@@ -255,6 +330,7 @@ export default function CreateContractForm() {
                   <TextField
                     fullWidth
                     label="Ngày kí"
+                    disabled={!isEdit}
                     {...getFieldProps('dateSigned')}
                     error={Boolean(touched.dateSigned && errors.dateSigned)}
                     helperText={touched.dateSigned && errors.dateSigned}
@@ -262,6 +338,7 @@ export default function CreateContractForm() {
                   <TextField
                     fullWidth
                     label="Ngày bắt đầu"
+                    disabled={!isEdit}
                     {...getFieldProps('startDate')}
                     error={Boolean(touched.startDate && errors.startDate)}
                     helperText={touched.startDate && errors.startDate}
@@ -269,133 +346,92 @@ export default function CreateContractForm() {
                   <TextField
                     fullWidth
                     label="Ngày kết thúc"
+                    disabled={!isEdit}
                     {...getFieldProps('endDate')}
                     error={Boolean(touched.endDate && errors.endDate)}
                     helperText={touched.endDate && errors.endDate}
                   />
                 </Stack>
 
-                <Stack>
+                {!!!isEditPage && <>
+                 <Stack>
                   <div>Thông tin khách thuê</div>
                 </Stack>
+                  {isNewUser && !!!isEditPage && <NewGuestForm getFieldProps={getFieldProps} touched={touched} isNewUser={isNewUser} errors={errors} />}
+                  {!isNewUser && !!!isEditPage && <ExistedGuestForm selectedUser={selectedUser} handleSelectUser={handleSelectUser} guestList={guestWithoutContract} />}
 
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="Họ và tên"
-                    {...getFieldProps('fullName')}
-                    error={Boolean(touched.fullName && errors.fullName)}
-                    helperText={touched.fullName && errors.fullName}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Địa chỉ email"
-                    {...getFieldProps('renterEmail')}
-                    error={Boolean(touched.renterEmail && errors.renterEmail)}
-                    helperText={touched.renterEmail && errors.renterEmail}
-                  />
-                </Stack>
+                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                    <div>
+                      <LabelStyle>Mặt trước CMND/CCCD</LabelStyle>
+                      <UploadSingleFile
+                        maxSize={5145728}
+                        accept="image/*"
+                        file={values.frontCitizenCard}
+                        onDrop={handleFrontCitizenCardDrop}
+                        error={Boolean(touched.frontCitizenCard && errors.frontCitizenCard)}
+                      />
+                      {touched.frontCitizenCard && errors.frontCitizenCard && (
+                        <FormHelperText error sx={{ px: 2 }}>
+                          {touched.frontCitizenCard && errors.frontCitizenCard}
+                        </FormHelperText>
+                      )}
+                    </div>
 
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="Tên tài khoản"
-                    {...getFieldProps('renterUserName')}
-                    error={Boolean(touched.fullName && errors.fullName)}
-                    helperText={touched.fullName && errors.fullName}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Ngày sinh"
-                    {...getFieldProps('renterBirthDate')}
-                    error={Boolean(touched.renterBirthDate && errors.renterBirthDate)}
-                    helperText={touched.renterBirthDate && errors.renterBirthDate}
-                  />
-                </Stack>
+                    <div>
+                      <LabelStyle>Mặt sau CMND/CCCD</LabelStyle>
+                      <UploadSingleFile
+                        maxSize={5145728}
+                        accept="image/*"
+                        file={values.backCitizenCard}
+                        onDrop={handleBackCitizenCardDrop}
+                        error={Boolean(touched.backCitizenCard && errors.backCitizenCard)}
+                      />
+                      {touched.backCitizenCard && errors.backCitizenCard && (
+                        <FormHelperText error sx={{ px: 2 }}>
+                          {touched.backCitizenCard && errors.backCitizenCard}
+                        </FormHelperText>
+                      )}
+                    </div>
+                  </Stack></>}
 
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="Số điện thoại"
-                    {...getFieldProps('renterPhone')}
-                    error={Boolean(touched.renterPhone && errors.renterPhone)}
-                    helperText={touched.renterPhone && errors.renterPhone}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Địa chỉ"
-                    {...getFieldProps('address')}
-                    error={Boolean(touched.address && errors.address)}
-                    helperText={touched.address && errors.address}
-                  />
-                </Stack>
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="CMND/CCCD"
-                    {...getFieldProps('citizenNumber')}
-                    error={Boolean(touched.citizenNumber && errors.citizenNumber)}
-                    helperText={touched.citizenNumber && errors.citizenNumber}
-                  />
-                  <TextField
-                    select
-                    fullWidth
-                    label="Giới tính"
-                    {...getFieldProps('gender')}
-                    SelectProps={{ native: true }}
-                    error={Boolean(touched.gender && errors.gender)}
-                    helperText={touched.gender && errors.gender}
-                  >
-                    <option value="" />
-                    {gender.map((option) => (
-                      <option key={option.id} value={option.id}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </TextField>
-                </Stack>
+                {!isEdit && currentContract && currentContract?.ImageUrls &&
+                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                    {currentContract?.ImageUrls.map(image => {
+                      return (
+                        <UploadSingleFile
+                          maxSize={5145728}
+                          accept="image/*"
+                          file={image}
+                        />)
+                    })}
 
-                <Stack>
-                  <div>
-                    <LabelStyle>Hình ảnh hợp đồng</LabelStyle>
-                    <UploadSingleFile
-                      maxSize={5145728}
-                      accept="image/*"
-                      file={values.images}
-                      onDrop={handleDrop}
-                      error={Boolean(touched.images && errors.images)}
-                    />
-                    {touched.images && errors.images && (
-                      <FormHelperText error sx={{ px: 2 }}>
-                        {touched.images && errors.images}
-                      </FormHelperText>
-                    )}
-                  </div>
-                </Stack>
-
-                <Stack>
-                  <div>
-                    <LabelStyle>Hình ảnh hợp đồng</LabelStyle>
-                    <UploadSingleFile
-                      maxSize={5145728}
-                      accept="image/*"
-                      file={values.backCitizenCard}
-                      onDrop={handleBackCitizenCardDrop}
-                      error={Boolean(touched.backCitizenCard && errors.backCitizenCard)}
-                    />
-                    {touched.backCitizenCard && errors.backCitizenCard && (
-                      <FormHelperText error sx={{ px: 2 }}>
-                        {touched.backCitizenCard && errors.backCitizenCard}
-                      </FormHelperText>
-                    )}
-                  </div>
-                </Stack>
+                  </Stack>}
 
 
-
+                {(!!!isEditPage || isEdit) &&
+                  < Stack >
+                    <div>
+                      <LabelStyle>Hình ảnh hợp đồng</LabelStyle>
+                      <UploadMultiFile
+                        showPreview
+                        maxSize={3145728}
+                        accept="image/*"
+                        files={values.contractImages}
+                        onDrop={handContractImagesDrop}
+                        onRemove={handleRemove}
+                        onRemoveAll={handleRemoveAll}
+                        error={Boolean(touched.contractImages && errors.contractImages)}
+                      />
+                      {touched.contractImages && errors.contractImages && (
+                        <FormHelperText error sx={{ px: 2 }}>
+                          {touched.contractImages && errors.contractImages}
+                        </FormHelperText>
+                      )}
+                    </div>
+                  </Stack>}
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Nhập hợp đồng
+                    {submitButtonLabel}
                   </LoadingButton>
                 </Box>
               </Stack>
@@ -403,6 +439,6 @@ export default function CreateContractForm() {
           </Grid>
         </Grid>
       </Form>
-    </FormikProvider>
+    </FormikProvider >
   );
 }

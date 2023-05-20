@@ -34,6 +34,7 @@ import Label from '../../../../components/Label';
 import Page from '../../../../components/Page';
 import Scrollbar from '../../../../components/Scrollbar';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../../components/_dashboard/user/list';
+import MoreMenu from '../shared/MoreMenu';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -192,7 +193,7 @@ export default function ContractList() {
                 />
                 <TableBody>
                   {contractList?.map((row) => {
-                    const { ContractId, Renter, ContractName, Description, StartDate, EndDate, DateSigned, ContractStatus  } = row;
+                    const { ContractId, Renter, ContractName, Description, StartDateReturn, EndDateReturn, DateSignedReturn, ContractStatus  } = row;
                     const isItemSelected = selected.indexOf(ContractName) !== -1;
 
                     return (
@@ -216,9 +217,9 @@ export default function ContractList() {
                         </TableCell>
                         <TableCell align="left">{Renter.FullName}</TableCell>
                         <TableCell align="left">{Description}</TableCell>
-                        <TableCell align="left">{StartDate}</TableCell>
-                        <TableCell align="left">{EndDate}</TableCell>
-                        <TableCell align="left">{DateSigned}</TableCell>
+                        <TableCell align="left">{StartDateReturn}</TableCell>
+                        <TableCell align="left">{EndDateReturn}</TableCell>
+                        <TableCell align="left">{DateSignedReturn}</TableCell>
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
@@ -229,7 +230,7 @@ export default function ContractList() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu  onDelete={() => handleDeleteUser(ContractId)} id={ContractId} />
+                          <MoreMenu editPath={`${PATH_SUPERVISOR.guest.root}/contract/${ContractId}`} onDelete={() => handleDeleteUser(ContractId)} id={ContractId} />
                         </TableCell>
                       </TableRow>
                     );
@@ -263,7 +264,3 @@ export default function ContractList() {
     </Page>
   );
 }
-//paging
-//export to excel
-//user list
-//api call

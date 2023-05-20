@@ -8,7 +8,8 @@ const initialState = {
   isLoading: false,
   error: false,
   flatTypeList: [],
-  flatTypeTotal: 0,
+  activeFlats: [],
+  flatTypeTotal: 0
 };
 
 const slice = createSlice({
@@ -27,10 +28,14 @@ const slice = createSlice({
     },
 
     getFlatListSuccess(state, action) {
-        state.isLoading = false;
-        state.flatList = action.payload.flatList;
-        state.flatTotal = action.payload.total;
+      state.isLoading = false;
+      state.flatList = action.payload.flatList;
+      state.flatTotal = action.payload.total;
     },
+    getActiveFlatsSuccess(state, action) {
+      state.isLoading = false;
+      state.activeFlats = action.payload;
+    }
   }
 });
 
@@ -40,18 +45,31 @@ export default slice.reducer;
 export const { actions } = slice;
 
 export function getFlatList(pageNumber, pageSize) {
-    return async (dispatch) => {
-      dispatch(slice.actions.startLoading());
-      try {
-        const response = await axios.get(`/flats?PageNumber=${pageNumber ?? 1}&PageSize=${pageSize ?? 5}`);
-        dispatch(
-          slice.actions.getFlatListSuccess({
-            flatList: response.data.data,
-            total: response.data.totalCount
-          })
-        );
-      } catch (error) {
-        dispatch(slice.actions.hasError(error));
-      }
-    };
-  }
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/flats?PageNumber=${pageNumber ?? 1}&PageSize=${pageSize ?? 5}`);
+      dispatch(
+        slice.actions.getFlatListSuccess({
+          flatList: response.data.data,
+          total: response.data.totalCount
+        })
+      );
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getActiveFlats() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const url = '/flats/active';
+      const response = await axios.get(url);
+      dispatch(slice.actions.getActiveFlatsSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}

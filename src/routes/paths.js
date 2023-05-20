@@ -55,6 +55,7 @@ export const PATH_SUPERVISOR = {
     root: path(ROOTS_SUPERVISOR, '/guest'),
     listContract: path(ROOTS_SUPERVISOR, '/guest/contracts'),
     createContract: path(ROOTS_SUPERVISOR, '/guest/contract/create'),
+    viewContract: path(ROOTS_SUPERVISOR, '/guest/contract/:id'),
     listGuest: path(ROOTS_SUPERVISOR, '/guest/list-guest'),
     listRequest: path(ROOTS_SUPERVISOR, '/guest/requests'),
   },

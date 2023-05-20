@@ -139,7 +139,9 @@ export default function Router() {
           path: 'guest',
           children: [
             { path: '/contracts', element: <ListContractPage /> },
+            { path: '/test', element: <EcommerceProductCreate /> },
             { path: '/contract/create', element: <CreateContractPage /> },
+            { path: '/contract/:id', element: <EditContractPage /> },
             { path: '/list-guest', element: <ListGuestPage /> },
             { path: '/requests', element: <ListRequestPage /> },
             { path: '/requests/:id', element: <DetailRequestPage /> }
@@ -285,6 +287,7 @@ const ListFlatPage = Loadable(lazy(() => import('../pages/feature/supervisor/roo
 const ListRoomPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/ListRoomPage')));
 const ListContractPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/ListContractPage')));
 const CreateContractPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/CreateContractPage')));
+const EditContractPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/EditContractPage')));
 const ListGuestPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/ListGuestPage')));
 const BillsPage = Loadable(lazy(() => import('../pages/feature/supervisor/finances/BillsPage')));
 const CreateBill = Loadable(lazy(() => import('../pages/feature/supervisor/finances/CreateBill')));
@@ -356,6 +359,8 @@ const Tooltip = Loadable(lazy(() => import('../pages/components-overview/materia
 const TransferList = Loadable(lazy(() => import('../pages/components-overview/material-ui/transfer-list')));
 const TreeView = Loadable(lazy(() => import('../pages/components-overview/material-ui/TreeView')));
 const DataGrid = Loadable(lazy(() => import('../pages/components-overview/material-ui/data-grid')));
+const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate.js')));
+
 //
 const Charts = Loadable(lazy(() => import('../pages/components-overview/extra/Charts')));
 const Map = Loadable(lazy(() => import('../pages/components-overview/extra/Map')));

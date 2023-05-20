@@ -9,7 +9,7 @@ const initialState = {
   isLoading: false,
   error: false,
   contractList: [],
-  contractTotal: 0,
+  total: 0,
   currentContract: null
 };
 
@@ -31,13 +31,13 @@ const slice = createSlice({
     getContractListSuccess(state, action) {
       state.isLoading = false;
       state.contractList = action.payload.contractList;
-      state.contractTotal = action.payload.total;
+      state.total = action.payload.total;
     },
 
     resetContractList(state) {
       state.isLoading = false;
       state.contractList = [];
-      state.contractTotal = 0;
+      state.total = 0;
     },
 
     getCurrentContractSuccess(state, action) {
@@ -83,22 +83,14 @@ export function getContractById(id) {
   };
 }
 
-export function updateContract(id, payload, navigate, enqueueSnackbar) {
+export function createContractForNewUser(payload, navigate, enqueueSnackbar) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const url = `/contracts/${id}`;
-      const data = {
-        name: payload.name,
-        status: payload.status,
-        dueDate: payload.dueDate,
-        detail: payload.detail,
-        paymentTime: payload.completedDate
-      };
-
-      const response = await axios.put(url, data);
-      navigate(`${PATH_SUPERVISOR.finances.root}/${id}`);
-      enqueueSnackbar('Cập nhật hóa đơn thành công', { variant: 'success' });
+      const url = `/contracts/sign`;
+      await axios.post(url, payload);
+      navigate(PATH_SUPERVISOR.guest.listContract);
+      enqueueSnackbar('Tạo hợp đồng thành công', { variant: 'success' });
     } catch (error) {
       enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
       dispatch(slice.actions.hasError(error));
@@ -106,14 +98,29 @@ export function updateContract(id, payload, navigate, enqueueSnackbar) {
   };
 }
 
-export function createContract(payload, navigate, enqueueSnackbar) {
+export function createContractForExistingUser(id, payload, navigate, enqueueSnackbar) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const url = `/contracts/sign`;
-      const response = await axios.post(url, payload);
+      const url = `/contracts/sign/renter/${id}`;
+      await axios.post(url, payload);
       navigate(PATH_SUPERVISOR.guest.listContract);
-      enqueueSnackbar('Tạo hóa đơn thành công', { variant: 'success' });
+      enqueueSnackbar('Tạo hợp đồng thành công', { variant: 'success' });
+    } catch (error) {
+      enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function updateContract(id, payload, navigate, enqueueSnackbar) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const url = `/contracts/${id}`;
+      await axios.put(url, payload);
+      navigate(PATH_SUPERVISOR.guest.listContract);
+      enqueueSnackbar('Cập nhật hợp đồng thành công', { variant: 'success' });
     } catch (error) {
       enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
       dispatch(slice.actions.hasError(error));

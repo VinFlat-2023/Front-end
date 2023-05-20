@@ -28,9 +28,9 @@ export const NewGuestForm = ({ getFieldProps, touched, errors }) => {
         <TextField
           fullWidth
           label="Tên tài khoản"
-          {...getFieldProps('userName')}
-          error={Boolean(touched.userName && errors.userName)}
-          helperText={touched.userName && errors.userName}
+          {...getFieldProps('renterUserName')}
+          error={Boolean(touched.renterUserName && errors.renterUserName)}
+          helperText={touched.renterUserName && errors.renterUserName}
         />
         <TextField
           fullWidth

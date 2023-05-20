@@ -223,7 +223,7 @@ export default function UserList() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <MoreMenu editPath={`${PATH_SUPERVISOR.guest.root}/contract/${ContractId}`}  onDelete={() => handleDeleteUser(RoomId)} id={RoomId} />
+                          <MoreMenu editPath={`${PATH_SUPERVISOR.guest.root}/room/${RoomId}`}  onDelete={() => handleDeleteUser(RoomId)} id={RoomId} />
                         </TableCell>
                       </TableRow>
                     );

@@ -88,9 +88,9 @@ export function createContractForNewUser(payload, navigate, enqueueSnackbar) {
     dispatch(slice.actions.startLoading());
     try {
       const url = `/contracts/sign`;
-      const response = await axios.post(url, payload);
+      await axios.post(url, payload);
       navigate(PATH_SUPERVISOR.guest.listContract);
-      enqueueSnackbar('Tạo hóa đơn thành công', { variant: 'success' });
+      enqueueSnackbar('Tạo hợp đồng thành công', { variant: 'success' });
     } catch (error) {
       enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
       dispatch(slice.actions.hasError(error));
@@ -103,9 +103,9 @@ export function createContractForExistingUser(id, payload, navigate, enqueueSnac
     dispatch(slice.actions.startLoading());
     try {
       const url = `/contracts/sign/renter/${id}`;
-      const response = await axios.post(url, payload);
+      await axios.post(url, payload);
       navigate(PATH_SUPERVISOR.guest.listContract);
-      enqueueSnackbar('Tạo hóa đơn thành công', { variant: 'success' });
+      enqueueSnackbar('Tạo hợp đồng thành công', { variant: 'success' });
     } catch (error) {
       enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
       dispatch(slice.actions.hasError(error));
@@ -120,7 +120,7 @@ export function updateContract(id, payload, navigate, enqueueSnackbar) {
       const url = `/contracts/${id}`;
       await axios.put(url, payload);
       navigate(PATH_SUPERVISOR.guest.listContract);
-      enqueueSnackbar('Cập nhật hóa đơn thành công', { variant: 'success' });
+      enqueueSnackbar('Cập nhật hợp đồng thành công', { variant: 'success' });
     } catch (error) {
       enqueueSnackbar('Có lỗi xảy ra', { variant: 'error' });
       dispatch(slice.actions.hasError(error));

@@ -8,7 +8,7 @@ import { LoadingButton } from '@material-ui/lab';
 import { useDispatch, useSelector } from 'react-redux';
 import { UploadMultiFile } from 'src/components/upload';
 import { getCurrentBuilding } from 'src/redux/slices/building';
-import { createContractForExistingUser, createContractForNewUser } from 'src/redux/slices/contract';
+import { createContractForExistingUser, createContractForNewUser, updateContract } from 'src/redux/slices/contract';
 import { getActiveFlats } from 'src/redux/slices/flat';
 import { getGuestWithoutContract } from 'src/redux/slices/guest';
 import { getRoomByFlatId } from 'src/redux/slices/room';
@@ -17,6 +17,7 @@ import UploadSingleFile from '../../../../../components/upload/UploadSingleFile'
 import { ExistedGuestForm } from './ExistedGuestForm';
 import { NewGuestForm } from './NewGuestForm';
 import { getValidationSchema } from './validationSchema';
+import { PATH_SUPERVISOR } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 const gender = [{ id: '1', label: 'Nam' }, { id: '2', label: 'Nữ' }];
@@ -98,24 +99,21 @@ export default function CreateContractForm({ currentContract, isNewUser, isEditP
     },
 
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
-      console.log("submit", values, errors)
-
       if (isEdit) {
         try {
           try {
-            const contractImages = contractImages.map(async (item) => {
+            const contractImagesUrl = await contractImages.map(async (item) => {
               await uploadImage(item);
             });
+            const [contractImageUrl1, contractImageUrl2, contractImageUrl3, contractImageUrl4] = contractImagesUrl;
             if (isEditPage) {
-              //update
-              console.log("update values", values);
+              dispatch(updateContract(currentContract.ContractId, {...values, contractImageUrl1, contractImageUrl2, contractImageUrl3, contractImageUrl4}, navigate, enqueueSnackbar))
             } else {
-              console.log("create value", values)
               const frontCitizenCardUrl = await uploadImage(frontCitizenCard);
               const backCitizenCardUrl = await uploadImage(backCitizenCard);
               dispatch(isNewUser ?
                 createContractForNewUser({ ...values, citizenCardFrontImageUrl: frontCitizenCardUrl, citizenCardBackImageUrl: backCitizenCardUrl }, navigate, enqueueSnackbar)
-                : createContractForExistingUser({ ...values, citizenCardFrontImageUrl: frontCitizenCardUrl, citizenCardBackImageUrl: backCitizenCardUrl, RenterId: selectedUser.RenterId }, enqueueSnackbar, navigate)
+                : createContractForExistingUser( selectedUser.RenterId, { ...values, citizenCardFrontImageUrl: frontCitizenCardUrl, citizenCardBackImageUrl: backCitizenCardUrl, RenterId: selectedUser.RenterId }, navigate, enqueueSnackbar)
               )
             }
           } catch (error) {

@@ -44,11 +44,12 @@ export default slice.reducer;
 
 export const { actions } = slice;
 
-export function getRoomList() {
+export function getRoomList(pageNumber, pageSize) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/building/room');
+      const url = `building/room?PageNumber=${pageNumber ?? 1}&PageSize=${pageSize ?? 5}`
+      const response = await axios.get(url);
       dispatch(
         slice.actions.getRoomListSuccess({
           roomList: response.data.data,

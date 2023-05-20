@@ -35,14 +35,15 @@ import Scrollbar from '../../../../components/Scrollbar';
 import SearchNotFound from '../../../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../../components/_dashboard/user/list';
+import { getRoomList } from 'src/redux/slices/room';
+import MoreMenu from '../shared/MoreMenu';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'fullName', label: 'Phòng', alignRight: false },
-  // { id: 'userName', label: 'Tài khoản', alignRight: false },
-  { id: 'role', label: 'Loại phòng', alignRight: false },
-  { id: 'phoneNumber', label: 'Số vị trí còn trống', alignRight: false },
-  { id: 'status', label: 'Trạng thái', alignRight: false },
+  { id: 'RoomName', label: 'Phòng', alignRight: false },
+  { id: 'RoomType', label: 'Loại phòng', alignRight: false },
+  { id: 'AvailaleSlots', label: 'Số vị trí còn trống', alignRight: false },
+  { id: 'Status', label: 'Trạng thái', alignRight: false },
   { id: '' }
 ];
 
@@ -81,7 +82,7 @@ export default function UserList() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { userList, total } = useSelector((state) => state.user);
+  const { roomList, total } = useSelector((state) => state.room);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
@@ -92,7 +93,7 @@ export default function UserList() {
 
 
   useEffect(() => {
-    dispatch(getUserList(page +1 ,rowsPerPage));
+    dispatch(getRoomList(page +1 ,rowsPerPage));
   }, [dispatch, page, rowsPerPage]);
 
 
@@ -104,16 +105,13 @@ export default function UserList() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = userList.map((n) => n.Username);
+      const newSelecteds = roomList?.map((n) => n.RoomName);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  useEffect(()=>{
-    setFilteredUsers(applySortFilter(userList, getComparator(order, orderBy), filterName));
-  },[userList])
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -147,10 +145,10 @@ export default function UserList() {
     dispatch(deleteUser(userId));
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - roomList.length) : 0;
 
 
-  const isUserNotFound = filteredUsers?.length === 0;
+  const isUserNotFound = filterName?.length === 0;
 
   return (
     <Page title="Danh sách phòng">
@@ -184,38 +182,37 @@ export default function UserList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={userList?.length}
+                  rowCount={roomList?.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {userList.map((row) => {
-                    const { EmployeeId, FullName, Username, Status, Role, Phone } = row;
-                    const isItemSelected = selected.indexOf(Username) !== -1;
+                  {roomList?.map((row) => {
+                    const { RoomId, RoomName, RoomType, AvailableSlots, Status } = row;
+                    const isItemSelected = selected.indexOf(RoomName) !== -1;
 
                     return (
                       <TableRow
                         hover
-                        key={EmployeeId}
+                        key={RoomId}
                         tabIndex={-1}
                         role="checkbox"
                         selected={isItemSelected}
                         aria-checked={isItemSelected}
                       >
                         <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, Username)} />
+                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, RoomName)} />
                         </TableCell>
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
                             <Typography variant="subtitle2" noWrap>
-                              {FullName}
+                              {RoomName}
                             </Typography>
                           </Stack>
                         </TableCell>
-                        {/* <TableCell align="left">{Username}</TableCell> */}
-                        <TableCell align="left">{Role.RoleName}</TableCell>
-                        <TableCell align="left">{Phone}</TableCell>
+                        <TableCell align="left">{RoomType.RoomTypeName}</TableCell>
+                        <TableCell align="left">{AvailableSlots}</TableCell>
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
@@ -226,14 +223,14 @@ export default function UserList() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu  onDelete={() => handleDeleteUser(EmployeeId)} id={EmployeeId} />
+                          <MoreMenu editPath={`${PATH_SUPERVISOR.guest.root}/contract/${ContractId}`}  onDelete={() => handleDeleteUser(RoomId)} id={RoomId} />
                         </TableCell>
                       </TableRow>
                     );
                   })}
 
                 </TableBody>
-                {isUserNotFound && (
+                {/* {isUserNotFound && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -241,7 +238,7 @@ export default function UserList() {
                       </TableCell>
                     </TableRow>
                   </TableBody>
-                )}
+                )} */}
               </Table>
             </TableContainer>
           </Scrollbar>
@@ -260,7 +257,3 @@ export default function UserList() {
     </Page>
   );
 }
-//paging
-//export to excel
-//user list
-//api call

@@ -139,7 +139,6 @@ export default function Router() {
           path: 'guest',
           children: [
             { path: '/contracts', element: <ListContractPage /> },
-            { path: '/test', element: <EcommerceProductCreate /> },
             { path: '/contract/create', element: <CreateContractPage /> },
             { path: '/contract/:id', element: <EditContractPage /> },
             { path: '/list-guest', element: <ListGuestPage /> },
@@ -359,7 +358,6 @@ const Tooltip = Loadable(lazy(() => import('../pages/components-overview/materia
 const TransferList = Loadable(lazy(() => import('../pages/components-overview/material-ui/transfer-list')));
 const TreeView = Loadable(lazy(() => import('../pages/components-overview/material-ui/TreeView')));
 const DataGrid = Loadable(lazy(() => import('../pages/components-overview/material-ui/data-grid')));
-const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate.js')));
 
 //
 const Charts = Loadable(lazy(() => import('../pages/components-overview/extra/Charts')));

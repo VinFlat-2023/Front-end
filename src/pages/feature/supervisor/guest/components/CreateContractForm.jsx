@@ -12,7 +12,7 @@ import { createContractForExistingUser, createContractForNewUser, updateContract
 import { getActiveFlats } from 'src/redux/slices/flat';
 import { getGuestWithoutContract } from 'src/redux/slices/guest';
 import { getRoomByFlatId } from 'src/redux/slices/room';
-import { uploadImage } from 'src/utils/firebase';
+import { uploadImage, uploadMultipleImgae } from 'src/utils/firebase';
 import UploadSingleFile from '../../../../../components/upload/UploadSingleFile';
 import { ExistedGuestForm } from './ExistedGuestForm';
 import { NewGuestForm } from './NewGuestForm';
@@ -102,20 +102,36 @@ export default function CreateContractForm({ currentContract, isNewUser, isEditP
       if (isEdit) {
         try {
           try {
-            const contractImagesUrl = await contractImages.map(async (item) => {
-              await uploadImage(item);
-            });
-            const [contractImageUrl1, contractImageUrl2, contractImageUrl3, contractImageUrl4] = contractImagesUrl;
-            if (isEditPage) {
-              dispatch(updateContract(currentContract.ContractId, {...values, contractImageUrl1, contractImageUrl2, contractImageUrl3, contractImageUrl4}, navigate, enqueueSnackbar))
+            uploadMultipleImgae(contractImages).then (async (contractImagesUrls) => {
+            const [contractImageUrl1, contractImageUrl2, contractImageUrl3, contractImageUrl4] = contractImagesUrls;
+             if (isEditPage) {
+              dispatch(updateContract(currentContract.ContractId, { ...values, contractImageUrl1: contractImageUrl1, contractImageUrl2: contractImageUrl2, contractImageUrl3: contractImageUrl3, contractImageUrl4: contractImageUrl4 }, navigate, enqueueSnackbar))
             } else {
               const frontCitizenCardUrl = await uploadImage(frontCitizenCard);
               const backCitizenCardUrl = await uploadImage(backCitizenCard);
               dispatch(isNewUser ?
-                createContractForNewUser({ ...values, citizenCardFrontImageUrl: frontCitizenCardUrl, citizenCardBackImageUrl: backCitizenCardUrl }, navigate, enqueueSnackbar)
-                : createContractForExistingUser( selectedUser.RenterId, { ...values, citizenCardFrontImageUrl: frontCitizenCardUrl, citizenCardBackImageUrl: backCitizenCardUrl, RenterId: selectedUser.RenterId }, navigate, enqueueSnackbar)
+                createContractForNewUser({
+                  ...values,
+                  citizenCardFrontImageUrl: frontCitizenCardUrl,
+                  citizenCardBackImageUrl: backCitizenCardUrl,
+                  contractImageUrl1: contractImageUrl1,
+                  contractImageUrl2: contractImageUrl2,
+                  contractImageUrl3: contractImageUrl3,
+                  contractImageUrl4: contractImageUrl4
+                }, navigate, enqueueSnackbar)
+                : createContractForExistingUser(selectedUser.RenterId, {
+                  ...values,
+                  citizenCardFrontImageUrl: frontCitizenCardUrl,
+                  citizenCardBackImageUrl: backCitizenCardUrl,
+                  RenterId: selectedUser.RenterId,
+                  contractImageUrl1: contractImageUrl1,
+                  contractImageUrl2: contractImageUrl2,
+                  contractImageUrl3: contractImageUrl3,
+                  contractImageUrl4: contractImageUrl4
+                }, navigate, enqueueSnackbar)
               )
-            }
+             }
+            })
           } catch (error) {
             console.error('error', error);
             setErrors(error.message);
@@ -136,7 +152,6 @@ export default function CreateContractForm({ currentContract, isNewUser, isEditP
 
   const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps, getFieldMeta } = formik;
 
-  console.log("Values", values, errors);
 
   const handleSelectUser = (event) => {
     const newUser = guestWithoutContract.find(item => item.Username === event.target.value);
@@ -197,7 +212,7 @@ export default function CreateContractForm({ currentContract, isNewUser, isEditP
   );
 
   const handleRemove = (file) => {
-    const filteredItems = values.images.filter((_file) => _file !== file);
+    const filteredItems = values.contractImages.filter((_file) => _file !== file);
     setFieldValue('contractImages', filteredItems);
   };
 
@@ -352,9 +367,9 @@ export default function CreateContractForm({ currentContract, isNewUser, isEditP
                 </Stack>
 
                 {!!!isEditPage && <>
-                 <Stack>
-                  <div>Thông tin khách thuê</div>
-                </Stack>
+                  <Stack>
+                    <div>Thông tin khách thuê</div>
+                  </Stack>
                   {isNewUser && !!!isEditPage && <NewGuestForm getFieldProps={getFieldProps} touched={touched} isNewUser={isNewUser} errors={errors} />}
                   {!isNewUser && !!!isEditPage && <ExistedGuestForm selectedUser={selectedUser} handleSelectUser={handleSelectUser} guestList={guestWithoutContract} />}
 

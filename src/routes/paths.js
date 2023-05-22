@@ -49,7 +49,10 @@ export const PATH_SUPERVISOR = {
   room: {
     root: path(ROOTS_SUPERVISOR, '/room'),
     listFlat: path(ROOTS_SUPERVISOR, '/room/list-flat'),
-    listRoom: path(ROOTS_SUPERVISOR, '/room/list-room')
+    listRoom: path(ROOTS_SUPERVISOR, '/room/list-room'),
+    create: path(ROOTS_SUPERVISOR, '/room/flat/create'),
+    edit: path(ROOTS_SUPERVISOR, '/room/edit/:id'),
+    editFlat: path(ROOTS_SUPERVISOR, '/room/flat/edit/:id'),
   },
   guest: {
     root: path(ROOTS_SUPERVISOR, '/guest'),

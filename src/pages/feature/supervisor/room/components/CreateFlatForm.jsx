@@ -1,9 +1,9 @@
 import { Form, FormikProvider, useFormik } from 'formik';
 import { useSnackbar } from 'notistack5';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { QuillEditor } from '../../../../../components/editor';
 import * as Yup from 'yup';
+import { QuillEditor } from '../../../../../components/editor';
 
 // material
 import {
@@ -17,14 +17,12 @@ import {
 } from '@material-ui/core';
 import { styled } from '@material-ui/core/styles';
 import { LoadingButton } from '@material-ui/lab';
-// utils
-import axios from '../../../../../utils/axios';
-// routes
-import { PATH_ADMIN, PATH_SUPERVISOR } from '../../../../../routes/paths';
-//
-import { useDispatch } from 'react-redux';
-import { uploadImage } from 'src/utils/firebase';
-import UploadSingleFile from '../../../../../components/upload/UploadSingleFile';
+import { UploadMultiFile } from 'src/components/upload';
+import { createFlat, getFlatTypes } from 'src/redux/slices/flat';
+import { getRoomType } from 'src/redux/slices/room';
+import { useDispatch, useSelector } from 'src/redux/store';
+import { uploadImage, uploadMultipleImgae } from 'src/utils/firebase';
+import { PATH_SUPERVISOR } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 const locationFake = [{ id: '1', label: 'HCM' }];
@@ -37,42 +35,54 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(1)
 }));
 
-export default function CreateFlatForm() {
+export default function CreateFlatForm({ currentFlat, isEditPage }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
 
-  const [imageUpload, setImageUpload] = useState(null);
+  const { roomTypeList } = useSelector(state => state.room);
+  const { flatTypeList } = useSelector(state => state.flat);
 
-  const NewUserSchema = Yup.object().shape({
+  const [flatImages, setFlatImages] = useState([]);
+  const [isEdit, setIsEdit] = useState(true);
+  const [numberOfRoom, setNumberOfRoom] = useState();
+
+  useEffect(() => {
+    dispatch(getFlatTypes());
+    dispatch(getRoomType());
+    setNumberOfRoom(currentFlat?.MaxRoom ?? 1);
+  }, []);
+
+  const FlatSchema = Yup.object().shape({
     name: Yup.string().required('Tên đang trống'),
-    location: Yup.string().required('Vui lòng không bỏ trống'),
-    images: Yup.mixed().required('Ảnh đang trống')
+    description: Yup.string().required('Mô tả đang trống'),
+    flatTypeId: Yup.string().required('Loại căn hộ đang trống'),
+    roomTypeId: Yup.array().min(1,'Loại phòng đang trống'),
+    flatImages: Yup.array().min(1, "Ảnh căn hộ đang trống"),
   });
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: '',
-      location: '',
-      images: null
+      name: currentFlat?.Name || '',
+      description: currentFlat?.Description || '',
+      flatTypeId: currentFlat?.FlatTypeId || null,
+      status: "active",
+      roomTypeId: [],
+      roomTypeName: currentFlat?.RoomTypeName | "",
+      flatImages: [],
+
     },
-    validationSchema: NewUserSchema,
+    validationSchema: FlatSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
-        const url = await uploadImage(imageUpload);
-        setSubmitting(false);
-        const createValue = {
-          name: values.name,
-          location: values.location,
-          status: true,
-          imageUrl: url,
-        };
+        const flatImageUrls =await uploadMultipleImgae(flatImages);
+        const [flatImageUrl1, flatImageUrl2, flatImageUrl3, flatImageUrl4, flatImageUrl5, flatImageUrl6] = flatImageUrls;
+
         try {
-          const response = await axios.post('areas', createValue);
+          dispatch(createFlat(
+            { ...values, flatImageUrl1, flatImageUrl2, flatImageUrl3, flatImageUrl4, flatImageUrl5, flatImageUrl6 }, enqueueSnackbar, navigate));
           
-          resetForm();
-          enqueueSnackbar('Thêm căn hộ thành công', { variant: 'success' });
-          navigate(PATH_SUPERVISOR.room.listFlat);
+
         } catch (error) {
           console.log('error', error);
           setErrors(error.message);
@@ -87,29 +97,41 @@ export default function CreateFlatForm() {
   });
 
   const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
-
+  console.log("values", values, errors)
   const handleDrop = useCallback(
     (acceptedFiles) => {
-      const file = acceptedFiles[0];
-      setImageUpload(file);
-      if (file) {
-        setFieldValue('images', {
-          ...file,
-          preview: URL.createObjectURL(file)
-        });
-      }
-    },
-    [setFieldValue]
+      const files = acceptedFiles.slice(0, 6);
+      setFlatImages(files);
+      setFieldValue('flatImages',
+        files.map(file => Object.assign(file, { preview: URL.createObjectURL(file) }))
+      );
+    }, [setFieldValue]
   );
 
+
   const handleRemove = (file) => {
-    const filteredItems = values.images.filter((_file) => _file !== file);
-    setFieldValue('images', filteredItems);
+    const filteredItems = values.flatImages.filter((_file) => _file !== file);
+    setFieldValue('flatImages', filteredItems);
   };
 
   const handleRemoveAll = () => {
-    setFieldValue('images', []);
+    setFieldValue('flatImages', []);
   };
+
+  const onSelectRoomType = (event) => {
+    const value = event.target.value;
+    let currentValue = values.roomTypeId;
+    currentValue.push(value);
+  }
+
+  const onSelectFlatType = (event) => {
+    const newId = event.target.value;
+    let numberOfRoom = flatTypeList?.find(item => item.FlatTypeId === +newId);
+    numberOfRoom = numberOfRoom.RoomCapacity;
+    setNumberOfRoom(numberOfRoom);
+    setFieldValue('flatTypeId', newId);
+    setFieldValue('roomTypeId', new Array());
+  }
 
   return (
     <FormikProvider value={formik}>
@@ -131,71 +153,80 @@ export default function CreateFlatForm() {
                 <Stack>
                   <div>
                     <LabelStyle>Hình ảnh căn hộ</LabelStyle>
-                    <UploadSingleFile
+                    <UploadMultiFile
                       maxSize={5145728}
                       accept="image/*"
-                      file={values.images}
+                      showPreview
+                      files={values.flatImages}
                       onDrop={handleDrop}
-                      error={Boolean(touched.images && errors.images)}
+                      onRemove={handleRemove}
+                      onRemoveAll={handleRemoveAll}
+                      error={Boolean(touched.flatImages && errors.flatImages)}
                     />
-                    {touched.images && errors.images && (
+                    {touched.flatImages && errors.flatImages && (
                       <FormHelperText error sx={{ px: 2 }}>
-                        {touched.images && errors.images}
+                        {touched.flatImages && errors.flatImages}
                       </FormHelperText>
                     )}
                   </div>
                 </Stack>
 
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                <TextField
-                    select
+                  <TextField
+                    select={isEdit}
                     fullWidth
                     label="Loại căn hộ"
-                    {...getFieldProps('location')}
+                    disabled={!isEdit}
+                    {...getFieldProps('flatTypeId')}
+                    onChange={onSelectFlatType}
                     SelectProps={{ native: true }}
-                    error={Boolean(touched.location && errors.location)}
-                    helperText={touched.location && errors.location}
+                    error={Boolean(touched.flatTypeId && errors.flatTypeId)}
+                    helperText={touched.flatTypeId && errors.flatTypeId}
                   >
                     <option value="" />
-                    {locationFake.map((option) => (
-                      <option key={option.id} value={option.label}>
-                        {option.label}
+                    {flatTypeList.map((option) => (
+                      <option key={option.FlatTypeId} value={option.FlatTypeId}>
+                        {option.FlatTypeName}
                       </option>
                     ))}
                   </TextField>
-                  <TextField
-                    select
+                  {!isEdit && <TextField
                     fullWidth
                     label="Loại phòng"
-                    {...getFieldProps('location')}
-                    SelectProps={{ native: true }}
-                    error={Boolean(touched.location && errors.location)}
-                    helperText={touched.location && errors.location}
-                  >
-                    <option value="" />
-                    {locationFake.map((option) => (
-                      <option key={option.id} value={option.label}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </TextField>
+                    disabled={true}
+                    {...getFieldProps('roomTypeName')}
+                  />}
+                  {isEdit &&
+                    Array(numberOfRoom).fill(0).map(()=>
+                     <TextField
+                        select
+                        fullWidth
+                        label="Loại phòng"
+                        onChange={onSelectRoomType}
+                        SelectProps={{ native: true }}
+                        error={Boolean(touched.roomTypeId && errors.roomTypeId)}
+                        helperText={touched.roomTypeId && errors.roomTypeId}
+                      >
+                        <option value="" />
+                        {roomTypeList.map((option) => (
+                          <option key={option.RoomTypeId} value={option.RoomTypeId}>
+                            {option.RoomTypeName}
+                          </option>
+                        ))}
+                      </TextField>
+                    )}
                 </Stack>
 
                 <Stack>
-                  <div>
-                    <LabelStyle>Mô tả</LabelStyle>
-                    <QuillEditor
-                      id="post-content"
-                      value={values.description}
-                      onChange={(val) => setFieldValue('description', val)}
-                      error={Boolean(touched.description && errors.description)}
-                    />
-                    {touched.description && errors.description && (
-                      <FormHelperText error sx={{ px: 2, textTransform: 'capitalize' }}>
-                        {touched.description && errors.description}
-                      </FormHelperText>
-                    )}
-                  </div>
+                <TextField
+                    fullWidth
+                    label="Mô tả"
+                    disabled={!isEdit}
+                    multiline
+                    {...getFieldProps('description')}
+                    error={Boolean(touched.description && errors.description)}
+                    helperText={touched.description && errors.description}
+                  />
                 </Stack>
 
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>

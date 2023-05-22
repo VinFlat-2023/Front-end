@@ -132,7 +132,10 @@ export default function Router() {
           path: 'room',
           children: [
             { path: '/list-flat', element: <ListFlatPage /> },
-            { path: '/list-room', element: <ListRoomPage /> }
+            { path: '/list-room', element: <ListRoomPage /> },
+            { path: '/flat/create', element: <CreateFlatPage /> },
+            { path: '/edit/:id', element: <EditRoomPage /> },
+            { path: '/flat/edit/:id', element: <EditFlatPage /> },
           ]
         },
         {
@@ -284,6 +287,9 @@ const SupervisorDashboard = Loadable(lazy(() => import('../pages/feature/supervi
 const DomiritoryPage = Loadable(lazy(() => import('../pages/feature/supervisor/buildingKTX/BuildingKTXPage')));
 const ListFlatPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/ListFlatPage')));
 const ListRoomPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/ListRoomPage')));
+const EditRoomPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/EditRoomPage')));
+const EditFlatPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/EditFlatPage')));
+const CreateFlatPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/CreateFlatPage')));
 const ListContractPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/ListContractPage')));
 const CreateContractPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/CreateContractPage')));
 const EditContractPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/EditContractPage')));

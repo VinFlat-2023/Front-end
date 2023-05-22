@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../utils/axios';
+import { PATH_SUPERVISOR } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -9,7 +10,8 @@ const initialState = {
   error: false,
   flatTypeList: [],
   activeFlats: [],
-  flatTypeTotal: 0
+  flatTypeTotal: 0,
+  currentFlat: null,
 };
 
 const slice = createSlice({
@@ -35,6 +37,14 @@ const slice = createSlice({
     getActiveFlatsSuccess(state, action) {
       state.isLoading = false;
       state.activeFlats = action.payload;
+    },
+    getFlatTypeListSuccess(state, action) {
+      state.isLoading = false;
+      state.flatTypeList = action.payload;
+    },
+    getFlatSuccess(state, action){
+      state.isLoading = false;
+      state.currentFlat = action.payload;
     }
   }
 });
@@ -61,6 +71,19 @@ export function getFlatList(pageNumber, pageSize) {
   };
 }
 
+export function getFlatById(id){
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`/flats/${id}`);
+      dispatch(slice.actions.getFlatSuccess(response.data.data));
+    } catch(error){
+      dispatch(slice.actions.hasError(error));
+    }
+  }
+}
+
+
 export function getActiveFlats() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -73,3 +96,33 @@ export function getActiveFlats() {
     }
   };
 }
+
+export function getFlatTypes(pageNumber, pageSize) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const url = `flats/type?PageNumber=${pageNumber ?? 1}&PageSize=${pageSize ?? 25}`;
+      const response = await axios.get(url);
+      dispatch(slice.actions.getFlatTypeListSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function createFlat(payload, enqueueSnackbar, navigate) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const url = `flats`;
+      await axios.post(url, payload);
+      enqueueSnackbar("Tạo căn hộ thành công", { variant: 'success' });
+      navigate(PATH_SUPERVISOR.room.listFlat);
+    } catch (error) {
+      enqueueSnackbar(error.message, { variant: 'error' });
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+

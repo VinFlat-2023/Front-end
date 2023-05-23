@@ -12,7 +12,7 @@ ProductCard.propTypes = {
 };
 
 export default function ProductCard({ item }) {
-  const { BuildingName, ImageUrl } = item;
+  const { BuildingName, BuildingImageUrl1 } = item;
 
   return (
     <MotionInView variants={varFadeInUp}>
@@ -34,7 +34,7 @@ export default function ProductCard({ item }) {
           >
             <Box
               component="img"
-              src={ImageUrl}
+              src={BuildingImageUrl1}
               alt={BuildingName}
               sx={{
                 height: 310,

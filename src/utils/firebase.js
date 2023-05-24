@@ -6,3 +6,10 @@ export const uploadImage = async (imageUpload) => {
   const responseUrl = await getDownloadURL(snapshot.ref);
   return responseUrl;
 };
+
+
+export const uploadMultipleImgae = async (images) => {
+  const imagesPromies = images.map(image => uploadImage(image));
+  const imageUrls = await Promise.all(imagesPromies);
+  return imageUrls;
+}

@@ -35,6 +35,7 @@ import Scrollbar from '../../../../components/Scrollbar';
 import SearchNotFound from '../../../../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../../components/_dashboard/user/list';
 import { getFlatList } from 'src/redux/slices/flat';
+import MoreMenu from '../shared/MoreMenu';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -164,7 +165,7 @@ export default function FlatList() {
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_SUPERVISOR.room.listFlat}
+              to={PATH_SUPERVISOR.room.create}
               startIcon={<Icon icon={plusFill} />}
             >
               Thêm căn hộ
@@ -222,7 +223,7 @@ export default function FlatList() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu  onDelete={() => handleDeleteUser(FlatId)} id={FlatId} />
+                          <MoreMenu editPath={`${PATH_SUPERVISOR.room.root}/flat/edit/${FlatId}`}  onDelete={() => handleDeleteUser(FlatId)} id={FlatId} />
                         </TableCell>
                       </TableRow>
                     );
@@ -256,7 +257,4 @@ export default function FlatList() {
     </Page>
   );
 }
-//paging
-//export to excel
-//user list
-//api call
+

@@ -42,6 +42,7 @@ import MoreMenu from '../shared/MoreMenu';
 const TABLE_HEAD = [
   { id: 'RoomName', label: 'Phòng', alignRight: false },
   { id: 'RoomType', label: 'Loại phòng', alignRight: false },
+  { id: 'FlatName', label: 'Tên căn hộ', alignRight: false },
   { id: 'AvailaleSlots', label: 'Số vị trí còn trống', alignRight: false },
   { id: 'Status', label: 'Trạng thái', alignRight: false },
   { id: '' }
@@ -160,16 +161,6 @@ export default function UserList() {
             { name: 'Phòng', href: PATH_SUPERVISOR.room.listRoom },
             { name: 'Danh sách phòng' }
           ]}
-          action={
-            <Button
-              variant="contained"
-              component={RouterLink}
-              to={PATH_SUPERVISOR.room.listRoom}
-              startIcon={<Icon icon={plusFill} />}
-            >
-              Thêm phòng
-            </Button>
-          }
         />
 
         <Card>
@@ -189,7 +180,7 @@ export default function UserList() {
                 />
                 <TableBody>
                   {roomList?.map((row) => {
-                    const { RoomId, RoomName, RoomType, AvailableSlots, Status } = row;
+                    const { RoomId, RoomName, RoomType, Flat, AvailableSlots, Status } = row;
                     const isItemSelected = selected.indexOf(RoomName) !== -1;
 
                     return (
@@ -212,6 +203,7 @@ export default function UserList() {
                           </Stack>
                         </TableCell>
                         <TableCell align="left">{RoomType.RoomTypeName}</TableCell>
+                        <TableCell align="left">{Flat.Name}</TableCell>
                         <TableCell align="left">{AvailableSlots}</TableCell>
                         <TableCell align="left">
                           <Label
@@ -223,7 +215,7 @@ export default function UserList() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <MoreMenu editPath={`${PATH_SUPERVISOR.guest.root}/room/${RoomId}`}  onDelete={() => handleDeleteUser(RoomId)} id={RoomId} />
+                          <MoreMenu editPath={`${PATH_SUPERVISOR.room.root}/edit/${RoomId}`}  onDelete={() => handleDeleteUser(RoomId)} id={RoomId} />
                         </TableCell>
                       </TableRow>
                     );

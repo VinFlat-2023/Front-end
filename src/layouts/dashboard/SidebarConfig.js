@@ -67,7 +67,7 @@ export const supervisorSlidebar = [
       {
         title: 'Trang chủ',
         path: PATH_SUPERVISOR.home,
-        icon: ICONS.home
+        icon: ICONS.blog
       }
     ]
   },
@@ -77,12 +77,12 @@ export const supervisorSlidebar = [
       {
         title: 'Toà nhà KTX',
         path: PATH_SUPERVISOR.domitory,
-        icon: ICONS.user
+        icon: ICONS.home
       },
       {
         title: 'Phòng',
         path: PATH_SUPERVISOR.room.root,
-        icon: ICONS.user,
+        icon: ICONS.home,
         children: [
           { title: 'Danh sách căn hộ', path: PATH_SUPERVISOR.room.listFlat },
           { title: 'Danh sách phòng', path: PATH_SUPERVISOR.room.listRoom }
@@ -101,30 +101,30 @@ export const supervisorSlidebar = [
       {
         title: 'Tài chính',
         path: PATH_SUPERVISOR.finances.root,
-        icon: ICONS.user,
+        icon: ICONS.ecommerce,
         children: [
           { title: 'Danh sách hóa đơn', path: PATH_SUPERVISOR.finances.bill },
-          { title: 'Thống kê kinh doanh', path: PATH_SUPERVISOR.finances.statistic }
+          // { title: 'Thống kê kinh doanh', path: PATH_SUPERVISOR.finances.statistic }
         ]
       },
       {
         title: 'Điện nước',
         path: PATH_SUPERVISOR.electric,
-        icon: ICONS.user
+        icon: ICONS.dashboard
       },
-      {
-        title: 'Báo cáo',
-        path: PATH_SUPERVISOR.report.root,
-        icon: ICONS.user,
-        children: [
-          { title: 'Báo cáo tổng hợp tình trạng thuê', path: PATH_SUPERVISOR.report.renderStatus },
-          { title: 'Báo cáo điện nước', path: PATH_SUPERVISOR.report.service }
-        ]
-      },
+      // {
+      //   title: 'Báo cáo',
+      //   path: PATH_SUPERVISOR.report.root,
+      //   icon: ICONS.user,
+      //   children: [
+      //     { title: 'Báo cáo tổng hợp tình trạng thuê', path: PATH_SUPERVISOR.report.renderStatus },
+      //     { title: 'Báo cáo điện nước', path: PATH_SUPERVISOR.report.service }
+      //   ]
+      // },
       {
         title: 'Cài đặt',
         path: PATH_SUPERVISOR.setting.root,
-        icon: ICONS.user,
+        icon: ICONS.book,
         children: [
           { title: 'Loại căn hộ', path: PATH_SUPERVISOR.setting.flatType },
           { title: 'Loại phòng', path: PATH_SUPERVISOR.setting.roomType }

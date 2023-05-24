@@ -5,9 +5,8 @@ import * as Yup from 'yup';
 import { Card, Stack, TextField } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 // utils
-import { useDispatch } from 'react-redux';
-import axios from '../../../../utils/axios';
 import { setSession } from 'src/utils/jwt';
+import axios from '../../../../utils/axios';
 
 // ----------------------------------------------------------------------
 

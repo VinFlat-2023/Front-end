@@ -132,14 +132,16 @@ export default function Router() {
           path: 'room',
           children: [
             { path: '/list-flat', element: <ListFlatPage /> },
-            { path: '/list-room', element: <ListRoomPage /> }
+            { path: '/list-room', element: <ListRoomPage /> },
+            { path: '/flat/create', element: <CreateFlatPage /> },
+            { path: '/edit/:id', element: <EditRoomPage /> },
+            { path: '/flat/edit/:id', element: <EditFlatPage /> },
           ]
         },
         {
           path: 'guest',
           children: [
             { path: '/contracts', element: <ListContractPage /> },
-            { path: '/test', element: <EcommerceProductCreate /> },
             { path: '/contract/create', element: <CreateContractPage /> },
             { path: '/contract/:id', element: <EditContractPage /> },
             { path: '/list-guest', element: <ListGuestPage /> },
@@ -285,6 +287,9 @@ const SupervisorDashboard = Loadable(lazy(() => import('../pages/feature/supervi
 const DomiritoryPage = Loadable(lazy(() => import('../pages/feature/supervisor/buildingKTX/BuildingKTXPage')));
 const ListFlatPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/ListFlatPage')));
 const ListRoomPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/ListRoomPage')));
+const EditRoomPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/EditRoomPage')));
+const EditFlatPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/EditFlatPage')));
+const CreateFlatPage = Loadable(lazy(() => import('../pages/feature/supervisor/room/CreateFlatPage')));
 const ListContractPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/ListContractPage')));
 const CreateContractPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/CreateContractPage')));
 const EditContractPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/EditContractPage')));
@@ -359,7 +364,6 @@ const Tooltip = Loadable(lazy(() => import('../pages/components-overview/materia
 const TransferList = Loadable(lazy(() => import('../pages/components-overview/material-ui/transfer-list')));
 const TreeView = Loadable(lazy(() => import('../pages/components-overview/material-ui/TreeView')));
 const DataGrid = Loadable(lazy(() => import('../pages/components-overview/material-ui/data-grid')));
-const EcommerceProductCreate = Loadable(lazy(() => import('../pages/dashboard/EcommerceProductCreate.js')));
 
 //
 const Charts = Loadable(lazy(() => import('../pages/components-overview/extra/Charts')));

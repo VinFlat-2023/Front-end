@@ -22,7 +22,6 @@ import { UploadAvatar } from '../../../upload';
 // utils
 import { fData } from '../../../../utils/formatNumber';
 //
-import countries from '../countries';
 
 // ----------------------------------------------------------------------
 

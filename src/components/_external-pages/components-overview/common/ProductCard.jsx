@@ -4,6 +4,8 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Box, Link, Paper, Typography, CardActionArea } from '@material-ui/core';
 //
 import { varFadeInUp, MotionInView } from '../../../../components/animate';
+//
+import { PATH_PUBLIC} from '../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -12,11 +14,13 @@ ProductCard.propTypes = {
 };
 
 export default function ProductCard({ item }) {
-  const { BuildingName, BuildingImageUrl1 } = item;
+  const { BuildingName, BuildingImageUrl1, BuildingId } = item;
+
+  const linkto = `${PATH_PUBLIC.buildingDetail}/${BuildingId}`
 
   return (
     <MotionInView variants={varFadeInUp}>
-      <Link component={RouterLink} to="#" underline="none">
+      <Link component={RouterLink} to={linkto} underline="none">
         <Paper
           sx={{
             m: 2,

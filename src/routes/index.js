@@ -135,7 +135,7 @@ export default function Router() {
             { path: '/list-room', element: <ListRoomPage /> },
             { path: '/flat/create', element: <CreateFlatPage /> },
             { path: '/edit/:id', element: <EditRoomPage /> },
-            { path: '/flat/edit/:id', element: <EditFlatPage /> },
+            { path: '/flat/edit/:id', element: <EditFlatPage /> }
           ]
         },
         {
@@ -192,7 +192,8 @@ export default function Router() {
         { path: 'payment', element: <Payment /> },
         { path: '500', element: <Page500 /> },
         { path: '404', element: <NotFound /> },
-        { path: '*', element: <Navigate to="/404" replace /> }
+        { path: '*', element: <Navigate to="/404" replace /> },
+        
       ]
     },
     {
@@ -203,6 +204,7 @@ export default function Router() {
         { path: 'about-us', element: <About /> },
         { path: 'contact-us', element: <Contact /> },
         { path: 'faqs', element: <Faqs /> },
+        { path: 'building/:id', element: <BuildinDetail /> }, // Path Detail Building (no Login)
         {
           path: 'components',
           children: [
@@ -310,10 +312,13 @@ const CreateEditRoomTypePage = Loadable(
   lazy(() => import('../pages/feature/supervisor/setting/CreateEditRoomTypePage'))
 );
 const ListRequestPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/ListRequestPage')));
-const DetailRequestPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/components/requests/DetailRequestPage')));
+const DetailRequestPage = Loadable(
+  lazy(() => import('../pages/feature/supervisor/guest/components/requests/DetailRequestPage'))
+);
 
 // Others
 const UserEdit = Loadable(lazy(() => import('../pages/dashboard/UserEdit')));
+const BuildinDetail = Loadable(lazy(() => import('../pages/feature/public/BuildingDetailPage.jsx')));
 
 // Main
 const LandingPage = Loadable(lazy(() => import('../pages/LandingPage')));

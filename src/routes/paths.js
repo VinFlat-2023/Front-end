@@ -83,6 +83,10 @@ export const PATH_SUPERVISOR = {
   }
 };
 
+export const PATH_PUBLIC = {
+  buildingDetail: '/building'
+}
+
 export const PATH_PAGE = {
   comingSoon: '/coming-soon',
   maintenance: '/maintenance',

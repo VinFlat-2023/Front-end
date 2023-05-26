@@ -55,7 +55,7 @@ export default function CreateEditBuildingForm({ building, area, buildingExists 
     initialValues: {
       name: building.BuildingName || '',
       area: building.AreaId || '',
-      phone: building.Employee?.Phone || '',
+      phone: building.BuildingPhoneNumber || '',
       address: building.BuildingAddress || '',
       supName: user.user.FullName || '',
       description: building.Description || '',

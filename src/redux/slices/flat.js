@@ -103,7 +103,8 @@ export function getFlatTypes(pageNumber, pageSize) {
     try {
       const url = `flats/type?PageNumber=${pageNumber ?? 1}&PageSize=${pageSize ?? 25}`;
       const response = await axios.get(url);
-      dispatch(slice.actions.getFlatTypeListSuccess(response.data.data));
+      const activeFlatType = response.data.data.filter(item => !!item.Status)
+      dispatch(slice.actions.getFlatTypeListSuccess(activeFlatType));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

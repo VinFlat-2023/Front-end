@@ -106,7 +106,8 @@ export function getRoomType(pageNumber, pageSize) {
     const url = `/building/room-type?PageNumber=${pageNumber ?? 1}&PageSize=${pageSize ?? 25}`;
     try {
       const response = await axios.get(url);
-      dispatch(slice.actions.getRoomTypeListSuccess(response.data.data));
+      const activeRoomType = response.data.data.filter(item => item.Status === "Active")
+      dispatch(slice.actions.getRoomTypeListSuccess(activeRoomType));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

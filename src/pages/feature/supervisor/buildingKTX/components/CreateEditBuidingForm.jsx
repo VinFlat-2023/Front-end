@@ -87,16 +87,14 @@ export default function CreateEditBuildingForm({ building, area, buildingExists 
           imageUrl6: arrImgURL[5] || imageListUpdate[5] || ''
         };
         try {
-          console.log('value create building: ', createEditValue);
           if (buildingExists === false) {
             const rs = await axios.post('buildings', createEditValue);
             enqueueSnackbar(rs.data.message, { variant: 'success' });
-            navigate(PATH_SUPERVISOR.home);
+            window.location.reload();
           } else {
             const rs = await axios.put(`buildings/${building.BuildingId}`, createEditValue);
-            console.log('rs', rs);
             enqueueSnackbar(rs.data.message, { variant: 'success' });
-            navigate(PATH_SUPERVISOR.home);
+            window.location.reload();
           }
         } catch (error) {
           console.log('error', error);

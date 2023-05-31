@@ -26,7 +26,7 @@ import { getFlatTypes } from 'src/redux/slices/flat';
 
 // ----------------------------------------------------------------------
 const roomStatusOptions = [
-  { id: 1, label: 'Còn chỗ', value: 'Available' },
+  { id: 1, label: 'Còn chỗ', value: 'Active' },
   { id: 2, label: 'Bảo trì', value: 'Maintenance' },
   { id: 3, label: 'Hết chỗ', value: 'Full' },
 ];

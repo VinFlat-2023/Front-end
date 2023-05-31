@@ -1,6 +1,6 @@
 import { Form, FormikProvider, useFormik } from 'formik';
 import { useSnackbar } from 'notistack5';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { QuillEditor } from '../../../../../components/editor';
@@ -18,7 +18,7 @@ import {
 import { styled } from '@material-ui/core/styles';
 import { LoadingButton } from '@material-ui/lab';
 import { UploadMultiFile, UploadSingleFile } from 'src/components/upload';
-import { createFlat, getFlatTypes } from 'src/redux/slices/flat';
+import { createFlat, getFlatTypes, updateFlat } from 'src/redux/slices/flat';
 import { getRoomType } from 'src/redux/slices/room';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { uploadImage, uploadMultipleImgae } from 'src/utils/firebase';
@@ -36,8 +36,7 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
 }));
 
 const filterNullFromFlatImages = (flatImages) => {
-  const filteredItem = flatImages.filter(item => !!item);
-  console.log("item", flatImages);
+  const filteredItem = flatImages.filter(item => (!!item && item !== "null")) ;
   return filteredItem?.length > 0 ? filteredItem : [];
 }
 
@@ -62,11 +61,14 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
   const [isEdit, setIsEdit] = useState(!isEditPage);
   const [numberOfRoom, setNumberOfRoom] = useState();
   const [submitButtonLabel, setSubmitButtonLabel] = useState();
-
+  const [ isEnableFlatType, setIsEnableFlatType] = useState(false);
   useEffect(() => {
     dispatch(getFlatTypes());
     dispatch(getRoomType());
-    setNumberOfRoom(currentFlat?.MaxRoom ?? 1);
+    setSubmitButtonLabel(isEditPage ? "Cập nhật thông tin căn hộ" : "Tạo phòng");
+  }, []);
+
+  useEffect(() => {
     setFlatImages(filterNullFromFlatImages([
       currentFlat?.FlatImageUrl1,
       currentFlat?.FlatImageUrl2,
@@ -74,9 +76,9 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
       currentFlat?.FlatImageUrl4,
       currentFlat?.FlatImageUrl5,
       currentFlat?.FlatImageUrl6]));
-
-    setSubmitButtonLabel(isEditPage ? "Cập nhật thông tin căn hộ" : "Tạo phòng");
-  }, []);
+    setIsEnableFlatType(!!(currentFlat?.FlatType.Status));
+    setNumberOfRoom(currentFlat?.MaxRoom ?? 1);
+  }, [currentFlat])
 
   const FlatSchema = Yup.object().shape({
     name: Yup.string().required('Tên đang trống'),
@@ -112,9 +114,15 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
           const [flatImageUrl1, flatImageUrl2, flatImageUrl3, flatImageUrl4, flatImageUrl5, flatImageUrl6] = flatImageUrls;
 
           try {
+            if (!isEditPage){
             dispatch(createFlat(
-              { ...values, flatImageUrl1, flatImageUrl2, flatImageUrl3, flatImageUrl4, flatImageUrl5, flatImageUrl6 }, enqueueSnackbar, navigate));
-          } catch (error) {
+              { ...values, flatImageUrl1:flatImageUrl1, flatImageUrl2:flatImageUrl2, flatImageUrl3:flatImageUrl3, flatImageUrl4:flatImageUrl4, flatImageUrl5:flatImageUrl5, flatImageUrl6:flatImageUrl6 }, enqueueSnackbar, navigate));
+          }else {
+            dispatch(updateFlat(
+              currentFlat.FlatId,
+              { ...values, flatImageUrl1:flatImageUrl1, flatImageUrl2:flatImageUrl2, flatImageUrl3:flatImageUrl3, flatImageUrl4:flatImageUrl4, flatImageUrl5:flatImageUrl5, flatImageUrl6:flatImageUrl6 }, enqueueSnackbar)
+            );
+          }} catch (error) {
             console.log('error', error);
             setErrors(error.message);
             enqueueSnackbar(error.message, { variant: 'error' });
@@ -199,7 +207,7 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
                     select={isEdit}
                     fullWidth
                     label="Loại căn hộ"
-                    disabled={!isEdit}
+                    disabled={!isEnableFlatType && isEditPage}
                     {...getFieldProps('flatTypeId')}
                     onChange={onSelectFlatType}
                     SelectProps={{ native: true }}
@@ -267,7 +275,8 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
                 </Stack>}
 
                 {!isEdit && <Stack>
-                  {flatImages?.map(image => {
+                  {flatImages.map(image => {
+                    console.log('image', image);
                     return (
                       <UploadSingleFile
                         maxSize={5145728}

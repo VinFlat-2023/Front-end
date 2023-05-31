@@ -11,6 +11,7 @@ const initialState = {
   total: 0,
   roomInFlats: [],
   currentRoom: null,
+  currentFlatId: null,
   roomTypeList: []
 };
 
@@ -43,6 +44,7 @@ const slice = createSlice({
     getCurrentRoomSuccess(state, action) {
       state.isLoading = false;
       state.currentRoom = action.payload;
+      state.currentFlatId = action.payload.FlatId;
     },
     getRoomTypeListSuccess(state, action) {
       state.isLoading = false;
@@ -112,4 +114,20 @@ export function getRoomType(pageNumber, pageSize) {
       dispatch(slice.actions.hasError(error));
     }
   };
+}
+
+
+export function updateRoom(roomId, payload, enqueuSnackbar){
+  return async(dispatch)=>{
+    dispatch(slice.actions.startLoading());
+    const url = `/building/room/${roomId}`
+    try{
+      await axios.put(url, payload);
+      enqueuSnackbar("Cập nhật thông tin phòng thành công", { variant: 'success' })
+      
+    } catch(error){
+      enqueuSnackbar(error.message ?? "Có lỗi xảy ra", { variant: 'error' })
+      dispatch(slice.actions.hasError(error));
+    }
+  }
 }

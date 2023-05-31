@@ -11,18 +11,24 @@ import { getRoomById } from 'src/redux/slices/room';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { PATH_SUPERVISOR } from 'src/routes/paths';
 import CreateRoomForm from './components/CreateRoomForm';
+import { getFlatById } from 'src/redux/slices/flat';
 // ----------------------------------------------------------------------
 
 export default function EditRoomPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { themeStretch } = useSettings();
-  const { currentRoom } = useSelector(state => state.room);
+  const { currentRoom, currentFlatId } = useSelector(state => state.room);
+  const { currentFlatName } = useSelector(state => state.flat);
 
+  console.log("currentFlatId",currentFlatId,currentFlatName)
   useEffect(() => {
     dispatch(getRoomById(id));
   }, []);
 
+  useEffect(()=>{
+    dispatch(getFlatById(currentFlatId));
+  },[currentFlatId])
   return (
     <Page title={'Cập nhật tình trạng phòng'}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -35,7 +41,7 @@ export default function EditRoomPage() {
           ]}
         />
 
-        <CreateRoomForm currentRoom={currentRoom}  />
+        <CreateRoomForm currentRoom={{...currentRoom, flatName: currentFlatName}}  />
 
       </Container>
     </Page>

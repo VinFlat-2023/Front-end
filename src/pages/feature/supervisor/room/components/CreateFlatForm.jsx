@@ -1,6 +1,6 @@
 import { Form, FormikProvider, useFormik } from 'formik';
 import { useSnackbar } from 'notistack5';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { QuillEditor } from '../../../../../components/editor';
@@ -17,8 +17,8 @@ import {
 } from '@material-ui/core';
 import { styled } from '@material-ui/core/styles';
 import { LoadingButton } from '@material-ui/lab';
-import { UploadMultiFile } from 'src/components/upload';
-import { createFlat, getFlatTypes } from 'src/redux/slices/flat';
+import { UploadMultiFile, UploadSingleFile } from 'src/components/upload';
+import { createFlat, getFlatTypes, updateFlat } from 'src/redux/slices/flat';
 import { getRoomType } from 'src/redux/slices/room';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { uploadImage, uploadMultipleImgae } from 'src/utils/firebase';
@@ -35,6 +35,19 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(1)
 }));
 
+const filterNullFromFlatImages = (flatImages) => {
+  const filteredItem = flatImages.filter(item => (!!item && item !== "null")) ;
+  return filteredItem?.length > 0 ? filteredItem : [];
+}
+
+const extractRoomId = (rooms) => {
+  return rooms.map(room => room.RoomId);
+}
+
+const extractRoomName = (rooms) => {
+  return rooms.map(room => room.RoomName);
+}
+
 export default function CreateFlatForm({ currentFlat, isEditPage }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -43,21 +56,35 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
   const { roomTypeList } = useSelector(state => state.room);
   const { flatTypeList } = useSelector(state => state.flat);
 
+  const roomNames = !!(currentFlat?.Rooms) ? extractRoomName(currentFlat?.Rooms) : null;
   const [flatImages, setFlatImages] = useState([]);
-  const [isEdit, setIsEdit] = useState(true);
+  const [isEdit, setIsEdit] = useState(!isEditPage);
   const [numberOfRoom, setNumberOfRoom] = useState();
-
+  const [submitButtonLabel, setSubmitButtonLabel] = useState();
+  const [ isEnableFlatType, setIsEnableFlatType] = useState(false);
   useEffect(() => {
     dispatch(getFlatTypes());
     dispatch(getRoomType());
-    setNumberOfRoom(currentFlat?.MaxRoom ?? 1);
+    setSubmitButtonLabel(isEditPage ? "Cập nhật thông tin căn hộ" : "Tạo phòng");
   }, []);
+
+  useEffect(() => {
+    setFlatImages(filterNullFromFlatImages([
+      currentFlat?.FlatImageUrl1,
+      currentFlat?.FlatImageUrl2,
+      currentFlat?.FlatImageUrl3,
+      currentFlat?.FlatImageUrl4,
+      currentFlat?.FlatImageUrl5,
+      currentFlat?.FlatImageUrl6]));
+    setIsEnableFlatType(!!(currentFlat?.FlatType.Status));
+    setNumberOfRoom(currentFlat?.MaxRoom ?? 1);
+  }, [currentFlat])
 
   const FlatSchema = Yup.object().shape({
     name: Yup.string().required('Tên đang trống'),
     description: Yup.string().required('Mô tả đang trống'),
     flatTypeId: Yup.string().required('Loại căn hộ đang trống'),
-    roomTypeId: Yup.array().min(1,'Loại phòng đang trống'),
+    roomTypeId: Yup.array().min(1, 'Loại phòng đang trống'),
     flatImages: Yup.array().min(1, "Ảnh căn hộ đang trống"),
   });
   const formik = useFormik({
@@ -67,31 +94,47 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
       description: currentFlat?.Description || '',
       flatTypeId: currentFlat?.FlatTypeId || null,
       status: "active",
-      roomTypeId: [],
-      roomTypeName: currentFlat?.RoomTypeName | "",
-      flatImages: [],
+      flatTypeName: currentFlat?.FlatType?.FlatTypeName || '',
+      roomTypeId: (!!currentFlat?.Rooms && isEditPage) ? extractRoomId(currentFlat.Rooms) : [],
+      roomTypeName: (!!currentFlat?.RoomTypeName && isEditPage) ? extractRoomName(currentFlat.Rooms) : [],
+      flatImages: filterNullFromFlatImages([
+        currentFlat?.FlatImageUrl1,
+        currentFlat?.FlatImageUrl2,
+        currentFlat?.FlatImageUrl3,
+        currentFlat?.FlatImageUrl4,
+        currentFlat?.FlatImageUrl5,
+        currentFlat?.FlatImageUrl6]) || [],
 
     },
     validationSchema: FlatSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
-      try {
-        const flatImageUrls =await uploadMultipleImgae(flatImages);
-        const [flatImageUrl1, flatImageUrl2, flatImageUrl3, flatImageUrl4, flatImageUrl5, flatImageUrl6] = flatImageUrls;
-
+      if (isEdit) {
         try {
-          dispatch(createFlat(
-            { ...values, flatImageUrl1, flatImageUrl2, flatImageUrl3, flatImageUrl4, flatImageUrl5, flatImageUrl6 }, enqueueSnackbar, navigate));
-          
+          const flatImageUrls = await uploadMultipleImgae(flatImages);
+          const [flatImageUrl1, flatImageUrl2, flatImageUrl3, flatImageUrl4, flatImageUrl5, flatImageUrl6] = flatImageUrls;
 
+          try {
+            if (!isEditPage){
+            dispatch(createFlat(
+              { ...values, flatImageUrl1:flatImageUrl1, flatImageUrl2:flatImageUrl2, flatImageUrl3:flatImageUrl3, flatImageUrl4:flatImageUrl4, flatImageUrl5:flatImageUrl5, flatImageUrl6:flatImageUrl6 }, enqueueSnackbar, navigate));
+          }else {
+            dispatch(updateFlat(
+              currentFlat.FlatId,
+              { ...values, flatImageUrl1:flatImageUrl1, flatImageUrl2:flatImageUrl2, flatImageUrl3:flatImageUrl3, flatImageUrl4:flatImageUrl4, flatImageUrl5:flatImageUrl5, flatImageUrl6:flatImageUrl6 }, enqueueSnackbar)
+            );
+          }} catch (error) {
+            console.log('error', error);
+            setErrors(error.message);
+            enqueueSnackbar(error.message, { variant: 'error' });
+          }
         } catch (error) {
-          console.log('error', error);
-          setErrors(error.message);
-          enqueueSnackbar(error.message, { variant: 'error' });
+          console.error(error);
+          setSubmitting(false);
+          setErrors(error);
         }
-      } catch (error) {
-        console.error(error);
-        setSubmitting(false);
-        setErrors(error);
+      } else {
+        setIsEdit(true);
+        setSubmitButtonLabel("Lưu thay đổi");
       }
     }
   });
@@ -120,8 +163,10 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
 
   const onSelectRoomType = (event) => {
     const value = event.target.value;
+    const fieldId = event.target.id;
     let currentValue = values.roomTypeId;
-    currentValue.push(value);
+    currentValue[fieldId] = value;
+    setFieldValue('roomTypeId', currentValue);
   }
 
   const onSelectFlatType = (event) => {
@@ -130,7 +175,7 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
     numberOfRoom = numberOfRoom.RoomCapacity;
     setNumberOfRoom(numberOfRoom);
     setFieldValue('flatTypeId', newId);
-    setFieldValue('roomTypeId', new Array());
+    setFieldValue('roomTypeId', new Array(numberOfRoom));
   }
 
   return (
@@ -143,6 +188,7 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
                 <Stack>
                   <TextField
                     fullWidth
+                    disabled={!isEdit}
                     label="Tên căn hộ"
                     {...getFieldProps('name')}
                     error={Boolean(touched.name && errors.name)}
@@ -150,7 +196,64 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
                   />
                 </Stack>
 
-                <Stack>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                  {!isEdit && <TextField
+                    disabled={true}
+                    label="Loại căn hộ"
+                    {...getFieldProps('flatTypeName')}
+                  />}
+
+                  {isEdit && <TextField
+                    select={isEdit}
+                    fullWidth
+                    label="Loại căn hộ"
+                    disabled={!isEnableFlatType && isEditPage}
+                    {...getFieldProps('flatTypeId')}
+                    onChange={onSelectFlatType}
+                    SelectProps={{ native: true }}
+                    error={Boolean(touched.flatTypeId && errors.flatTypeId)}
+                    helperText={touched.flatTypeId && errors.flatTypeId}
+                  >
+                    <option value="" />
+                    {flatTypeList.map((option) => (
+                      <option key={option.FlatTypeId} value={option.FlatTypeId}>
+                        {option.FlatTypeName}
+                      </option>
+                    ))}
+                  </TextField>}
+                  {!isEdit && roomNames && roomNames.map(item => {
+                    return (
+                      <TextField
+                        fullWidth
+                        label="Loại phòng"
+                        disabled={true}
+                        value={item}
+                      />
+                    )
+                  })}
+                  {isEdit &&
+                    Array(numberOfRoom).fill(0).map((item, index) =>
+                      <TextField
+                        select
+                        fullWidth
+                        label="Loại phòng"
+                        id={index}
+                        onChange={onSelectRoomType}
+                        SelectProps={{ native: true }}
+                        error={Boolean(touched.roomTypeId && errors.roomTypeId)}
+                        helperText={touched.roomTypeId && errors.roomTypeId}
+                      >
+                        <option value="" />
+                        {roomTypeList.map((option) => (
+                          <option key={option.RoomTypeId} value={option.RoomTypeId}>
+                            {option.RoomTypeName}
+                          </option>
+                        ))}
+                      </TextField>
+                    )}
+                </Stack>
+
+                {isEdit && <Stack>
                   <div>
                     <LabelStyle>Hình ảnh căn hộ</LabelStyle>
                     <UploadMultiFile
@@ -169,56 +272,22 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
                       </FormHelperText>
                     )}
                   </div>
-                </Stack>
+                </Stack>}
 
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField
-                    select={isEdit}
-                    fullWidth
-                    label="Loại căn hộ"
-                    disabled={!isEdit}
-                    {...getFieldProps('flatTypeId')}
-                    onChange={onSelectFlatType}
-                    SelectProps={{ native: true }}
-                    error={Boolean(touched.flatTypeId && errors.flatTypeId)}
-                    helperText={touched.flatTypeId && errors.flatTypeId}
-                  >
-                    <option value="" />
-                    {flatTypeList.map((option) => (
-                      <option key={option.FlatTypeId} value={option.FlatTypeId}>
-                        {option.FlatTypeName}
-                      </option>
-                    ))}
-                  </TextField>
-                  {!isEdit && <TextField
-                    fullWidth
-                    label="Loại phòng"
-                    disabled={true}
-                    {...getFieldProps('roomTypeName')}
-                  />}
-                  {isEdit &&
-                    Array(numberOfRoom).fill(0).map(()=>
-                     <TextField
-                        select
-                        fullWidth
-                        label="Loại phòng"
-                        onChange={onSelectRoomType}
-                        SelectProps={{ native: true }}
-                        error={Boolean(touched.roomTypeId && errors.roomTypeId)}
-                        helperText={touched.roomTypeId && errors.roomTypeId}
-                      >
-                        <option value="" />
-                        {roomTypeList.map((option) => (
-                          <option key={option.RoomTypeId} value={option.RoomTypeId}>
-                            {option.RoomTypeName}
-                          </option>
-                        ))}
-                      </TextField>
-                    )}
-                </Stack>
+                {!isEdit && <Stack>
+                  {flatImages.map(image => {
+                    console.log('image', image);
+                    return (
+                      <UploadSingleFile
+                        maxSize={5145728}
+                        accept="image/*"
+                        file={image}
+                      />)
+                  })}
+                </Stack>}
 
                 <Stack>
-                <TextField
+                  <TextField
                     fullWidth
                     label="Mô tả"
                     disabled={!isEdit}
@@ -231,7 +300,7 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
 
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Thêm căn hộ
+                    {submitButtonLabel}
                   </LoadingButton>
                 </Box>
               </Stack>

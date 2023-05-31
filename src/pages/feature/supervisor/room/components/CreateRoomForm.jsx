@@ -18,19 +18,24 @@ import {
 import { styled } from '@material-ui/core/styles';
 import { LoadingButton } from '@material-ui/lab';
 import { useDispatch, useSelector } from 'src/redux/store';
-import { getRoomType } from 'src/redux/slices/room';
+import { getRoomType, updateRoom } from 'src/redux/slices/room';
 import { getCurrentBuilding } from 'src/redux/slices/building';
-import { uploadImage } from 'src/utils/firebase';
-import { UploadMultiFile } from 'src/components/upload';
+import { uploadImage, uploadMultipleImgae } from 'src/utils/firebase';
+import { UploadMultiFile, UploadSingleFile } from 'src/components/upload';
 import { getFlatTypes } from 'src/redux/slices/flat';
 
 // ----------------------------------------------------------------------
 const roomStatusOptions = [
-  { id: 1, label: 'Còn chỗ', value: 'Available' },
+  { id: 1, label: 'Còn chỗ', value: 'Active' },
   { id: 2, label: 'Bảo trì', value: 'Maintenance' },
   { id: 3, label: 'Hết chỗ', value: 'Full' },
 ];
 
+const extractRoomImages = (roomImages) => {
+  const filtered = roomImages.filter(image => !!image);
+  console.log("room", filtered)
+  return (!!filtered && filtered?.length > 0) ? filtered : [];
+}
 // ----------------------------------------------------------------------
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
@@ -51,12 +56,24 @@ export default function CreateRoomForm({ currentRoom }) {
   const [isEdit, setIsEdit] = useState(false);
 
 
+  console.log("current Room", currentRoom)
   useEffect(() => {
     dispatch(getFlatTypes());
     dispatch(getRoomType());
     dispatch(getCurrentBuilding());
+
   }, []);
 
+  useEffect(() => {
+    setRoomImages(extractRoomImages([
+      currentRoom?.RoomImageUrl1,
+      currentRoom?.RoomImageUrl2,
+      currentRoom?.RoomImageUrl3,
+      currentRoom?.RoomImageUrl4,
+      currentRoom?.RoomImageUrl5,
+      currentRoom?.RoomImageUrl6,
+    ]))
+  }, [currentRoom])
   const RoomSchema = Yup.object().shape({
     roomName: Yup.string().required('Tên đang trống'),
     electricityAttribute: Yup.string().required('Chỉ số điện đang trống'),
@@ -73,21 +90,26 @@ export default function CreateRoomForm({ currentRoom }) {
       electricityAttribute: currentRoom?.ElectricityAttribute || "",
       waterAttribute: currentRoom?.WaterAttribute || "",
       roomTypeId: currentRoom?.RoomTypeId || "",
-      roomTypeName: currentRoom?.RoomTypeName || "",
+      roomTypeName: currentRoom?.RoomType?.RoomTypeName || "",
       status: currentRoom?.Status || "",
       flatId: currentRoom?.FlatId || "",
-      roomImages: [],
+      flatName: currentRoom?.flatName || "",
+      roomImages: roomImages,
+      description: currentRoom?.Description || null,
     },
     validationSchema: RoomSchema,
-    //{...values, buildingId: currentBuilding.BuildingId}
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       if (isEdit) {
         try {
-          const roomImageUrls = roomImages.map(async (item) => await uploadImage(item));
+          const roomImageUrls = await uploadMultipleImgae(roomImages);
+
           const [roomImageUrl1, roomImageUrl2, roomImageUrl3, roomImageUrl4, roomImageUrl5, roomImageUrl6] = roomImageUrls;
+          //console.log('upload data',{ ...values, buildingId: currentBuilding.BuildingId, roomImageUrl1, roomImageUrl2, roomImageUrl3, roomImageUrl4, roomImageUrl5, roomImageUrl6 });
+
           setSubmitting(false);
           try {
-            console.log({ ...values, buildingId: currentBuilding.BuildingId, roomImageUrl1, roomImageUrl2, roomImageUrl3, roomImageUrl4, roomImageUrl5, roomImageUrl6 });
+            dispatch(updateRoom(currentRoom.RoomId, { ...values, buildingId: currentBuilding.BuildingId, roomImageUrl1, roomImageUrl2, roomImageUrl3, roomImageUrl4, roomImageUrl5, roomImageUrl6 }, enqueueSnackbar))
+            console.log('upload data', { ...values, buildingId: currentBuilding.BuildingId, roomImageUrl1, roomImageUrl2, roomImageUrl3, roomImageUrl4, roomImageUrl5, roomImageUrl6 });
           } catch (error) {
             console.log('error', error);
             setErrors(error.message);
@@ -106,7 +128,7 @@ export default function CreateRoomForm({ currentRoom }) {
 
   const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
 
-  console.log("values", values, errors)
+  // console.log("values", values, errors)
   const handRoomImagesDrop = useCallback(
     (acceptedFiles) => {
       const files = acceptedFiles.slice(0, 6);
@@ -158,22 +180,11 @@ export default function CreateRoomForm({ currentRoom }) {
 
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                   <TextField
-                    select={isEdit}
                     fullWidth
                     label="Tên căn hộ"
-                    disabled={!isEdit}
-                    {...getFieldProps('flatId')}
-                    SelectProps={{ native: true }}
-                    error={Boolean(touched.flatId && errors.flatId)}
-                    helperText={touched.flatId && errors.flatId}
-                  >
-                    <option value="" />
-                    {flatTypeList.map((option) => (
-                      <option key={option.FlatTypeId} value={option.FlatTypeId}>
-                        {option.FlatTypeName}
-                      </option>
-                    ))}
-                  </TextField>
+                    disabled={true}
+                    {...getFieldProps('flatName')}
+                  />
                   {!isEdit && <TextField
                     fullWidth
                     label="Loại phòng"
@@ -191,7 +202,7 @@ export default function CreateRoomForm({ currentRoom }) {
                   >
                     <option value="" />
                     {roomTypeList.map((option) => (
-                      <option key={option.RoomTypeId} value={option.RoomTypeName}>
+                      <option key={option.RoomTypeId} value={option.RoomTypeId}>
                         {option.RoomTypeName}
                       </option>
                     ))}
@@ -234,40 +245,9 @@ export default function CreateRoomForm({ currentRoom }) {
                   </TextField>
                 </Stack>
 
-
-                <Stack>
-                  <div>
-                    <LabelStyle>Mô tả</LabelStyle>
-                    <QuillEditor
-                      id="post-content"
-                      value={values.description}
-                      onChange={(val) => setFieldValue('description', val)}
-                      error={Boolean(touched.description && errors.description)}
-                    />
-                    {touched.description && errors.description && (
-                      <FormHelperText error sx={{ px: 2, textTransform: 'capitalize' }}>
-                        {touched.description && errors.description}
-                      </FormHelperText>
-                    )}
-                  </div>
-                </Stack>
-
-                {/* {!isEdit && currentContract?.ImageUrls &&
-                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                    {currentContract?.ImageUrls.map(image => {
-                      return (
-                        <UploadSingleFile
-                          maxSize={5145728}
-                          accept="image/*"
-                          file={image}
-                        />)
-                    })}
-
-                  </Stack>} */}
-
                 {isEdit && <Stack>
                   <div>
-                    <LabelStyle>Hình ảnh hợp đồng</LabelStyle>
+                    <LabelStyle>Hình ảnh phòng</LabelStyle>
                     <UploadMultiFile
                       showPreview
                       maxSize={3145728}
@@ -285,6 +265,25 @@ export default function CreateRoomForm({ currentRoom }) {
                     )}
                   </div>
                 </Stack>}
+
+                {!isEdit && roomImages && roomImages.map(image => {
+                  console.log("img", image)
+                  return (
+                    <UploadSingleFile
+                      maxSize={5145728}
+                      accept="image/*"
+                      file={image}
+                    />)
+                })}
+
+                <Stack>
+                  <TextField
+                    disabled={!isEdit}
+                    label={"Mô tả"}
+                    {...getFieldProps('description')}
+
+                  />
+                </Stack>
 
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>

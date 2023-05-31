@@ -12,6 +12,7 @@ const initialState = {
   activeFlats: [],
   flatTypeTotal: 0,
   currentFlat: null,
+  currentFlatName: null,
 };
 
 const slice = createSlice({
@@ -45,6 +46,7 @@ const slice = createSlice({
     getFlatSuccess(state, action){
       state.isLoading = false;
       state.currentFlat = action.payload;
+      state.currentFlatName = action.payload.Name;
     }
   }
 });
@@ -103,7 +105,8 @@ export function getFlatTypes(pageNumber, pageSize) {
     try {
       const url = `flats/type?PageNumber=${pageNumber ?? 1}&PageSize=${pageSize ?? 25}`;
       const response = await axios.get(url);
-      dispatch(slice.actions.getFlatTypeListSuccess(response.data.data));
+      const activeFlatType = response.data.data.filter(item => !!item.Status)
+      dispatch(slice.actions.getFlatTypeListSuccess(activeFlatType));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -125,4 +128,17 @@ export function createFlat(payload, enqueueSnackbar, navigate) {
   };
 }
 
+export function updateFlat(flatId, payload, enqueueSnackbar){
+  return async(dispatch)=>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const url = `flats/${flatId}`;
+      await axios.put(url, payload);
+      enqueueSnackbar("Cập nhật thông tin căn hộ thành công", { variant: 'success' });      
+    } catch(error){
+      enqueueSnackbar(error.message, { variant: 'error' });
+      dispatch(slice.actions.hasError(error));
+    }
+  }
+}
 

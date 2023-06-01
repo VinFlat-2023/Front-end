@@ -158,7 +158,7 @@ export default function FlatList() {
           heading="Danh sách căn hộ"
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
-            { name: 'Phòng', href: PATH_SUPERVISOR.room.listFlat },
+            { name: 'Căn hộ', href: PATH_SUPERVISOR.room.listFlat },
             { name: 'Danh sách căn hộ' }
           ]}
           action={

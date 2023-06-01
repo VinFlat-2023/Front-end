@@ -24,18 +24,18 @@ const MENU_OPTIONS = [
   {
     label: 'Home',
     icon: homeFill,
-    linkTo: '/'
+    linkTo: '/supervisor/home'
   },
   {
     label: 'Profile',
     icon: personFill,
     linkTo: PATH_DASHBOARD.user.profile
   },
-  {
-    label: 'Settings',
-    icon: settings2Fill,
-    linkTo: PATH_DASHBOARD.user.account
-  }
+  // {
+  //   label: 'Settings',
+  //   icon: settings2Fill,
+  //   linkTo: PATH_DASHBOARD.user.account
+  // }
 ];
 
 // ----------------------------------------------------------------------
@@ -129,7 +129,7 @@ export default function AccountPopover() {
 
         <Box sx={{ p: 2, pt: 1.5 }}>
           <Button fullWidth color="inherit" variant="outlined" onClick={handleLogout}>
-            Logout
+            Đăng xuất
           </Button>
         </Box>
       </MenuPopover>

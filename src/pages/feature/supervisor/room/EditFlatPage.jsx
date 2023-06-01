@@ -26,14 +26,14 @@ export default function EditFlatPage() {
   }, []);
 
   return (
-    <Page title={'Cập nhật tình trạng phòng'}>
+    <Page title={'Cập nhật thông tin căn hộ'}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={'Cập nhật tình trạng phòng'}
+          heading={'Cập nhật thông tin căn hộ'}
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
-            { name: 'Phòng', href: PATH_SUPERVISOR.room.listRoom },
-            { name: 'Cập nhật tình trạng phòng' }
+            { name: 'Danh sách căn hộ', href: PATH_SUPERVISOR.room.listFlat },
+            { name: 'Cập nhật thông tin căn hộ' }
           ]}
         />
 

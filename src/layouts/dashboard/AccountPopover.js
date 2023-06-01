@@ -3,13 +3,12 @@ import { useSnackbar } from 'notistack5';
 import { useRef, useState } from 'react';
 import homeFill from '@iconify/icons-eva/home-fill';
 import personFill from '@iconify/icons-eva/person-fill';
-import settings2Fill from '@iconify/icons-eva/settings-2-fill';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // material
 import { alpha } from '@material-ui/core/styles';
 import { Button, Box, Divider, MenuItem, Typography } from '@material-ui/core';
 // routes
-import { PATH_DASHBOARD, PATH_SUPERVISOR, PATH_ADMIN } from '../../routes/paths';
+import { PATH_SUPERVISOR, PATH_ADMIN } from '../../routes/paths';
 // hooks
 import useAuth from '../../hooks/useAuth';
 import useIsMountedRef from '../../hooks/useIsMountedRef';
@@ -19,17 +18,16 @@ import MyAvatar from '../../components/MyAvatar';
 import MenuPopover from '../../components/MenuPopover';
 
 // ----------------------------------------------------------------------
-const role = localStorage.getItem('roleName');
 const MENU_OPTIONS = [
   {
     label: 'Home',
     icon: homeFill,
-    linkTo: role === 'Admin' ? PATH_ADMIN.home : PATH_SUPERVISOR.home
+    linkTo: localStorage.getItem('roleName') === 'Admin' ? PATH_ADMIN.home : PATH_SUPERVISOR.home
   },
   {
     label: 'Profile',
     icon: personFill,
-    linkTo: role === 'Admin' ? PATH_ADMIN.admin_profile.home : PATH_SUPERVISOR.profile.root
+    linkTo: localStorage.getItem('roleName') === 'Admin' ? PATH_ADMIN.admin_profile.home : PATH_SUPERVISOR.profile.root
   }
   // {
   //   label: 'Settings',

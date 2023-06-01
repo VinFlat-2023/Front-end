@@ -50,7 +50,7 @@ export default function LoginForm() {
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
         await login(values.userName, values.password);
-        enqueueSnackbar('Login success', {
+        enqueueSnackbar('Đăng nhập thành công', {
           variant: 'success',
           action: (key) => (
             <MIconButton size="small" onClick={() => closeSnackbar(key)}>

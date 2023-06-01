@@ -24,7 +24,7 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 const PERCENT = 2.6;
-const TOTAL_USER = 18765;
+const TOTAL_USER = 196;
 const CHART_DATA = [{ data: [20, 41, 63, 33, 28, 35, 50, 46, 11, 26] }];
 
 export default function AppTotalActiveUsers() {
@@ -50,9 +50,9 @@ export default function AppTotalActiveUsers() {
   return (
     <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
       <Box sx={{ flexGrow: 1 }}>
-        <Typography variant="subtitle2">Total Active Users</Typography>
+        <Typography variant="subtitle2">Tổng số người thuê KTX</Typography>
         <Stack direction="row" alignItems="center" spacing={1} sx={{ mt: 2, mb: 1 }}>
-          <IconWrapperStyle
+          {/* <IconWrapperStyle
             sx={{
               ...(PERCENT < 0 && {
                 color: 'error.main',
@@ -61,17 +61,17 @@ export default function AppTotalActiveUsers() {
             }}
           >
             <Icon width={16} height={16} icon={PERCENT >= 0 ? trendingUpFill : trendingDownFill} />
-          </IconWrapperStyle>
-          <Typography component="span" variant="subtitle2">
+          </IconWrapperStyle> */}
+          {/* <Typography component="span" variant="subtitle2">
             {PERCENT > 0 && '+'}
             {fPercent(PERCENT)}
-          </Typography>
+          </Typography> */}
         </Stack>
 
         <Typography variant="h3">{fNumber(TOTAL_USER)}</Typography>
       </Box>
 
-      <ReactApexChart type="bar" series={CHART_DATA} options={chartOptions} width={60} height={36} />
+      {/* <ReactApexChart type="bar" series={CHART_DATA} options={chartOptions} width={60} height={36} /> */}
     </Card>
   );
 }

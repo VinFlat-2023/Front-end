@@ -40,9 +40,9 @@ export default function SupervisorDashboardPage() {
             <AppTotalInstalled />
           </Grid>
 
-          <Grid item xs={12} md={3}>
+          {/* <Grid item xs={12} md={3}>
             <AppTotalInstalled />
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12} md={3}>
             <AppTotalDownloads />

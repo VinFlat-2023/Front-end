@@ -5,7 +5,7 @@ import { Container, Stack } from '@material-ui/core';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_ADMIN, PATH_SUPERVISOR } from '../../routes/paths';
+import { PATH_ADMIN, PATH_DASHBOARD, PATH_SUPERVISOR } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // components
@@ -38,8 +38,8 @@ export default function UserEdit() {
           heading="Chỉnh sửa tài khoản"
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
-            { name: 'Quản lý tài khoản', href: PATH_SUPERVISOR.finances.root },
-            { name: 'Chỉnh sửa hợp đồng' }
+            { name: 'Quản lý tài khoản', href: PATH_DASHBOARD.account.root },
+            { name: 'Chỉnh sửa tài khoản' }
           ]}
         />
 

@@ -31,23 +31,21 @@ export default function Dormitory() {
       setBuildingExists(true);
       enqueueSnackbar(response.data.message, { variant: 'success' });
     } catch (error) {
-      if(error.data === -1){
-        setBuildingExists(false);
-        setBuilding(error.message);
-      }
-      
+      setBuildingExists(false);
+      setBuilding(error.message);
+
       enqueueSnackbar(error.message, { variant: 'error' });
     }
   };
 
-  const getAllArea = async() => {
+  const getAllArea = async () => {
     try {
       const response = await axios.get('areas/no-paging');
       setArea(response.data.data);
     } catch (error) {
       enqueueSnackbar(error.message, { variant: 'error' });
     }
-  }
+  };
 
   useEffect(() => {
     getCurrentBuilding();

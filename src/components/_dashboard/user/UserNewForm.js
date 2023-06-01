@@ -45,7 +45,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
       username: currentUser?.Username || '',
       fullname: currentUser?.FullName || '',
       email: currentUser?.Email || '',
-      phone: currentUser?.Phone || '',
+      phone: currentUser?.PhoneNumber || '',
       address: currentUser?.Address || '',
       roleId: currentUser?.Role.RoleId || '',
       status: currentUser?.Status || ''

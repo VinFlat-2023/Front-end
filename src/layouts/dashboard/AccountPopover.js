@@ -3,13 +3,12 @@ import { useSnackbar } from 'notistack5';
 import { useRef, useState } from 'react';
 import homeFill from '@iconify/icons-eva/home-fill';
 import personFill from '@iconify/icons-eva/person-fill';
-import settings2Fill from '@iconify/icons-eva/settings-2-fill';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // material
 import { alpha } from '@material-ui/core/styles';
 import { Button, Box, Divider, MenuItem, Typography } from '@material-ui/core';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_SUPERVISOR, PATH_ADMIN } from '../../routes/paths';
 // hooks
 import useAuth from '../../hooks/useAuth';
 import useIsMountedRef from '../../hooks/useIsMountedRef';
@@ -19,22 +18,33 @@ import MyAvatar from '../../components/MyAvatar';
 import MenuPopover from '../../components/MenuPopover';
 
 // ----------------------------------------------------------------------
-
-const MENU_OPTIONS = [
+const MENU_OPTIONS_ADMIN = [
   {
     label: 'Home',
     icon: homeFill,
-    linkTo: '/'
+    linkTo: PATH_ADMIN.home
   },
   {
     label: 'Profile',
     icon: personFill,
-    linkTo: PATH_DASHBOARD.user.profile
+    linkTo: PATH_ADMIN.admin_profile.home
+  }
+  // {
+  //   label: 'Settings',
+  //   icon: settings2Fill,
+  //   linkTo: PATH_DASHBOARD.user.account
+  // }
+];
+const MENU_OPTIONS_SUPERVISOR = [
+  {
+    label: 'Home',
+    icon: homeFill,
+    linkTo: PATH_SUPERVISOR.home
   },
   {
-    label: 'Settings',
-    icon: settings2Fill,
-    linkTo: PATH_DASHBOARD.user.account
+    label: 'Profile',
+    icon: personFill,
+    linkTo: PATH_SUPERVISOR.profile.root
   }
 ];
 
@@ -47,7 +57,7 @@ export default function AccountPopover() {
   const isMountedRef = useIsMountedRef();
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
-
+  const role = user?.Role?.RoleName;
   const handleOpen = () => {
     setOpen(true);
   };
@@ -104,32 +114,54 @@ export default function AccountPopover() {
         </Box>
 
         <Divider sx={{ my: 1 }} />
+        {role === 'Admin' &&
+          MENU_OPTIONS_ADMIN.map((option) => (
+            <MenuItem
+              key={option.label}
+              to={option.linkTo}
+              component={RouterLink}
+              onClick={handleClose}
+              sx={{ typography: 'body2', py: 1, px: 2.5 }}
+            >
+              <Box
+                component={Icon}
+                icon={option.icon}
+                sx={{
+                  mr: 2,
+                  width: 24,
+                  height: 24
+                }}
+              />
 
-        {MENU_OPTIONS.map((option) => (
-          <MenuItem
-            key={option.label}
-            to={option.linkTo}
-            component={RouterLink}
-            onClick={handleClose}
-            sx={{ typography: 'body2', py: 1, px: 2.5 }}
-          >
-            <Box
-              component={Icon}
-              icon={option.icon}
-              sx={{
-                mr: 2,
-                width: 24,
-                height: 24
-              }}
-            />
+              {option.label}
+            </MenuItem>
+          ))}
+        {role === 'Supervisor' &&
+          MENU_OPTIONS_SUPERVISOR.map((option) => (
+            <MenuItem
+              key={option.label}
+              to={option.linkTo}
+              component={RouterLink}
+              onClick={handleClose}
+              sx={{ typography: 'body2', py: 1, px: 2.5 }}
+            >
+              <Box
+                component={Icon}
+                icon={option.icon}
+                sx={{
+                  mr: 2,
+                  width: 24,
+                  height: 24
+                }}
+              />
 
-            {option.label}
-          </MenuItem>
-        ))}
+              {option.label}
+            </MenuItem>
+          ))}
 
         <Box sx={{ p: 2, pt: 1.5 }}>
           <Button fullWidth color="inherit" variant="outlined" onClick={handleLogout}>
-            Logout
+            Đăng xuất
           </Button>
         </Box>
       </MenuPopover>

@@ -1,7 +1,7 @@
 import { Form, FormikProvider, useFormik } from 'formik';
 import { useSnackbar } from 'notistack5';
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
 // material
@@ -17,6 +17,7 @@ import { uploadImage } from 'src/utils/firebase';
 import UploadMultiFile from '../../../../../components/upload/UploadMultiFile';
 import { QuillEditor } from '../../../../../components/editor';
 import useAuth from '../../../../../hooks/useAuth';
+import { Path } from '@react-pdf/renderer';
 
 // ----------------------------------------------------------------------
 
@@ -53,12 +54,12 @@ export default function CreateEditBuildingForm({ building, area, buildingExists 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: building.BuildingName || '',
-      area: building.AreaId || '',
-      phone: building.BuildingPhoneNumber || '',
-      address: building.BuildingAddress || '',
-      supName: user.user.FullName || '',
-      description: building.Description || '',
+      name: building?.BuildingName || '',
+      area: building?.AreaId || '',
+      phone: building?.BuildingPhoneNumber || '',
+      address: building?.BuildingAddress || '',
+      supName: user.user?.FullName || '',
+      description: building?.Description || '',
       images: []
     },
     validationSchema: NewUserSchema,
@@ -91,6 +92,7 @@ export default function CreateEditBuildingForm({ building, area, buildingExists 
             const rs = await axios.post('buildings', createEditValue);
             enqueueSnackbar(rs.data.message, { variant: 'success' });
             window.location.reload();
+            
           } else {
             const rs = await axios.put(`buildings/${building.BuildingId}`, createEditValue);
             enqueueSnackbar(rs.data.message, { variant: 'success' });

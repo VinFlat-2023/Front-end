@@ -80,6 +80,10 @@ export const PATH_SUPERVISOR = {
     flatType: path (ROOTS_SUPERVISOR, '/setting/flat-type'),
     addFlatType: path(ROOTS_SUPERVISOR, '/setting/flat-type/add'),
     addRoomType: path(ROOTS_SUPERVISOR, '/setting/room-type/add')
+  },
+  profile: {
+    root: path(ROOTS_SUPERVISOR, '/profile'),
+    edit: path(ROOTS_SUPERVISOR, '/profile/edit')
   }
 };
 

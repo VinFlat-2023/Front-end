@@ -97,7 +97,6 @@ AdminSidebar.propTypes = {
 export default function AdminSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
   const user = useAuth();
-  console.log(' bar', user);
   const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
     useCollapseDrawer();
 

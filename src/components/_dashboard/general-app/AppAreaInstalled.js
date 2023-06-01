@@ -12,15 +12,15 @@ const CHART_DATA = [
   {
     year: 2019,
     data: [
-      { name: 'Asia', data: [10, 41, 35, 51, 49, 62, 69, 91, 148] },
-      { name: 'America', data: [10, 34, 13, 56, 77, 88, 99, 77, 45] }
+      { name: 'Asia', data: [10, 41, 35, 51, 49, 62] },
+      { name: 'America', data: [10, 34, 13, 56, 77, 88] }
     ]
   },
   {
     year: 2020,
     data: [
-      { name: 'Asia', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] },
-      { name: 'America', data: [45, 77, 99, 88, 77, 56, 13, 34, 10] }
+      { name: 'Asia', data: [148, 91, 69, 62, 49, 51] },
+      { name: 'America', data: [45, 77, 99, 88, 77, 56] }
     ]
   }
 ];
@@ -34,7 +34,7 @@ export default function AppAreaInstalled() {
 
   const chartOptions = merge(BaseOptionChart(), {
     xaxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+      categories: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6']
     }
   });
 

@@ -97,7 +97,6 @@ SupervisorSidebar.propTypes = {
 export default function SupervisorSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
   const user = useAuth();
-  console.log(' user supervisor', user);
   const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
     useCollapseDrawer();
 

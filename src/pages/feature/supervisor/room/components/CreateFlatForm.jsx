@@ -197,13 +197,13 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
                 </Stack>
 
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  {!isEdit && <TextField
+                  {<TextField
                     disabled={true}
                     label="Loại căn hộ"
                     {...getFieldProps('flatTypeName')}
                   />}
 
-                  {isEdit && <TextField
+                  {/* {isEdit && <TextField
                     select={isEdit}
                     fullWidth
                     label="Loại căn hộ"
@@ -220,23 +220,23 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
                         {option.FlatTypeName}
                       </option>
                     ))}
-                  </TextField>}
-                  {!isEdit && roomNames && roomNames.map(item => {
+                  </TextField>} */}
+                  {roomNames && roomNames.map(item => {
                     return (
                       <TextField
                         fullWidth
-                        label="Loại phòng"
+                        label="Phòng"
                         disabled={true}
                         value={item}
                       />
                     )
                   })}
-                  {isEdit &&
+                  {/* {isEdit &&
                     Array(numberOfRoom).fill(0).map((item, index) =>
                       <TextField
                         select
                         fullWidth
-                        label="Loại phòng"
+                        label="Phòng"
                         id={index}
                         onChange={onSelectRoomType}
                         SelectProps={{ native: true }}
@@ -250,7 +250,7 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
                           </option>
                         ))}
                       </TextField>
-                    )}
+                    )} */}
                 </Stack>
 
                 {isEdit && <Stack>

@@ -18,22 +18,34 @@ import MyAvatar from '../../components/MyAvatar';
 import MenuPopover from '../../components/MenuPopover';
 
 // ----------------------------------------------------------------------
-const MENU_OPTIONS = [
+const MENU_OPTIONS_ADMIN = [
   {
     label: 'Home',
     icon: homeFill,
-    linkTo: localStorage.getItem('roleName') === 'Admin' ? PATH_ADMIN.home : PATH_SUPERVISOR.home
+    linkTo: PATH_ADMIN.home
   },
   {
     label: 'Profile',
     icon: personFill,
-    linkTo: localStorage.getItem('roleName') === 'Admin' ? PATH_ADMIN.admin_profile.home : PATH_SUPERVISOR.profile.root
+    linkTo: PATH_ADMIN.admin_profile.home
   }
   // {
   //   label: 'Settings',
   //   icon: settings2Fill,
   //   linkTo: PATH_DASHBOARD.user.account
   // }
+];
+const MENU_OPTIONS_SUPERVISOR = [
+  {
+    label: 'Home',
+    icon: homeFill,
+    linkTo: PATH_SUPERVISOR.home
+  },
+  {
+    label: 'Profile',
+    icon: personFill,
+    linkTo: PATH_SUPERVISOR.profile.root
+  }
 ];
 
 // ----------------------------------------------------------------------
@@ -45,7 +57,7 @@ export default function AccountPopover() {
   const isMountedRef = useIsMountedRef();
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
-
+  const role = user?.Role?.RoleName;
   const handleOpen = () => {
     setOpen(true);
   };
@@ -102,28 +114,50 @@ export default function AccountPopover() {
         </Box>
 
         <Divider sx={{ my: 1 }} />
+        {role === 'Admin' &&
+          MENU_OPTIONS_ADMIN.map((option) => (
+            <MenuItem
+              key={option.label}
+              to={option.linkTo}
+              component={RouterLink}
+              onClick={handleClose}
+              sx={{ typography: 'body2', py: 1, px: 2.5 }}
+            >
+              <Box
+                component={Icon}
+                icon={option.icon}
+                sx={{
+                  mr: 2,
+                  width: 24,
+                  height: 24
+                }}
+              />
 
-        {MENU_OPTIONS.map((option) => (
-          <MenuItem
-            key={option.label}
-            to={option.linkTo}
-            component={RouterLink}
-            onClick={handleClose}
-            sx={{ typography: 'body2', py: 1, px: 2.5 }}
-          >
-            <Box
-              component={Icon}
-              icon={option.icon}
-              sx={{
-                mr: 2,
-                width: 24,
-                height: 24
-              }}
-            />
+              {option.label}
+            </MenuItem>
+          ))}
+        {role === 'Supervisor' &&
+          MENU_OPTIONS_SUPERVISOR.map((option) => (
+            <MenuItem
+              key={option.label}
+              to={option.linkTo}
+              component={RouterLink}
+              onClick={handleClose}
+              sx={{ typography: 'body2', py: 1, px: 2.5 }}
+            >
+              <Box
+                component={Icon}
+                icon={option.icon}
+                sx={{
+                  mr: 2,
+                  width: 24,
+                  height: 24
+                }}
+              />
 
-            {option.label}
-          </MenuItem>
-        ))}
+              {option.label}
+            </MenuItem>
+          ))}
 
         <Box sx={{ p: 2, pt: 1.5 }}>
           <Button fullWidth color="inherit" variant="outlined" onClick={handleLogout}>

@@ -54,6 +54,7 @@ export default function CreateRoomForm({ currentRoom }) {
 
   const [roomImages, setRoomImages] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
+  const [canChangeRoomType, setCanChangeRoomType] = useState(true);
 
 
   console.log("current Room", currentRoom)
@@ -73,6 +74,7 @@ export default function CreateRoomForm({ currentRoom }) {
       currentRoom?.RoomImageUrl5,
       currentRoom?.RoomImageUrl6,
     ]))
+    setCanChangeRoomType(currentRoom?.IsAnyOneRented);
   }, [currentRoom])
   const RoomSchema = Yup.object().shape({
     roomName: Yup.string().required('Tên đang trống'),
@@ -194,6 +196,7 @@ export default function CreateRoomForm({ currentRoom }) {
                   {isEdit && <TextField
                     select
                     fullWidth
+                    disabled={canChangeRoomType}
                     label="Loại phòng"
                     {...getFieldProps('roomTypeId')}
                     SelectProps={{ native: true }}

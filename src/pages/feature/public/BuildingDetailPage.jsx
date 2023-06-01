@@ -48,7 +48,6 @@ const SkeletonLoad = (
 export default function BuildingDetailsPage() {
   const { themeStretch } = useSettings();
   const { id } = useParams();
-  console.log(`Building Details id`, id);
   const [detailBuilding, setDetailBuilding] = useState('');
 
   useEffect(() => {

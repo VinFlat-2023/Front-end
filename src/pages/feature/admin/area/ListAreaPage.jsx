@@ -154,7 +154,6 @@ export default function ListAreaPage() {
   };
 
   const handleChangePage = (event, newPage) => {
-    console.log('newPage', newPage);
     setPage(newPage);
   };
 

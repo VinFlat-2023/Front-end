@@ -82,7 +82,8 @@ export const PATH_SUPERVISOR = {
     addRoomType: path(ROOTS_SUPERVISOR, '/setting/room-type/add')
   },
   profile: {
-    root: path(ROOTS_SUPERVISOR, '/profile')
+    root: path(ROOTS_SUPERVISOR, '/profile'),
+    edit: path(ROOTS_SUPERVISOR, '/profile/edit')
   }
 };
 

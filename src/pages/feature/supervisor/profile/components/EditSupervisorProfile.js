@@ -7,7 +7,7 @@ import { Box, Container, Stack, Tab, Tabs } from '@material-ui/core';
 // redux
 import { useSelector } from '../../../../../redux/store';
 // routes
-import { PATH_ADMIN } from '../../../../../routes/paths';
+import { PATH_SUPERVISOR } from '../../../../../routes/paths';
 // hooks
 import useSettings from 'src/hooks/useSettings';
 // components
@@ -54,8 +54,8 @@ export default function EditSupervisorProfile() {
         <HeaderBreadcrumbs
           heading="Hồ sơ cá nhân"
           links={[
-            { name: 'Trang chủ', href: PATH_ADMIN.root },
-            { name: 'Quản lý hồ sơ', href: PATH_ADMIN.admin_profile.home },
+            { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
+            { name: 'Quản lý hồ sơ', href: PATH_SUPERVISOR.profile.root },
             { name: 'Chỉnh sửa hồ sơ' }
           ]}
         />

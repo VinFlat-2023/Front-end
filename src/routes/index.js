@@ -177,7 +177,15 @@ export default function Router() {
             { path: '/room-type/add', element: <CreateEditRoomTypePage /> },
             { path: '/room-type/:id', element: <CreateEditRoomTypePage /> }
           ]
-        }
+        },
+        { path: '/profile', element: <Profile /> },
+        {
+          path: 'profile',
+          children: [
+            { path: '/', element: <Profile /> },
+            { path: '/edit', element: <EditProfilePage /> }
+          ]
+        },
       ]
     },
 
@@ -315,6 +323,8 @@ const ListRequestPage = Loadable(lazy(() => import('../pages/feature/supervisor/
 const DetailRequestPage = Loadable(
   lazy(() => import('../pages/feature/supervisor/guest/components/requests/DetailRequestPage'))
 );
+const Profile = Loadable(lazy(() => import('../pages/feature/supervisor/profile/SupervisorProfilePage')));
+const EditProfilePage = Loadable(lazy(() => import('../pages/feature/supervisor/profile/components/EditSupervisorProfile')));
 
 // Others
 const UserEdit = Loadable(lazy(() => import('../pages/dashboard/UserEdit')));

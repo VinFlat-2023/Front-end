@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 // material
 import { Box, Card, Grid, Stack, TextField } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
-import { ROOTS_ADMIN } from 'src/routes/paths';
+import { PATH_SUPERVISOR } from 'src/routes/paths';
 //
 
 // ----------------------------------------------------------------------
@@ -17,7 +17,7 @@ export default function ViewProfile({ currentUser }) {
       username: currentUser?.Username || '',
       fullname: currentUser?.FullName || '',
       email: currentUser?.Email || '',
-      phone: currentUser?.Phone || '',
+      phone: currentUser?.PhoneNumber || '',
       address: currentUser?.Address || '',
       roleName: currentUser?.Role.RoleName || '',
       status: currentUser?.Status || ''
@@ -25,7 +25,7 @@ export default function ViewProfile({ currentUser }) {
     onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
         setSubmitting(false);
-        navigate(`${ROOTS_ADMIN}/admin_profile/edit`)
+        navigate(PATH_SUPERVISOR.profile.edit)
       } catch (error) {
         console.error(error);
         setSubmitting(false);

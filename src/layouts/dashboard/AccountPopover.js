@@ -9,7 +9,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { alpha } from '@material-ui/core/styles';
 import { Button, Box, Divider, MenuItem, Typography } from '@material-ui/core';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_SUPERVISOR, PATH_ADMIN } from '../../routes/paths';
 // hooks
 import useAuth from '../../hooks/useAuth';
 import useIsMountedRef from '../../hooks/useIsMountedRef';
@@ -19,18 +19,18 @@ import MyAvatar from '../../components/MyAvatar';
 import MenuPopover from '../../components/MenuPopover';
 
 // ----------------------------------------------------------------------
-
+const role = localStorage.getItem('roleName');
 const MENU_OPTIONS = [
   {
     label: 'Home',
     icon: homeFill,
-    linkTo: '/supervisor/home'
+    linkTo: role === 'Admin' ? PATH_ADMIN.home : PATH_SUPERVISOR.home
   },
   {
     label: 'Profile',
     icon: personFill,
-    linkTo: PATH_DASHBOARD.user.profile
-  },
+    linkTo: role === 'Admin' ? PATH_ADMIN.admin_profile.home : PATH_SUPERVISOR.profile.root
+  }
   // {
   //   label: 'Settings',
   //   icon: settings2Fill,

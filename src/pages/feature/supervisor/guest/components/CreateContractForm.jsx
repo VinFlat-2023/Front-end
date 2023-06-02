@@ -34,7 +34,15 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
   marginBottom: theme.spacing(1)
 }));
-
+const extractContractImages = (images) => {
+  if (images && images.length > 0) {
+    const filtered = images.filter(image => !!image);
+    console.log("images", filtered)
+    return (!!filtered && filtered?.length > 0) ? filtered : [];
+  } else {
+    return [];
+  }
+}
 export default function CreateContractForm({ currentContract, isNewUser, isEditPage }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -65,8 +73,14 @@ export default function CreateContractForm({ currentContract, isNewUser, isEditP
   }, []);
 
   useEffect(() => {
+    console.log('flat id', flatId,currentContract)
     dispatch(getRoomByFlatId(flatId));
   }, [flatId]);
+
+  useEffect(()=>{
+    setFlatId(currentContract?.FlatId);
+    setContractImages(extractContractImages(currentContract?.ImageUrls))
+  },[currentContract])
 
 
   const formik = useFormik({
@@ -95,7 +109,7 @@ export default function CreateContractForm({ currentContract, isNewUser, isEditP
       citizenNumber: "",
       frontCitizenCard: null,
       backCitizenCard: null,
-      contractImages: currentContract?.ImageUrls || [],
+      contractImages: contractImages,
     },
 
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {

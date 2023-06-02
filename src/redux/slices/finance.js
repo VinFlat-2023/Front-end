@@ -132,3 +132,18 @@ export function createInvoice(payload, navigate, enqueueSnackbar) {
     }
   };
 }
+
+
+export function createBatchInvoice(enqueueSnackbar) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const url = `/invoices/batch-fill`;
+      const response = await axios.post(url);
+      enqueueSnackbar(response.data.message, { variant: 'success' });
+    } catch (error) {
+      enqueueSnackbar(error.data.message, { variant: 'error' });
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}

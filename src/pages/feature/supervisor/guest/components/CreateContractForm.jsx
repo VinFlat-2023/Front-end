@@ -22,9 +22,9 @@ import { PATH_SUPERVISOR } from 'src/routes/paths';
 // ----------------------------------------------------------------------
 const gender = [{ id: '1', label: 'Nam' }, { id: '2', label: 'Nữ' }];
 const contractStatus = [
-  { id: '1', label: 'Đang hoạt động', value: 'active' },
-  { id: '2', label: 'Hết hạn', value: 'inActive' },
-  { id: '3', label: 'Tạm dừng', value: 'suspend' },
+  { id: '1', label: 'Còn hiệu lực', value: 'Active' },
+  { id: '2', label: 'Hết hạn', value: 'Expired' },
+  { id: '3', label: 'Đã hủy', value: 'Cancelled' },
 ];
 
 // ----------------------------------------------------------------------
@@ -34,7 +34,15 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
   marginBottom: theme.spacing(1)
 }));
-
+const extractContractImages = (images) => {
+  if (images && images.length > 0) {
+    const filtered = images.filter(image => !!image);
+    console.log("images", filtered)
+    return (!!filtered && filtered?.length > 0) ? filtered : [];
+  } else {
+    return [];
+  }
+}
 export default function CreateContractForm({ currentContract, isNewUser, isEditPage }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -53,6 +61,11 @@ export default function CreateContractForm({ currentContract, isNewUser, isEditP
   const [frontCitizenCard, setFrontCitizenCard] = useState(null);
   const [backCitizenCard, setBackCitizenCard] = useState(null);
   const [contractImages, setContractImages] = useState([]);
+  
+  const [frontCitizenCardChange, setFrontCitizenCardChange] = useState(false);
+  const [backCitizenCardChange, setBackCitizenCardChange] = useState(false);
+  const [contractImagesChange, setContractImagesChange] = useState(false);
+  
 
 
 
@@ -65,8 +78,14 @@ export default function CreateContractForm({ currentContract, isNewUser, isEditP
   }, []);
 
   useEffect(() => {
+    console.log('flat id', flatId,currentContract)
     dispatch(getRoomByFlatId(flatId));
   }, [flatId]);
+
+  useEffect(()=>{
+    setFlatId(currentContract?.FlatId);
+    setContractImages(extractContractImages(currentContract?.ImageUrls))
+  },[currentContract])
 
 
   const formik = useFormik({
@@ -78,7 +97,7 @@ export default function CreateContractForm({ currentContract, isNewUser, isEditP
       startDate: currentContract?.StartDateReturn || "",
       description: currentContract?.Description || "",
       endDate: currentContract?.EndDateReturn || "",
-      contractStatus: "active",
+      contractStatus: currentContract?.ContractStatus || "",
       priceForWater: currentContract?.PriceForWater || "",
       priceForElectricity: currentContract?.PriceForElectricity || "",
       priceForService: currentContract?.PriceForService || "",
@@ -95,14 +114,15 @@ export default function CreateContractForm({ currentContract, isNewUser, isEditP
       citizenNumber: "",
       frontCitizenCard: null,
       backCitizenCard: null,
-      contractImages: currentContract?.ImageUrls || [],
+      contractImages: contractImages,
     },
 
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       if (isEdit) {
         try {
           try {
-            uploadMultipleImgae(contractImages).then (async (contractImagesUrls) => {
+            console.log(contractImagesChange)
+            uploadMultipleImgae(contractImages, contractImagesChange).then (async (contractImagesUrls) => {
             const [contractImageUrl1, contractImageUrl2, contractImageUrl3, contractImageUrl4] = contractImagesUrls;
              if (isEditPage) {
               dispatch(updateContract(currentContract.ContractId, { ...values, contractImageUrl1: contractImageUrl1, contractImageUrl2: contractImageUrl2, contractImageUrl3: contractImageUrl3, contractImageUrl4: contractImageUrl4 }, navigate, enqueueSnackbar))
@@ -171,6 +191,7 @@ export default function CreateContractForm({ currentContract, isNewUser, isEditP
 
   const handleFrontCitizenCardDrop = useCallback(
     (acceptedFiles) => {
+      setFrontCitizenCardChange(true);
       const file = acceptedFiles[0];
       setFrontCitizenCard(file);
       if (file) {
@@ -185,6 +206,7 @@ export default function CreateContractForm({ currentContract, isNewUser, isEditP
 
   const handleBackCitizenCardDrop = useCallback(
     (acceptedFiles) => {
+      setBackCitizenCardChange(true);
       const file = acceptedFiles[0];
       setBackCitizenCard(file);
       if (file) {
@@ -197,6 +219,7 @@ export default function CreateContractForm({ currentContract, isNewUser, isEditP
 
   const handContractImagesDrop = useCallback(
     (acceptedFiles) => {
+      setContractImagesChange(true);
       const files = acceptedFiles.slice(0, 4);
       setContractImages(files);
       setFieldValue(
@@ -329,6 +352,24 @@ export default function CreateContractForm({ currentContract, isNewUser, isEditP
                     label="Mã hợp đồng"
                     value={currentContract?.ContractSerialNumber}
                   />}
+                  
+                  <TextField
+                    fullWidth
+                    disabled={!isEdit}
+                    select={isEdit}
+                    label="Trạng thái hợp đồng"
+                    {...getFieldProps('contractStatus')}
+                    SelectProps={{ native: true }}
+                    error={Boolean(touched.contractStatus && errors.contractStatus)}
+                    helperText={touched.contractStatus && errors.contractStatus}
+                  >
+                    <option value="" />
+                    {contractStatus?.map((option) => (
+                      <option key={option.id} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </TextField>
 
                   <TextField
                     fullWidth

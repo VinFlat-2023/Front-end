@@ -26,6 +26,12 @@ import { PATH_SUPERVISOR } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 const locationFake = [{ id: '1', label: 'HCM' }];
+const flatStatus = [
+  { id: 1, label: 'Đang hoạt động', value: 'Active' },
+  { id: 2, label: 'Bảo trì', value: 'Maintenance' },
+  { id: 3, label: 'Dừng hoạt động', value: 'Inactive' },
+  { id: 4, label: 'Đã đầy', value: 'Full' },
+];
 
 // ----------------------------------------------------------------------
 
@@ -48,7 +54,7 @@ const extractRoomName = (rooms) => {
   return rooms.map(room => room.RoomName);
 }
 
-export default function CreateFlatForm({ currentFlat, isEditPage }) {
+export default function CreateFlatForm({ currentFlat, isEditPage, isCreatePage }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
@@ -58,10 +64,11 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
 
   const roomNames = !!(currentFlat?.Rooms) ? extractRoomName(currentFlat?.Rooms) : null;
   const [flatImages, setFlatImages] = useState([]);
-  const [isEdit, setIsEdit] = useState(!isEditPage);
+  const [isEdit, setIsEdit] = useState(isCreatePage ?? false);
   const [numberOfRoom, setNumberOfRoom] = useState();
   const [submitButtonLabel, setSubmitButtonLabel] = useState();
   const [ isEnableFlatType, setIsEnableFlatType] = useState(false);
+  const [isFlatImageChange, setIsFlatImageChange] = useState(false);
   useEffect(() => {
     dispatch(getFlatTypes());
     dispatch(getRoomType());
@@ -86,6 +93,7 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
     flatTypeId: Yup.string().required('Loại căn hộ đang trống'),
     roomTypeId: Yup.array().min(1, 'Loại phòng đang trống'),
     flatImages: Yup.array().min(1, "Ảnh căn hộ đang trống"),
+    status: Yup.string().required("Trạng thái căn hộ đang trống")
   });
   const formik = useFormik({
     enableReinitialize: true,
@@ -93,7 +101,7 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
       name: currentFlat?.Name || '',
       description: currentFlat?.Description || '',
       flatTypeId: currentFlat?.FlatTypeId || null,
-      status: "active",
+      status: currentFlat?.Status || null,
       flatTypeName: currentFlat?.FlatType?.FlatTypeName || '',
       roomTypeId: (!!currentFlat?.Rooms && isEditPage) ? extractRoomId(currentFlat.Rooms) : [],
       roomTypeName: (!!currentFlat?.RoomTypeName && isEditPage) ? extractRoomName(currentFlat.Rooms) : [],
@@ -110,7 +118,7 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       if (isEdit) {
         try {
-          const flatImageUrls = await uploadMultipleImgae(flatImages);
+          const flatImageUrls = await uploadMultipleImgae(flatImages, isFlatImageChange);
           const [flatImageUrl1, flatImageUrl2, flatImageUrl3, flatImageUrl4, flatImageUrl5, flatImageUrl6] = flatImageUrls;
 
           try {
@@ -122,6 +130,8 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
               currentFlat.FlatId,
               { ...values, flatImageUrl1:flatImageUrl1, flatImageUrl2:flatImageUrl2, flatImageUrl3:flatImageUrl3, flatImageUrl4:flatImageUrl4, flatImageUrl5:flatImageUrl5, flatImageUrl6:flatImageUrl6 }, enqueueSnackbar)
             );
+            setIsEdit(false);
+            setSubmitButtonLabel("Cập nhật thông tin căn hộ");
           }} catch (error) {
             console.log('error', error);
             setErrors(error.message);
@@ -143,6 +153,7 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
   console.log("values", values, errors)
   const handleDrop = useCallback(
     (acceptedFiles) => {
+      setIsFlatImageChange(true);
       const files = acceptedFiles.slice(0, 6);
       setFlatImages(files);
       setFieldValue('flatImages',
@@ -197,17 +208,17 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
                 </Stack>
 
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  {<TextField
+                  {isEditPage && <TextField
                     disabled={true}
                     label="Loại căn hộ"
                     {...getFieldProps('flatTypeName')}
                   />}
 
-                  {/* {isEdit && <TextField
-                    select={isEdit}
+                  {isCreatePage && <TextField
+                    select
                     fullWidth
                     label="Loại căn hộ"
-                    disabled={!isEnableFlatType && isEditPage}
+                    
                     {...getFieldProps('flatTypeId')}
                     onChange={onSelectFlatType}
                     SelectProps={{ native: true }}
@@ -220,8 +231,8 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
                         {option.FlatTypeName}
                       </option>
                     ))}
-                  </TextField>} */}
-                  {roomNames && roomNames.map(item => {
+                  </TextField>}
+                  {isEditPage && roomNames && roomNames.map(item => {
                     return (
                       <TextField
                         fullWidth
@@ -231,7 +242,7 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
                       />
                     )
                   })}
-                  {/* {isEdit &&
+                  {isCreatePage &&
                     Array(numberOfRoom).fill(0).map((item, index) =>
                       <TextField
                         select
@@ -250,7 +261,7 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
                           </option>
                         ))}
                       </TextField>
-                    )} */}
+                    )}
                 </Stack>
 
                 {isEdit && <Stack>
@@ -286,7 +297,7 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
                   })}
                 </Stack>}
 
-                <Stack>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                   <TextField
                     fullWidth
                     label="Mô tả"
@@ -296,6 +307,23 @@ export default function CreateFlatForm({ currentFlat, isEditPage }) {
                     error={Boolean(touched.description && errors.description)}
                     helperText={touched.description && errors.description}
                   />
+                  <TextField
+                    select
+                    fullWidth
+                    disabled={!isEdit}
+                    label="Trạng thái"
+                    SelectProps={{ native: true }}
+                    {...getFieldProps('status')}
+                    error={Boolean(touched.status && errors.status)}
+                    helperText={touched.status && errors.status}
+                  >
+                    <option value="" />
+                    {flatStatus.map((option) => (
+                      <option key={option.id} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </TextField>
                 </Stack>
 
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>

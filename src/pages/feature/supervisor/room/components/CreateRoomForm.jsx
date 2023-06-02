@@ -56,6 +56,7 @@ export default function CreateRoomForm({ currentRoom }) {
   const [roomImages, setRoomImages] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [canChangeRoomType, setCanChangeRoomType] = useState(true);
+  const [ isRoomImageChange, setIsRoomImageChange] = useState(false);
 
 
   console.log("current Room", currentRoom)
@@ -104,7 +105,7 @@ export default function CreateRoomForm({ currentRoom }) {
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       if (isEdit) {
         try {
-          const roomImageUrls = await uploadMultipleImgae(roomImages);
+          const roomImageUrls = await uploadMultipleImgae(roomImages, isRoomImageChange);
 
           const [roomImageUrl1, roomImageUrl2, roomImageUrl3, roomImageUrl4, roomImageUrl5, roomImageUrl6] = roomImageUrls;
           //console.log('upload data',{ ...values, buildingId: currentBuilding.BuildingId, roomImageUrl1, roomImageUrl2, roomImageUrl3, roomImageUrl4, roomImageUrl5, roomImageUrl6 });
@@ -113,6 +114,7 @@ export default function CreateRoomForm({ currentRoom }) {
           try {
             dispatch(updateRoom(currentRoom.RoomId, { ...values, buildingId: currentBuilding.BuildingId, roomImageUrl1, roomImageUrl2, roomImageUrl3, roomImageUrl4, roomImageUrl5, roomImageUrl6 }, enqueueSnackbar))
             console.log('upload data', { ...values, buildingId: currentBuilding.BuildingId, roomImageUrl1, roomImageUrl2, roomImageUrl3, roomImageUrl4, roomImageUrl5, roomImageUrl6 });
+            setIsEdit(false);
           } catch (error) {
             console.log('error', error);
             setErrors(error.message);
@@ -134,6 +136,7 @@ export default function CreateRoomForm({ currentRoom }) {
   // console.log("values", values, errors)
   const handRoomImagesDrop = useCallback(
     (acceptedFiles) => {
+      setIsRoomImageChange(true);
       const files = acceptedFiles.slice(0, 6);
       setRoomImages(files);
       setFieldValue(
@@ -235,7 +238,7 @@ export default function CreateRoomForm({ currentRoom }) {
                     fullWidth
                     label="Trạng thái"
                     disabled={!isEdit}
-                    {...getFieldProps('tatus')}
+                    {...getFieldProps('status')}
                     SelectProps={{ native: true }}
                     error={Boolean(touched.status && errors.status)}
                     helperText={touched.status && errors.status}

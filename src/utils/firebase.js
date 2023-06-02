@@ -7,9 +7,12 @@ export const uploadImage = async (imageUpload) => {
   return responseUrl;
 };
 
-
-export const uploadMultipleImgae = async (images) => {
-  const imagesPromies = images.map(image => uploadImage(image));
-  const imageUrls = await Promise.all(imagesPromies);
-  return imageUrls;
-}
+export const uploadMultipleImgae = async (images, isChange) => {
+  if (isChange) {
+    const imagesPromies = images.map((image) => uploadImage(image));
+    const imageUrls = await Promise.all(imagesPromies);
+    return imageUrls;
+  } else {
+    return images;
+  }
+};

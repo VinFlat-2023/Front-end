@@ -29,7 +29,7 @@ export default function CreateRoomPage() {
           ]}
         />
 
-        <CreateFlatForm />
+        <CreateFlatForm isCreatePage={true} />
 
       </Container>
     </Page>

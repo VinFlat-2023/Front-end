@@ -222,6 +222,7 @@ export default function ContractList() {
                         <TableCell align="left">{DateSignedReturn}</TableCell>
                         <TableCell align="left">
                           <Label
+                          
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
                             color={
                               ContractStatus === 'Active' ? 'success' : ContractStatus === 'Expired' ? 'default' :ContractStatus === 'Cancelled' ? 'error': 'warning'

@@ -40,11 +40,11 @@ import AreaMoreMenu from './components/AreaMoreMenu';
 
 const TABLE_HEAD = [
   { id: 'Name', label: 'Tên khu vực', alignRight: false },
-  { id: 'Location', label: 'Vị trí', alignRight: false },
-  { id: '' },
-  { id: '' },
+  // { id: 'Location', label: 'Vị trí', alignRight: false },
   { id: 'Status', label: 'Trạng thái', alignRight: false },
-  { id: '' }
+  { id: '' },
+  { id: '' },
+  { id: '' },
 ];
 
 // ----------------------------------------------------------------------
@@ -111,7 +111,7 @@ export default function ListAreaPage() {
       setTotalPage(data.data.totalPage);
       setTotalCount(data.data.totalCount);
     } catch (error) {
-      if (error.status === 'Not Found') {
+      if (error.status === 'Không tìm thấy') {
         setListArea([]);
         setTotalPage(0)
       }
@@ -237,15 +237,13 @@ export default function ListAreaPage() {
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{Location}</TableCell>
-                        <TableCell align="left"></TableCell>
-                        <TableCell align="left"></TableCell>
+                        {/* <TableCell align="left">{Location}</TableCell> */}
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
                             color={Status ? 'success' : 'error'}
                           >
-                            {sentenceCase(Status ? 'Active' : 'Stopped')}
+                            {sentenceCase(Status ? 'Dang hoat dong' : 'Ngung hoat dong')}
                           </Label>
                         </TableCell>
 

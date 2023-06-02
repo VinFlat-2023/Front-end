@@ -241,8 +241,8 @@ export default function CreateContractForm({ currentContract, isNewUser, isEditP
                   <TextField
                     fullWidth
                     disabled
-                    label="Tên tòa nhà kTX xá đang quản lý"
-                    value={currentBuilding?.BuildingAddress}
+                    label=""
+                    value={currentBuilding?.BuildingName}
                   />
                 </Stack>
 
@@ -261,7 +261,7 @@ export default function CreateContractForm({ currentContract, isNewUser, isEditP
                     <option value="" />
                     {activeFlats?.map((option) => (
                       <option key={option.FlatId} value={option.FlatId}>
-                        {option.Description}
+                        {option.Name}
                       </option>
                     ))}
                   </TextField>

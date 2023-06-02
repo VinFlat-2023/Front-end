@@ -223,39 +223,39 @@ export default function BillsPage() {
         handleChangeRowsPerPage={handleChangeRowsPerPage}
       />
     },
-    {
-      key: 2,
-      value: 'expense',
-      icon: <Icon icon={receiptIcon} width={20} height={20} />,
-      component: <BillTable
-        selected={selected}
-        type={INVOICE_TYPE.EXPENSE}
-        page={page}
-        filterName={filterName}
-        theme={theme}
-        order={order}
-        orderBy={orderBy}
-        invoiceList={invoiceList}
-        isUserNotFound={isUserNotFound}
-        invoiceTotal={invoiceTotal}
-        rowsPerPage={rowsPerPage}
-        tableHead={EXPENSE_TABLE_HEAD}
-        handleChangePage={handleChangePage}
-        handleFilterByName={handleFilterByName}
-        handleRequestSort={handleRequestSort}
-        handleSelectAllClick={handleSelectAllClick}
-        handleClick={handleClick}
-        handleDeleteUser={handleDeleteUser}
-        handleChangeRowsPerPage={handleChangeRowsPerPage}
-      />
-    }
+    // {
+    //   key: 2,
+    //   value: 'expense',
+    //   icon: <Icon icon={receiptIcon} width={20} height={20} />,
+    //   component: <BillTable
+    //     selected={selected}
+    //     type={INVOICE_TYPE.EXPENSE}
+    //     page={page}
+    //     filterName={filterName}
+    //     theme={theme}
+    //     order={order}
+    //     orderBy={orderBy}
+    //     invoiceList={invoiceList}
+    //     isUserNotFound={isUserNotFound}
+    //     invoiceTotal={invoiceTotal}
+    //     rowsPerPage={rowsPerPage}
+    //     tableHead={EXPENSE_TABLE_HEAD}
+    //     handleChangePage={handleChangePage}
+    //     handleFilterByName={handleFilterByName}
+    //     handleRequestSort={handleRequestSort}
+    //     handleSelectAllClick={handleSelectAllClick}
+    //     handleClick={handleClick}
+    //     handleDeleteUser={handleDeleteUser}
+    //     handleChangeRowsPerPage={handleChangeRowsPerPage}
+    //   />
+    // }
   ];
 
   return (
     <Page title="Danh sách hóa đơn VinFlat">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Danh sách hóa đơn VinFlat"
+          heading="Danh sách hóa đơn"
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.home },
             { name: 'Quản lý  tài chính', href: PATH_SUPERVISOR.finances.bill },

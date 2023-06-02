@@ -26,9 +26,10 @@ import { getFlatTypes } from 'src/redux/slices/flat';
 
 // ----------------------------------------------------------------------
 const roomStatusOptions = [
-  { id: 1, label: 'Còn chỗ', value: 'Active' },
+  { id: 1, label: 'Đang hoạt động', value: 'Active' },
   { id: 2, label: 'Bảo trì', value: 'Maintenance' },
   { id: 3, label: 'Hết chỗ', value: 'Full' },
+  { id: 4, label: 'Dừng hoạt động', value: 'Inactive' },
 ];
 
 const extractRoomImages = (roomImages) => {
@@ -234,7 +235,7 @@ export default function CreateRoomForm({ currentRoom }) {
                     fullWidth
                     label="Trạng thái"
                     disabled={!isEdit}
-                    {...getFieldProps('status')}
+                    {...getFieldProps('tatus')}
                     SelectProps={{ native: true }}
                     error={Boolean(touched.status && errors.status)}
                     helperText={touched.status && errors.status}

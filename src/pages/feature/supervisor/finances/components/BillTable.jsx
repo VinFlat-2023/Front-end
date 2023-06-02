@@ -63,7 +63,7 @@ export const BillTable = ({
                                 const toEditPath = `${PATH_SUPERVISOR.finances.root}/${InvoiceId}`;
                                 return (
                                     <TableRow
-                                        hover
+                                        hoveredit
                                         key={InvoiceId}
                                         tabIndex={-1}
                                         role="checkbox"

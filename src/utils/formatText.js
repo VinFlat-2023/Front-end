@@ -9,8 +9,8 @@ export function getTabLabel(value){
         case 'expense':
             return 'Hóa đơn chi'
         case 'newUser':
-            return 'Khách thuê mới'
+            return 'Tạo mới hợp đồng'
         case 'existsUser':
-            return 'Khách thuê đã có tài khoản'
+            return 'Gia hạn hợp đồng'
     }
 }

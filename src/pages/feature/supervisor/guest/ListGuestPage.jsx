@@ -213,11 +213,11 @@ export default function ListGuestPage() {
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={!!Status ?  'success' : 'error'}
+                            color={Status ? 'success' : 'error'}
                           >
-                            {sentenceCase(!!Status ? "Active" : "Banned")}
+                            {sentenceCase(Status ? "Dang hoat dong" : "Khong hoat dong")}
                           </Label>
-                        </TableCell>
+                        </TableCell>  
 
                         <TableCell align="right">
                           <MoreMenu editPath={`${PATH_SUPERVISOR.guest.root}/${RenterId}`}  onDelete={() => handleDeleteUser(RenterId)} id={RenterId} />

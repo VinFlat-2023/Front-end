@@ -9,7 +9,8 @@ const initialState = {
   error: false,
   guestList: [],
   guestTotal: 0,
-  guestWithoutContract: []
+  guestWithoutContract: [],
+  currentGuest: null,
 };
 
 const slice = createSlice({
@@ -36,6 +37,11 @@ const slice = createSlice({
     getGuestWithoutContract(state, action) {
       state.isLoading = false;
       state.guestWithoutContract = action.payload;
+    },
+
+    getGuestSuccess(state, action) {
+      state.isLoading = false;
+      state.currentGuest = action.payload;
     }
   }
 });
@@ -74,3 +80,32 @@ export function getGuestWithoutContract() {
     }
   };
 }
+
+
+export function getGuestById(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading);
+    try {
+      const url = `/renters/${id}`;
+      const response = await axios.get(url);
+      dispatch(slice.actions.getGuestSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function updateRenterStatus(id, status,enqueueSnackbar) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading);
+    try {
+      const url = `/renters/${id}`;
+      await axios.put(url, status);
+      enqueueSnackbar("Cập nhật trạng thái khách thuê thành công" , { variant: 'success' })
+    } catch (error) {
+      enqueueSnackbar("Có lỗi xảy ra" , { variant: 'error' })
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+

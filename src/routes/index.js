@@ -145,6 +145,7 @@ export default function Router() {
             { path: '/contract/create', element: <CreateContractPage /> },
             { path: '/contract/:id', element: <EditContractPage /> },
             { path: '/list-guest', element: <ListGuestPage /> },
+            { path: '/:id', element: <EditGuestPage /> },
             { path: '/requests', element: <ListRequestPage /> },
             { path: '/requests/:id', element: <DetailRequestPage /> }
           ]
@@ -304,6 +305,7 @@ const ListContractPage = Loadable(lazy(() => import('../pages/feature/supervisor
 const CreateContractPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/CreateContractPage')));
 const EditContractPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/EditContractPage')));
 const ListGuestPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/ListGuestPage')));
+const EditGuestPage = Loadable(lazy(() => import('../pages/feature/supervisor/guest/EditGuestPage')));
 const BillsPage = Loadable(lazy(() => import('../pages/feature/supervisor/finances/BillsPage')));
 const CreateBill = Loadable(lazy(() => import('../pages/feature/supervisor/finances/CreateBill')));
 const ViewBill = Loadable(lazy(() => import('../pages/feature/supervisor/finances/ViewBill')));

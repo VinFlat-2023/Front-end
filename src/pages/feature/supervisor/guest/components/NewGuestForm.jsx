@@ -1,7 +1,7 @@
 import { Stack, TextField } from "@material-ui/core";
 import { useState } from "react";
 
-const gender = [{ id: '1', label: 'Nam' }, { id: '2', label: 'Nữ' }];
+const gender = [{ id: '1', label: 'Nam', value: 'Male'}, { id: '2', label: 'Nữ', value: "Female" }];
 
 export const NewGuestForm = ({ getFieldProps, touched, errors }) => {
 
@@ -76,7 +76,7 @@ export const NewGuestForm = ({ getFieldProps, touched, errors }) => {
         >
           <option value="" />
           {gender.map((option) => (
-            <option key={option.id} value={option.id}>
+            <option key={option.id} value={option.value}>
               {option.label}
             </option>
           ))}

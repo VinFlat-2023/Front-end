@@ -31,6 +31,7 @@ import Scrollbar from '../../../../components/Scrollbar';
 import SearchNotFound from '../../../../components/SearchNotFound';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../../components/_dashboard/user/list';
 import { getGuestList } from 'src/redux/slices/guest';
+import MoreMenu from '../shared/MoreMenu';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -207,19 +208,19 @@ export default function ListGuestPage() {
                         <TableCell align="left">{Email}</TableCell>
                         <TableCell align="left">{Address}</TableCell>
                         <TableCell align="left">{BirthDateReturn}</TableCell>
-                        <TableCell align="left">{Gender}</TableCell>
+                        <TableCell align="left">{Gender === 'Male' ? 'Nam' : "Nữ"}</TableCell>
                        
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(Status === 'false' && 'error') || 'success'}
+                            color={!!Status ?  'success' : 'error'}
                           >
-                            {sentenceCase(Status ? "Active" : "Banned")}
+                            {sentenceCase(!!Status ? "Active" : "Banned")}
                           </Label>
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu  onDelete={() => handleDeleteUser(RenterId)} id={RenterId} />
+                          <MoreMenu editPath={`${PATH_SUPERVISOR.guest.root}/${RenterId}`}  onDelete={() => handleDeleteUser(RenterId)} id={RenterId} />
                         </TableCell>
                       </TableRow>
                     );
@@ -253,7 +254,3 @@ export default function ListGuestPage() {
     </Page>
   );
 }
-//paging
-//export to excel
-//user list
-//api call

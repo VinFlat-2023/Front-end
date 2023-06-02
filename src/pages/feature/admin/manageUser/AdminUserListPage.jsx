@@ -41,8 +41,8 @@ const TABLE_HEAD = [
   { id: 'fullName', label: 'Họ và tên', alignRight: false },
   { id: 'userName', label: 'Tài khoản', alignRight: false },
   { id: 'role', label: 'Chức vụ', alignRight: false },
-  { id: 'phoneNumber', label: 'Số điện thoại', alignRight: false },
-  { id: 'status', label: 'Trạng thái', alignRight: false },
+  { id: 'PhoneNumber', label: 'Số điện thoại', alignRight: false },
+  { id: 'Status', label: 'Trạng thái', alignRight: false },
   { id: '' }
 ];
 
@@ -191,7 +191,7 @@ export default function UserList() {
                 />
                 <TableBody>
                   {userList.map((row) => {
-                    const { EmployeeId, FullName, Username, Status, Role, Phone } = row;
+                    const { EmployeeId, FullName, Username, Status, Role, PhoneNumber } = row;
                     const isItemSelected = selected.indexOf(Username) !== -1;
 
                     return (
@@ -215,13 +215,13 @@ export default function UserList() {
                         </TableCell>
                         <TableCell align="left">{Username}</TableCell>
                         <TableCell align="left">{Role.RoleName}</TableCell>
-                        <TableCell align="left">{Phone}</TableCell>
+                        <TableCell align="left">{PhoneNumber}</TableCell>
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(Status === 'false' && 'error') || 'success'}
+                            color={Status ? 'success' : 'error'}
                           >
-                            {sentenceCase(Status ? "Active" : "Banned")}
+                            {sentenceCase(Status ? "Dang hoat dong" : "Ngung hoat dong")}
                           </Label>
                         </TableCell>
 

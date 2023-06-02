@@ -50,7 +50,7 @@ export default function ListRequestPage() {
           heading="Danh sách yêu cầu"
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.root },
-            { name: 'Khách thuê', href: PATH_SUPERVISOR.guest.root },
+            { name: 'Khách thuê', href: PATH_SUPERVISOR.guest.listRequest},
             { name: 'Danh sách yêu cầu' }
           ]}
           action={<Button variant="contained" startIcon={<Icon icon={downloadIcon} />}></Button>}

@@ -72,7 +72,7 @@ function MoreMenuButton() {
         <MenuItem>
           <Icon icon={editFill} width={20} height={20} />
           <Typography variant="body2" sx={{ ml: 2 }}>
-            Edit
+            Chỉnh sửa
           </Typography>
         </MenuItem>
         <MenuItem>

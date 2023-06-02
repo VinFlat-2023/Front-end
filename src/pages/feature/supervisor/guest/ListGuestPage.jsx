@@ -212,11 +212,11 @@ export default function ListGuestPage() {
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(Status === 'false' && 'error') || 'success'}
+                            color={Status ? 'success' : 'error'}
                           >
-                            {sentenceCase(Status ? "Active" : "Banned")}
+                            {sentenceCase(Status ? "Dang hoat dong" : "Khong hoat dong")}
                           </Label>
-                        </TableCell>
+                        </TableCell>  
 
                         <TableCell align="right">
                           <UserMoreMenu  onDelete={() => handleDeleteUser(RenterId)} id={RenterId} />

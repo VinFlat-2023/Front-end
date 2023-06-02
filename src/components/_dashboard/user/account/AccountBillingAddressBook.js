@@ -48,7 +48,7 @@ export default function AccountBillingAddressBook({ addressBook }) {
             </Typography>
 
             <Box sx={{ mt: 1 }}>
-              <Button
+              {/* <Button
                 color="error"
                 size="small"
                 startIcon={<Icon icon={trash2Fill} />}
@@ -56,9 +56,9 @@ export default function AccountBillingAddressBook({ addressBook }) {
                 sx={{ mr: 1 }}
               >
                 Delete
-              </Button>
+              </Button> */}
               <Button size="small" startIcon={<Icon icon={editFill} />} onClick={() => {}}>
-                Edit
+                Chỉnh sửa
               </Button>
             </Box>
           </Paper>

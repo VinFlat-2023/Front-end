@@ -42,7 +42,7 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Tên', alignRight: false },
   { id: 'type', label: 'Loại', alignRight: false },
   { id: 'status', label: 'Trạng thái', alignRight: false },
-  { id: '' }  
+  { id: '' }
 ];
 
 // ----------------------------------------------------------------------
@@ -89,11 +89,9 @@ export default function FlatList() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filteredUsers, setFilteredUsers] = useState([]);
 
-
   useEffect(() => {
-    dispatch(getFlatList(page +1 ,rowsPerPage));
+    dispatch(getFlatList(page + 1, rowsPerPage));
   }, [dispatch, page, rowsPerPage]);
-
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -110,9 +108,9 @@ export default function FlatList() {
     setSelected([]);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     setFilteredUsers(applySortFilter(flatList, getComparator(order, orderBy), filterName));
-  },[flatList])
+  }, [flatList]);
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -147,7 +145,6 @@ export default function FlatList() {
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - flatList.length) : 0;
-
 
   const isUserNotFound = filteredUsers?.length === 0;
 
@@ -216,19 +213,38 @@ export default function FlatList() {
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(Status === 'false' && 'error') || 'success'}
+                            color={
+                              Status === 'Active'
+                                ? 'success'
+                                : Status === 'Maintenance'
+                                ? 'default'
+                                : Status === 'Full'
+                                ? 'info'
+                                : 'warning'
+                            }
                           >
-                            {sentenceCase(Status ? "Active" : "Banned")}
+                            {Status === 'Active'
+                              ? 'Đang hoạt động'
+                              : Status === 'Maintenance'
+                              ? 'Bảo trì'
+                              : Status === 'Inactive'
+                              ? 'Dừng hoạt động'
+                              : Status === 'Full'
+                              ? 'Đã đầy'
+                              : 'warning'}
                           </Label>
                         </TableCell>
 
                         <TableCell align="right">
-                          <MoreMenu editPath={`${PATH_SUPERVISOR.room.root}/flat/edit/${FlatId}`}  onDelete={() => handleDeleteUser(FlatId)} id={FlatId} />
+                          <MoreMenu
+                            editPath={`${PATH_SUPERVISOR.room.root}/flat/edit/${FlatId}`}
+                            onDelete={() => handleDeleteUser(FlatId)}
+                            id={FlatId}
+                          />
                         </TableCell>
                       </TableRow>
                     );
                   })}
-
                 </TableBody>
                 {isUserNotFound && (
                   <TableBody>
@@ -257,4 +273,3 @@ export default function FlatList() {
     </Page>
   );
 }
-

@@ -44,7 +44,7 @@ const TABLE_HEAD = [
   { id: 'startDate', label: 'Ngày bắt đầu', alignRight: false },
   { id: 'endDate', label: 'Ngày kết thúc', alignRight: false },
   { id: 'signedDate', label: 'Ngày kí', alignRight: false },
-  { id: 'status', label: 'Trạng thái', alignRight: false },
+  { id: 'ContractStatus', label: 'Trạng thái', alignRight: false },
   { id: '' }
 ];
 
@@ -223,9 +223,11 @@ export default function ContractList() {
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(ContractStatus === 'false' && 'error') || 'success'}
+                            color={
+                              ContractStatus === 'Active' ? 'success' : ContractStatus === 'Expired' ? 'default' :ContractStatus === 'Cancelled' ? 'error': 'warning'
+                            }
                           >
-                            {sentenceCase(ContractStatus ? "Active" : "Banned")}
+                            {ContractStatus === 'Active' ? 'Còn hiệu lực' : ContractStatus === 'Expired' ? 'Hết hạn' :ContractStatus === 'Cancelled' ? 'Đã hủy': 'warning'}
                           </Label>
                         </TableCell>
 
@@ -241,7 +243,7 @@ export default function ContractList() {
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                      No contract found for this building managed by this supervisor
+                      Không tìm thấy hợp đồng nào cho tòa nhà này
                       </TableCell>
                     </TableRow>
                   </TableBody>

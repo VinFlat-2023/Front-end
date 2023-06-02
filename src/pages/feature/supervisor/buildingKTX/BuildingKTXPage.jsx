@@ -58,7 +58,7 @@ export default function Dormitory() {
         <HeaderBreadcrumbs
           heading={'Toà nhà KTX'}
           links={[
-            { name: 'Dashboard', href: PATH_SUPERVISOR.home },
+            { name: 'Trang chủ', href: PATH_SUPERVISOR.home },
             {
               name: 'Toà nhà KTX',
               href: PATH_SUPERVISOR.domitory

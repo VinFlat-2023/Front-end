@@ -26,8 +26,7 @@ import { SwitchAccount } from '@material-ui/icons';
 // ----------------------------------------------------------------------
 
 const TYPES = [
-  { id: 0, label: "Thu" },
-  { id: 1, label: "Chi" },
+  { id: 1, label: "Thu" },
 ]
 
 export default function CreateBill() {

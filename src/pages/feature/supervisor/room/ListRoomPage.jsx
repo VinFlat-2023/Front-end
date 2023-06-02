@@ -92,11 +92,9 @@ export default function UserList() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filteredUsers, setFilteredUsers] = useState([]);
 
-
   useEffect(() => {
-    dispatch(getRoomList(page +1 ,rowsPerPage));
+    dispatch(getRoomList(page + 1, rowsPerPage));
   }, [dispatch, page, rowsPerPage]);
-
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -112,7 +110,6 @@ export default function UserList() {
     }
     setSelected([]);
   };
-
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -148,7 +145,6 @@ export default function UserList() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - roomList.length) : 0;
 
-
   const isUserNotFound = filterName?.length === 0;
 
   return (
@@ -181,7 +177,7 @@ export default function UserList() {
                 <TableBody>
                   {roomList?.map((row) => {
                     const { RoomId, RoomName, RoomType, Flat, AvailableSlots, Status } = row;
-                    console.log("row", Flat)
+                    console.log('row', Flat);
                     const isItemSelected = selected.indexOf(RoomName) !== -1;
 
                     return (
@@ -209,19 +205,38 @@ export default function UserList() {
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                            color={(Status === 'false' && 'error') || 'success'}
+                            color={
+                              Status === 'Active'
+                                ? 'success'
+                                : Status === 'Maintenance'
+                                ? 'default'
+                                : Status === 'Full'
+                                ? 'info'
+                                : 'warning'
+                            }
                           >
-                            {sentenceCase(Status ? "Active" : "Banned")}
+                            {Status === 'Active'
+                              ? 'Đang hoạt động'
+                              : Status === 'Maintenance'
+                              ? 'Bảo trì'
+                              : Status === 'Inactive'
+                              ? 'Không hoạt động'
+                              : Status === 'Full'
+                              ? 'Đã đầy'
+                              : 'warning'}
                           </Label>
                         </TableCell>
 
                         <TableCell align="right">
-                          <MoreMenu editPath={`${PATH_SUPERVISOR.room.root}/edit/${RoomId}`}  onDelete={() => handleDeleteUser(RoomId)} id={RoomId} />
+                          <MoreMenu
+                            editPath={`${PATH_SUPERVISOR.room.root}/edit/${RoomId}`}
+                            onDelete={() => handleDeleteUser(RoomId)}
+                            id={RoomId}
+                          />
                         </TableCell>
                       </TableRow>
                     );
                   })}
-
                 </TableBody>
                 {/* {isUserNotFound && (
                   <TableBody>

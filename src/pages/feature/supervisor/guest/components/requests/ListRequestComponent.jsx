@@ -215,11 +215,11 @@ export default function ListRequestComponent() {
                           : 'error'}
                       >
                         {Status === STATUS_ACTIVE
-                          ? 'Mới tạo'
+                          ? 'Đã gửi'
                           : Status === STATUS_PROCESSING
                           ? 'Đã tiếp nhận'
                           : Status === STATUS_CONFORMING
-                          ? 'Đang đợi renter xác nhận'
+                          ? 'Đang đợi khách thuê xác nhận'
                           : Status === STATUS_SOLVED
                           ? 'Đã xác nhận'
                           : 'Đã hủy'}

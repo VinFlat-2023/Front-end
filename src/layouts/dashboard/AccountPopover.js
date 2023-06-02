@@ -20,12 +20,12 @@ import MenuPopover from '../../components/MenuPopover';
 // ----------------------------------------------------------------------
 const MENU_OPTIONS_ADMIN = [
   {
-    label: 'Home',
+    label: 'Trang chủ',
     icon: homeFill,
     linkTo: PATH_ADMIN.home
   },
   {
-    label: 'Profile',
+    label: 'Hồ sơ',
     icon: personFill,
     linkTo: PATH_ADMIN.admin_profile.home
   }
@@ -37,12 +37,12 @@ const MENU_OPTIONS_ADMIN = [
 ];
 const MENU_OPTIONS_SUPERVISOR = [
   {
-    label: 'Home',
+    label: 'Trang chủ',
     icon: homeFill,
     linkTo: PATH_SUPERVISOR.home
   },
   {
-    label: 'Profile',
+    label: 'Hồ sơ',
     icon: personFill,
     linkTo: PATH_SUPERVISOR.profile.root
   }

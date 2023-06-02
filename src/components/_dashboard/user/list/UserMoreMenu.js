@@ -38,12 +38,12 @@ export default function UserMoreMenu({ onDelete, id }) {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem onClick={onDelete} sx={{ color: 'text.secondary' }}>
+        {/* <MenuItem onClick={onDelete} sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Icon icon={trash2Outline} width={24} height={24} />
           </ListItemIcon>
           <ListItemText primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
-        </MenuItem>
+        </MenuItem> */}
 
         <MenuItem
           component={RouterLink}
@@ -53,7 +53,7 @@ export default function UserMoreMenu({ onDelete, id }) {
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText primary="Chỉnh sửa" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
       </Menu>
     </>

@@ -11,6 +11,7 @@ import { PATH_AUTH } from '../../routes/paths';
 import Page from '../../components/Page';
 import { ResetPasswordForm } from '../../components/authentication/reset-password';
 //
+import axios from '../../utils/axios';
 import { SentIcon } from '../../assets';
 
 // ----------------------------------------------------------------------
@@ -29,6 +30,17 @@ export default function ResetPassword() {
   const [email, setEmail] = useState('');
   const [sent, setSent] = useState(false);
 
+  const resetPassword = async () => {
+    try {
+      const url = 'auth/reset-password';
+      await axios.post(url, {'registeredEmail': email});
+    } catch (error) {}
+  };
+  const onResetPassword = () => {
+    resetPassword(email);
+    setSent(true);
+
+  }
   return (
     <RootStyle title="Đặt lại mật khẩu | VinFlat">
       <LogoOnlyLayout />
@@ -45,7 +57,7 @@ export default function ResetPassword() {
                 bạn để đặt lại mật khẩu.
               </Typography>
 
-              <ResetPasswordForm onSent={() => setSent(true)} onGetEmail={(value) => setEmail(value)} />
+              <ResetPasswordForm onSent={() => {onResetPassword()}} onGetEmail={(value) => setEmail(value)} />
 
               <Button fullWidth size="large" component={RouterLink} to={PATH_AUTH.login} sx={{ mt: 1 }}>
                 Trở lại

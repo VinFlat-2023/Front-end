@@ -13,7 +13,15 @@ import {
   Container,
   Stack,
   Tab,
-  Tabs
+  Tabs,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  LinearProgress,
+  CircularProgress,
+  Backdrop,
 } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
 // components
@@ -22,11 +30,13 @@ import roundAccountBox from '@iconify/icons-ic/round-account-box';
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
-import { getInvoiceList } from 'src/redux/slices/finance';
+import { createBatchInvoice, getInvoiceList } from 'src/redux/slices/finance';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { getTabLabel } from 'src/utils/formatText';
 import { BillTable } from './components/BillTable';
 import { INVOICE_TYPE } from './type';
+import { useSnackbar } from 'notistack5';
+
 
 // ----------------------------------------------------------------------
 
@@ -83,6 +93,7 @@ const EXPENSE_TABLE_HEAD = [
 
 export default function BillsPage() {
   const { themeStretch } = useSettings();
+  const { enqueueSnackbar } = useSnackbar();
   const { invoiceList, invoiceTotal } = useSelector(state => state.finance);
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -94,6 +105,8 @@ export default function BillsPage() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [currentTab, setCurrentTab] = useState('income');
+  const [openDialog, setOpenDialog] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     let invoiceType;
@@ -160,6 +173,25 @@ export default function BillsPage() {
 
   };
 
+  const onAddContractClick = () => {
+    setOpenDialog(true);
+  }
+
+  const onCloseDialog = () => {
+    setOpenDialog(false);
+  }
+
+  const onCreateBills = async () => {
+    try {
+      setOpenDialog(false);
+      setIsProcessing(true);
+      await dispatch(createBatchInvoice(enqueueSnackbar));
+    } catch (ex) {
+      setOpenDialog(false);
+    } finally {
+      setIsProcessing(false);
+    }
+  }
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - invoiceList.length) : 0;
 
   const isUserNotFound = filteredUsers?.length === 0;
@@ -223,7 +255,7 @@ export default function BillsPage() {
     <Page title="Danh sách hóa đơn VinFlat">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Danh sách tài khoản nhân viên VinFlat"
+          heading="Danh sách hóa đơn VinFlat"
           links={[
             { name: 'Trang chủ', href: PATH_SUPERVISOR.home },
             { name: 'Quản lý  tài chính', href: PATH_SUPERVISOR.finances.bill },
@@ -232,14 +264,40 @@ export default function BillsPage() {
           action={
             <Button
               variant="contained"
-              component={RouterLink}
-              to={PATH_SUPERVISOR.finances.create}
+              onClick={onAddContractClick}
               startIcon={<Icon icon={plusFill} />}
             >
               Thêm hóa đơn
             </Button>
           }
         />
+        <Dialog
+          open={openDialog}
+          onClose={onCloseDialog}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Tạo hoá đơn"}
+          </DialogTitle>
+          <DialogContent>
+
+            Tạo hoá đơn và gửi email thông báo cho tất cả người dùng
+
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={onCloseDialog}>Hủy</Button>
+            <Button onClick={onCreateBills} autoFocus>
+              Đồng ý
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={isProcessing}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <Stack spacing={5}>
           <Tabs
             value={currentTab}

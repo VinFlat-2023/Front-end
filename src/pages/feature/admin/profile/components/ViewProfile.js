@@ -45,7 +45,7 @@ export default function ViewProfile({ currentUser }) {
               <Stack spacing={3}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                   <TextField fullWidth disabled={true} label="Họ và tên" {...getFieldProps('fullname')} />
-                  <TextField fullWidth disabled={true} label="Username" {...getFieldProps('username')} />
+                  <TextField fullWidth disabled={true} label="Tên tài khoản" {...getFieldProps('username')} />
                 </Stack>
 
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>

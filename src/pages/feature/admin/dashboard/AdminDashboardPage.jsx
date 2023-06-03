@@ -28,10 +28,12 @@ export default function AdminDashboardPage() {
   const { user } = useAuth();
 
   return (
-    <Page title="VinFlat | Admin - Trang chủ">
+    <Page
+      title="VinFlat | 
+    Quản trị viên - Trang chủ"
+    >
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
-
           <Grid item xs={12} md={3}>
             <AppTotalActiveUsers />
           </Grid>

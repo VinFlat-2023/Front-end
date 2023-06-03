@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { paramCase } from 'change-case';
 import { useParams, useLocation } from 'react-router-dom';
 // material
@@ -14,6 +14,8 @@ import useSettings from '../../../../hooks/useSettings';
 import Page from '../../../../components/Page';
 import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
 import UserNewForm from '../../../../components/_dashboard/user/UserNewForm';
+import { useSnackbar } from 'notistack5';
+import axios from 'c:/Users/yiyangqianxi/project/Front-end/src/utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -25,9 +27,21 @@ export default function UserCreate() {
   const { userList } = useSelector((state) => state.user);
   const isEdit = pathname.includes('edit');
   const currentUser = userList?.find((user) => paramCase(user.Username) === name);
+  const { enqueueSnackbar } = useSnackbar();
+  const [building, setBuilding] = useState([]);
+
+  const getAllBuilding = async () => {
+    try {
+      const response = await axios.get('buildings/list');
+      setBuilding(response.data.data);
+    } catch (error) {
+      enqueueSnackbar(error.message, { variant: 'error' });
+    }
+  };
   
   useEffect(() => {
     dispatch(getUserList());
+    getAllBuilding();
   }, [dispatch]);
 
   return (
@@ -42,7 +56,7 @@ export default function UserCreate() {
           ]}
         />
 
-        <UserNewForm isEdit={isEdit} currentUser={currentUser} />
+        <UserNewForm isEdit={isEdit} currentUser={currentUser} building ={building} />
       </Container>
     </Page>
   );

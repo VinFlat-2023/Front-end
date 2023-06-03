@@ -28,7 +28,7 @@ export default function SupervisorDashboardPage() {
   const { user } = useAuth();
 
   return (
-    <Page title="VinFlat | Supervisor - Trang chủ">
+    <Page title="VinFlat | Quản lý KTX - Trang chủ">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
 

@@ -1,5 +1,5 @@
 export const roles = [
-    { id: '1', label: 'Admin' },
-    { id: '2', label: 'Supervisor' },
-    { id: '3', label: 'Technician' },
+    { id: '1', label: 'Quản trị viên' },
+    { id: '2', label: 'Quản lý KTX' },
+    { id: '3', label: 'Kỹ thuật viên' },
 ]

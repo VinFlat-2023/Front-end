@@ -17,6 +17,9 @@ import { LoadingButton } from '@material-ui/lab';
 import { useDispatch } from 'react-redux';
 import { createNewEmployee, updateUserProfile } from 'src/redux/slices/user';
 import { roles } from './roles';
+// utils
+import axios from 'c:/Users/yiyangqianxi/project/Front-end/src/utils/axios';
+
 
 // ----------------------------------------------------------------------
 
@@ -25,18 +28,19 @@ UserNewForm.propTypes = {
   currentUser: PropTypes.object
 };
 
-export default function UserNewForm({ isEdit, currentUser }) {
+export default function UserNewForm({ isEdit, currentUser, building }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
 
   const NewUserSchema = Yup.object().shape({
-    username: Yup.string().required('User name is required'),
-    fullname: Yup.string().required('Full name is required'),
-    email: Yup.string().required('Email is required').email(),
-    phone: Yup.string().required('Phone number is required'),
-    address: Yup.string().required('Address is required'),
-    roleId: Yup.string().required('Role is required')
+    username: Yup.string().required('Tài khoản không được để trống'),
+    fullname: Yup.string().required('Họ và tên không được để trống'),
+    email: Yup.string().required('Email không được để trống').email(),
+    phone: Yup.string().required('Số điện thoại không được để trống'),
+    address: Yup.string().required('Địa chỉ không được để trống'),
+    roleId: Yup.string().required('Chức vụ không được để trống'),
+    // building: Yup.string().required('Tòa nhà không được trống'),
   });
 
   const formik = useFormik({
@@ -48,7 +52,8 @@ export default function UserNewForm({ isEdit, currentUser }) {
       phone: currentUser?.PhoneNumber || '',
       address: currentUser?.Address || '',
       roleId: currentUser?.Role.RoleId || '',
-      status: currentUser?.Status || ''
+      status: currentUser?.Status || '',
+      building: currentUser?.BuildingId || '',
     },
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
@@ -97,7 +102,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                   />
                   <TextField
                     fullWidth
-                    label="Username"
+                    label="Tên tài khoản"
                     {...getFieldProps('username')}
                     disabled={isEdit}
                     error={Boolean(touched.username && errors.username)}
@@ -144,6 +149,23 @@ export default function UserNewForm({ isEdit, currentUser }) {
                     {roles.map((option) => (
                       <option key={option.id} value={option.id}>
                         {option.label}
+                      </option>
+                    ))}
+                  </TextField>
+
+                  <TextField
+                    select
+                    fullWidth
+                    label="Tên ký túc xá"
+                    {...getFieldProps('building')}
+                    SelectProps={{ native: true }}
+                    error={Boolean(touched.location && errors.location)}
+                    helperText={touched.location && errors.location}
+                  >
+                    <option value="" />
+                    {building.map((option) => (
+                      <option key={option.BuildingId} value={option.BuildingId}>
+                        {option.BuildingName}
                       </option>
                     ))}
                   </TextField>

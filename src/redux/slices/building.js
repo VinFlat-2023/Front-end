@@ -55,3 +55,15 @@ export function getCurrentBuilding() {
     }
   };
 }
+
+export function getBuildingList() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get('/buildings/list');
+      dispatch(slice.actions.getBuildingListSuccess(response.data.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}

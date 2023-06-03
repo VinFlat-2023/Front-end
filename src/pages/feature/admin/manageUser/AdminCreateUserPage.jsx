@@ -15,7 +15,7 @@ import Page from '../../../../components/Page';
 import HeaderBreadcrumbs from '../../../../components/HeaderBreadcrumbs';
 import UserNewForm from '../../../../components/_dashboard/user/UserNewForm';
 import { useSnackbar } from 'notistack5';
-import axios from 'c:/Users/yiyangqianxi/project/Front-end/src/utils/axios';
+import axios from '../../../../utils/axios';
 
 // ----------------------------------------------------------------------
 

@@ -5,21 +5,12 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 // material
-import {
-  Box,
-  Card,
-  Grid,
-  Stack,
-  TextField,
-} from '@material-ui/core';
+import { Box, Card, Grid, Stack, TextField } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 //
 import { useDispatch } from 'react-redux';
 import { createNewEmployee, updateUserProfile } from 'src/redux/slices/user';
 import { roles } from './roles';
-// utils
-import axios from 'c:/Users/yiyangqianxi/project/Front-end/src/utils/axios';
-
 
 // ----------------------------------------------------------------------
 
@@ -39,7 +30,7 @@ export default function UserNewForm({ isEdit, currentUser, building }) {
     email: Yup.string().required('Email không được để trống').email(),
     phone: Yup.string().required('Số điện thoại không được để trống'),
     address: Yup.string().required('Địa chỉ không được để trống'),
-    roleId: Yup.string().required('Chức vụ không được để trống'),
+    roleId: Yup.string().required('Chức vụ không được để trống')
     // building: Yup.string().required('Tòa nhà không được trống'),
   });
 
@@ -53,7 +44,7 @@ export default function UserNewForm({ isEdit, currentUser, building }) {
       address: currentUser?.Address || '',
       roleId: currentUser?.Role.RoleId || '',
       status: currentUser?.Status || '',
-      building: currentUser?.BuildingId || '',
+      building: currentUser?.BuildingId || ''
     },
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
@@ -153,7 +144,8 @@ export default function UserNewForm({ isEdit, currentUser, building }) {
                     ))}
                   </TextField>
 
-                  <TextField
+                  {/* <TextField
+                    disabled={isEdit}
                     select
                     fullWidth
                     label="Tên ký túc xá"
@@ -168,7 +160,7 @@ export default function UserNewForm({ isEdit, currentUser, building }) {
                         {option.BuildingName}
                       </option>
                     ))}
-                  </TextField>
+                  </TextField> */}
                 </Stack>
 
                 <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>

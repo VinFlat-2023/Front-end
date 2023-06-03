@@ -33,14 +33,13 @@ export default function ResetPassword() {
   const resetPassword = async () => {
     try {
       const url = 'auth/reset-password';
-      await axios.post(url, {'registeredEmail': email});
+      await axios.post(url, { registeredEmail: email });
     } catch (error) {}
   };
   const onResetPassword = () => {
-    resetPassword(email);
+    // resetPassword(email);
     setSent(true);
-
-  }
+  };
   return (
     <RootStyle title="Đặt lại mật khẩu | VinFlat">
       <LogoOnlyLayout />
@@ -57,7 +56,12 @@ export default function ResetPassword() {
                 bạn để đặt lại mật khẩu.
               </Typography>
 
-              <ResetPasswordForm onSent={() => {onResetPassword()}} onGetEmail={(value) => setEmail(value)} />
+              <ResetPasswordForm
+                onSent={() => {
+                  onResetPassword();
+                }}
+                onGetEmail={(value) => setEmail(value)}
+              />
 
               <Button fullWidth size="large" component={RouterLink} to={PATH_AUTH.login} sx={{ mt: 1 }}>
                 Trở lại
@@ -71,7 +75,7 @@ export default function ResetPassword() {
                 Yêu cầu gửi thành công
               </Typography>
               <Typography>
-                Chúng tôi sẽ gửi lại thông tin mới đến &nbsp;
+                Mật khẩu mới đã được gửi tới người dùng &nbsp;
                 <strong>{email}</strong>
                 <br />
                 sau khi thông tin xác thực. Vui lòng kiểm tra email của bạn.

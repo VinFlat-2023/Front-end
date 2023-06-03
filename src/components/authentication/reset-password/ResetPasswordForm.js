@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { Form, FormikProvider, useFormik } from 'formik';
@@ -7,6 +8,8 @@ import { LoadingButton } from '@material-ui/lab';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
+
+import axios from 'c:/Users/yiyangqianxi/project/Front-end/src/utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -22,18 +25,20 @@ export default function ResetPasswordForm({ onSent, onGetEmail }) {
   const ResetPasswordSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required')
   });
-
+  const [email, setEmail] = useState('');
   const formik = useFormik({
     initialValues: {
-      email: 'demo@minimals.cc'
+      email: ''
     },
     validationSchema: ResetPasswordSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        await resetPassword(values.email);
+        // await resetPassword(values.email);
         if (isMountedRef.current) {
-          onSent();
           onGetEmail(formik.values.email);
+          onSent();
+          const url = 'auth/reset-password';
+          await axios.post(url, { 'registeredEmail': formik.values.email });
           setSubmitting(false);
         }
       } catch (error) {
@@ -66,6 +71,7 @@ export default function ResetPasswordForm({ onSent, onGetEmail }) {
           <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
             Đặt lại mật khẩu
           </LoadingButton>
+
         </Stack>
       </Form>
     </FormikProvider>
